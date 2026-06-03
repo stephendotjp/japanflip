@@ -1,0 +1,826 @@
+[
+  {
+    "id": "vintage-levis-501",
+    "slug": "vintage-levis-501",
+    "title": "Vintage Levi's 501",
+    "category": "Clothing",
+    "subcategory": "Denim",
+    "tier": "basic",
+    "buyPriceJPY": { "min": 500, "max": 1500 },
+    "sellPriceUSD": { "min": 80, "max": 150 },
+    "roi": 41,
+    "roiTier": "high",
+    "tags": ["Fast Seller", "Lightweight", "Easy to Pack", "High Demand"],
+    "cities": ["Tokyo", "Osaka", "Kyoto"],
+    "minBudgetJPY": 500,
+    "sellPlatforms": ["Depop", "eBay", "Etsy"],
+    "description": "Japanese recycle shops consistently underprice pre-owned Levi's 501s relative to the Western resale market. Made-in-USA cuts from the 1970s and 80s carry a strong premium on Depop and eBay — Japanese shop staff rarely know what they have.",
+    "whatToLookFor": [
+      "Made in USA tag — adds 30–50% to resale value. Inside back waistband, right side.",
+      "Single stitch hem — indicates pre-1980s production. Commands premium pricing.",
+      "Big E on the red tab — pre-1971. Most valuable. Learn to spot this fast.",
+      "Waist 28–34 sells fastest. Avoid 38+ — much harder to move in the US market.",
+      "Dark indigo with minimal fade sells better than heavily washed pairs.",
+      "Check all seams — any repairs or patches drop value significantly."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Hard Off / Mode Off",
+          "description": "Best volume. Look in the ¥500 bins first — staff often misprice denim. Go early on weekdays.",
+          "icon": "🏪"
+        },
+        {
+          "name": "2nd Street",
+          "description": "More curated, slightly higher prices but better condition. Good for Made-in-USA cuts.",
+          "icon": "👕"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Shimokitazawa Vintage Row",
+          "description": "3 specific stores within 200m. Best selection in Tokyo for pre-1980 cuts.",
+          "address": "2-chome Kitazawa, Setagaya City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Amerika-Mura Osaka",
+          "description": "Dense cluster of vintage shops. Saturday mornings after new stock arrives.",
+          "address": "Amerikamura, Nishi Ward, Osaka",
+          "icon": "📍"
+        },
+        {
+          "name": "Harajuku Ura-Hara Backstreets",
+          "description": "Hidden shops off the main drag. Higher prices but rarer finds including Big E stock.",
+          "address": "Jingumae 3–4 chome, Shibuya, Tokyo",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — polite, never aggressive."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "これ、まとめて買いたいんですが",
+          "romaji": "Kore, matomete kaitain desu ga",
+          "meaning": "I'd like to buy several of these together — bulk discount opener."
+        },
+        {
+          "japanese": "状態を確認してもいいですか？",
+          "romaji": "Jōtai wo kakunin shite mo ii desu ka?",
+          "meaning": "May I check the condition? — polite way to inspect closely."
+        },
+        {
+          "japanese": "これは本物ですか？",
+          "romaji": "Kore wa honmono desu ka?",
+          "meaning": "Is this authentic? — use for high-value items."
+        },
+        {
+          "japanese": "最後の値段はいくらですか？",
+          "romaji": "Saigo no nedan wa ikura desu ka?",
+          "meaning": "What's your final price? — signals you're serious."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "Depop", "priceMin": 90, "priceMax": 150, "fee": "10%", "tip": "Use hashtags. Photo on concrete floor performs well." },
+      { "name": "eBay", "priceMin": 80, "priceMax": 130, "fee": "13.25%", "tip": "Use sold listings to price. Auction format works for Big E." },
+      { "name": "Etsy", "priceMin": 100, "priceMax": 160, "fee": "6.5%", "tip": "Slower but buyers pay more. Good for pre-1980 with provenance." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "Personal use clothing, no duty under $800 total" },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "Declare if reselling. VAT may apply over limit." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "Personal goods duty-free under threshold" },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "Personal exemption. No issues with clothing." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "Lower threshold. Keep receipts if challenged." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "Clean import rules. No issues with clothing." }
+    ]
+  },
+  {
+    "id": "seiko-skx-diver",
+    "slug": "seiko-skx-diver",
+    "title": "Seiko SKX Diver",
+    "category": "Watches",
+    "subcategory": "Automatic",
+    "tier": "basic",
+    "buyPriceJPY": { "min": 8000, "max": 18000 },
+    "sellPriceUSD": { "min": 150, "max": 320 },
+    "roi": 12,
+    "roiTier": "high",
+    "tags": ["High Demand", "Easy to Ship", "Collector Favorite"],
+    "cities": ["Tokyo", "Osaka"],
+    "minBudgetJPY": 8000,
+    "sellPlatforms": ["eBay", "Chrono24", "WatchUSeek"],
+    "description": "The SKX007 and SKX009 were discontinued globally but Japan has a massive stock of pre-owned units in recycle shops. Western buyers pay a significant premium for these — especially original-dial, unpolished examples with intact lume.",
+    "whatToLookFor": [
+      "Original dial — no refinishing. Look for even lume plots with no chips.",
+      "Case unpolished — brushed flanks intact. Polished cases lose 30% value.",
+      "Check crown at 4 o'clock — should screw down smoothly with no play.",
+      "Original bracelet adds $30–50. Aftermarket straps are fine but note it.",
+      "Chapter ring should be tight with no wobble. Loose ones are hard to fix.",
+      "Movement should sweep smoothly. Listen for any rattling."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Hard Off Electronics",
+          "description": "Watch cases near the counter. Staff price by brand not model — SKX often mislabeled.",
+          "icon": "⌚"
+        },
+        {
+          "name": "Komehyo",
+          "description": "Large used goods chain. Good authenticated stock. Slightly higher prices but condition guaranteed.",
+          "icon": "🏬"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Nakano Broadway Floor 3",
+          "description": "Dense watch collector shops. Best place in Tokyo for vintage Seiko.",
+          "address": "5-52-15 Nakano, Nakano City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Shinjuku Watch Row",
+          "description": "Takashimaya Times Square basement — 4 watch dealers side by side.",
+          "address": "5-24-2 Sendagaya, Shibuya City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Den Den Town Osaka",
+          "description": "Electronics district with multiple watch dealers. Good prices, less tourist traffic.",
+          "address": "Nipponbashi, Naniwa Ward, Osaka",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — polite, never aggressive."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "動作確認できますか？",
+          "romaji": "Dōsa kakunin dekimasu ka?",
+          "meaning": "Can I verify it's working? — essential before buying any watch."
+        },
+        {
+          "japanese": "これ、まとめて買いたいんですが",
+          "romaji": "Kore, matomete kaitain desu ga",
+          "meaning": "I'd like to buy several of these — bulk discount opener."
+        },
+        {
+          "japanese": "保証書はありますか？",
+          "romaji": "Hoshōsho wa arimasu ka?",
+          "meaning": "Do you have the warranty card? — original papers add value."
+        },
+        {
+          "japanese": "最後の値段はいくらですか？",
+          "romaji": "Saigo no nedan wa ikura desu ka?",
+          "meaning": "What's your final price? — signals you're serious."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "eBay", "priceMin": 150, "priceMax": 280, "fee": "13.25%", "tip": "Auction format with $1 start drives bidding wars for desirable references." },
+      { "name": "Chrono24", "priceMin": 200, "priceMax": 320, "fee": "6.5%", "tip": "Serious buyers here. List with full condition notes and original photos." },
+      { "name": "WatchUSeek", "priceMin": 160, "priceMax": 300, "fee": "0%", "tip": "Forum sales. Build reputation first. No fees but requires engagement." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "No duty on watches under $800 total de minimis." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "Watches are flagged more. Keep receipts." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "Declare multiple watches. GST applies over threshold." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "Watches are fine. Keep purchase receipt." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "Strict enforcement. Declare everything over limit." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "Standard personal goods rules apply." }
+    ]
+  },
+  {
+    "id": "nikka-whisky-from-the-barrel",
+    "slug": "nikka-whisky-from-the-barrel",
+    "title": "Nikka From The Barrel",
+    "category": "Spirits",
+    "subcategory": "Japanese Whisky",
+    "tier": "basic",
+    "buyPriceJPY": { "min": 2800, "max": 3500 },
+    "sellPriceUSD": { "min": 90, "max": 130 },
+    "roi": 18,
+    "roiTier": "high",
+    "tags": ["High Demand", "Compact", "Premium Brand"],
+    "cities": ["Tokyo", "Osaka", "Kyoto"],
+    "minBudgetJPY": 2800,
+    "sellPlatforms": ["eBay", "WhiskyAuction", "Facebook Groups"],
+    "description": "Nikka From The Barrel retails for ¥3,000 in Japan but sells for $90–130 in the US where it's scarce and inconsistently distributed. The 500ml bottle is compact and easy to pack — 2–3 fit in carry-on luggage under duty-free limits.",
+    "whatToLookFor": [
+      "Buy at liquor chains (Yamaya, Kakuyasu) for lowest retail price.",
+      "The 500ml square bottle packs efficiently — 3 fit in a standard carry-on with clothes.",
+      "Check the seal is intact and the liquid reaches the fill line.",
+      "Avoid bottles with damaged labels — collectors care about condition.",
+      "Batch number on the back adds collectibility for serious buyers.",
+      "Buy 3 maximum per trip to stay within duty-free spirit allowances."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Yamaya",
+          "description": "Discount liquor chain. Best prices, wide availability. Look for ¥2,800 shelf price.",
+          "icon": "🍶"
+        },
+        {
+          "name": "Don Quijote",
+          "description": "Find in the spirits section. Tourist-friendly, accepts cards, often has stock.",
+          "icon": "🏪"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Kakuyasu Shinjuku",
+          "description": "Largest spirits selection in Tokyo. Buy 3+ for best unit economics.",
+          "address": "3-14-20 Shinjuku, Shinjuku City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Liquor Mountain Kyoto",
+          "description": "Best prices outside Tokyo. Less foot traffic, consistent stock.",
+          "address": "568 Tominokojidori, Nakagyo Ward, Kyoto",
+          "icon": "📍"
+        },
+        {
+          "name": "Narita / Haneda Duty Free",
+          "description": "Final purchase point. Sometimes cheaper than retail. Buy your remaining allowance here.",
+          "address": "Narita International Airport, Terminal 1 & 2",
+          "icon": "✈️"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "これはまだありますか？",
+          "romaji": "Kore wa mada arimasu ka?",
+          "meaning": "Do you still have this in stock? — useful when shelf is empty."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "まとめ買いで割引はありますか？",
+          "romaji": "Matomegai de waribiki wa arimasu ka?",
+          "meaning": "Is there a discount for buying multiple? — works at independent shops."
+        },
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — polite negotiation opener."
+        },
+        {
+          "japanese": "在庫はどのくらいありますか？",
+          "romaji": "Zaiko wa dono kurai arimasu ka?",
+          "meaning": "How much stock do you have? — useful to gauge buying opportunity."
+        },
+        {
+          "japanese": "取り置きできますか？",
+          "romaji": "Torioki dekimasu ka?",
+          "meaning": "Can you hold this for me? — useful if you need to come back."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "eBay", "priceMin": 90, "priceMax": 120, "fee": "13.25%", "tip": "List as collectible spirits. Include batch number. Ship with bubble wrap inside a box." },
+      { "name": "WhiskyAuction", "priceMin": 100, "priceMax": 130, "fee": "15%", "tip": "Serious collectors here. Higher prices but slower. Good for aged lots." },
+      { "name": "Facebook Groups", "priceMin": 95, "priceMax": 115, "fee": "0%", "tip": "Japanese whisky collector groups. No fees. Meet locally for best prices." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "1 liter duty-free", "note": "Up to 3 liters allowed with duty. Declare on CBP form." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "1 liter over 22% ABV", "note": "FTBAR is 51.4% — declare anything over 1 liter." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "2.25 liters", "note": "Most generous allowance. Fine for 3–4 bottles." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "1.14 liters", "note": "Strict. Declare excess and pay provincial import fee." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "1 liter over 22% ABV", "note": "Duty applies above limit. Keep receipts." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "3 liters", "note": "Generous allowance. Good for 4–5 bottles." }
+    ]
+  },
+  {
+    "id": "olympus-om1-film-camera",
+    "slug": "olympus-om1-film-camera",
+    "title": "Olympus OM-1 Film Camera",
+    "category": "Electronics",
+    "subcategory": "Film Cameras",
+    "tier": "basic",
+    "buyPriceJPY": { "min": 3000, "max": 9000 },
+    "sellPriceUSD": { "min": 80, "max": 200 },
+    "roi": 14,
+    "roiTier": "high",
+    "tags": ["Collector Favorite", "Analog Revival", "High Demand"],
+    "cities": ["Tokyo", "Osaka", "Kyoto"],
+    "minBudgetJPY": 3000,
+    "sellPlatforms": ["eBay", "Etsy", "Facebook Groups"],
+    "description": "The analog photography revival has created massive Western demand for Japanese SLR cameras. Japan's Hard Off stores are full of OM-1s at ¥3,000–9,000 — the same cameras sell for $80–200 in the US and UK, often without working. Working examples command a significant premium.",
+    "whatToLookFor": [
+      "Test the shutter at all speeds — should fire cleanly without sticking.",
+      "Check the viewfinder for fungus — look through toward bright light.",
+      "Mirror should flip cleanly with no oil on blades.",
+      "Light seals are often degraded — factor in $15 DIY repair kit if needed.",
+      "OM-1 (non-MD) is more desirable than OM-1n for collectors.",
+      "Any included lens (Zuiko 50mm f/1.4) adds $40–60 to sale value."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Hard Off",
+          "description": "Camera section near electronics. Check the junk bins — broken cameras sell for ¥500 and often just need light seals.",
+          "icon": "📷"
+        },
+        {
+          "name": "Book Off / Hobby Off",
+          "description": "Less obvious but cameras show up in household sections. Underpriced by generalist staff.",
+          "icon": "📸"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Map Camera Shinjuku",
+          "description": "Japan's best used camera store. Higher prices but condition-graded and tested stock.",
+          "address": "1-12-5 Nishi-Shinjuku, Shinjuku City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Kitamura Camera Osaka",
+          "description": "Large chain with used section. Good volume, fair prices.",
+          "address": "1-4-3 Shinsaibashisuji, Chuo Ward, Osaka",
+          "icon": "📍"
+        },
+        {
+          "name": "Nakamura Camera Kyoto",
+          "description": "Small independent. Older stock, honest grading, occasionally excellent finds.",
+          "address": "Sanjo Teramachi, Nakagyo Ward, Kyoto",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "シャッターを試してもいいですか？",
+          "romaji": "Shattā wo tameshite mo ii desu ka?",
+          "meaning": "May I test the shutter? — essential before buying any film camera."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "動作確認できますか？",
+          "romaji": "Dōsa kakunin dekimasu ka?",
+          "meaning": "Can I verify it's working? — general function test request."
+        },
+        {
+          "japanese": "まとめて買いたいんですが、割引できますか？",
+          "romaji": "Matomete kaitain desu ga, waribiki dekimasu ka?",
+          "meaning": "I'd like to buy several — can you discount? — multi-unit negotiation."
+        },
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — polite standard opener."
+        },
+        {
+          "japanese": "ジャンク品はありますか？",
+          "romaji": "Janku-hin wa arimasu ka?",
+          "meaning": "Do you have any junk items? — unlocks the hidden cheap bins."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "eBay", "priceMin": 80, "priceMax": 180, "fee": "13.25%", "tip": "Ship in original box if possible. 'Tested and working' in title boosts visibility." },
+      { "name": "Etsy", "priceMin": 100, "priceMax": 200, "fee": "6.5%", "tip": "Film community shops here. Style photos matter. Slower but higher price." },
+      { "name": "Facebook Groups", "priceMin": 90, "priceMax": 160, "fee": "0%", "tip": "Film Photography group has 200k+ members. Local pickup eliminates shipping." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "Electronics fine under $800 de minimis." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "Electronics flagged at customs. Declare accurately." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "Personal electronics fine under threshold." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "No issues with personal electronics." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "Strict threshold. Multiple cameras will be scrutinized." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "Standard personal goods. Declare accurately." }
+    ]
+  },
+  {
+    "id": "sashiko-workwear-jacket",
+    "slug": "sashiko-workwear-jacket",
+    "title": "Sashiko Workwear Jacket",
+    "category": "Clothing",
+    "subcategory": "Workwear",
+    "tier": "premium",
+    "buyPriceJPY": { "min": 2000, "max": 6000 },
+    "sellPriceUSD": { "min": 120, "max": 280 },
+    "roi": 25,
+    "roiTier": "high",
+    "tags": ["Growing Market", "Artisan Appeal", "Unique to Japan"],
+    "cities": ["Kyoto", "Tokyo", "Osaka"],
+    "minBudgetJPY": 2000,
+    "sellPlatforms": ["Etsy", "Depop", "eBay"],
+    "description": "Traditional indigo-dyed sashiko workwear (noragi jackets, sodenashi vests, boro-repaired pieces) has exploded in Western fashion circles. Japan's flea markets and recycle shops hold enormous stock that Western buyers pay 10–25x for on Etsy.",
+    "whatToLookFor": [
+      "Indigo dye — look for natural fade, not chemical blue. Uneven fading is desirable.",
+      "Sashiko stitching — white running stitch reinforcement on indigo base is the key marker.",
+      "Boro repairs — visible mending patches add collectible value, not subtract.",
+      "Condition of collar and cuffs — heavy wear here is fine, holes elsewhere lower value.",
+      "Look for maker stamps or prefecture marks inside — adds provenance and story.",
+      "Heavier weight cotton (6–8oz) commands more than lightweight versions."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Antique Flea Markets",
+          "description": "Best source. Every major city hosts monthly markets. Early morning finds are best.",
+          "icon": "🏮"
+        },
+        {
+          "name": "Recycle Shops (Rural)",
+          "description": "Off-the-beaten-path Hard Off locations outside Tokyo often have undiscovered stock.",
+          "icon": "♻️"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Oedo Antique Market Tokyo",
+          "description": "Largest antique market in Japan. 1st and 3rd Sunday of each month, 9am–4pm.",
+          "address": "Tokyo International Forum, 3-5-1 Marunouchi, Chiyoda, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Toji Temple Market Kyoto",
+          "description": "Monthly market on the 21st. Best sashiko and boro selection in Japan.",
+          "address": "Toji Temple, 1 Toji-cho, Minami Ward, Kyoto",
+          "icon": "📍"
+        },
+        {
+          "name": "Kyoto Antique Center",
+          "description": "Permanent multi-dealer space. Open daily. Curated, higher prices but excellent condition.",
+          "address": "253 Nishikyogokucho, Nakagyo Ward, Kyoto",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — polite, never aggressive."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "これ、手縫いですか？",
+          "romaji": "Kore, tenuui desu ka?",
+          "meaning": "Is this hand-sewn? — shows knowledge, often gets better price."
+        },
+        {
+          "japanese": "まとめて買いたいんですが",
+          "romaji": "Kore, matomete kaitain desu ga",
+          "meaning": "I'd like to buy several of these — bulk discount opener."
+        },
+        {
+          "japanese": "古いものですか？",
+          "romaji": "Furui mono desu ka?",
+          "meaning": "Is this old/antique? — provenance question that builds rapport."
+        },
+        {
+          "japanese": "最後の値段はいくらですか？",
+          "romaji": "Saigo no nedan wa ikura desu ka?",
+          "meaning": "What's your final price? — signals you're serious."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "Etsy", "priceMin": 140, "priceMax": 280, "fee": "6.5%", "tip": "Storytelling sells here. Write about the village, the craft, the age. Photos on natural backgrounds." },
+      { "name": "Depop", "priceMin": 120, "priceMax": 220, "fee": "10%", "tip": "Younger buyers. Style it. Flat lay with other Japanese items performs well." },
+      { "name": "eBay", "priceMin": 110, "priceMax": 200, "fee": "13.25%", "tip": "Search 'sashiko jacket sold' to price. Auction works for rare boro pieces." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "Clothing fine under $800 de minimis." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "Antique textiles have special exemptions. Research if high value." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "Personal clothing fine. Multiple jackets may trigger inspection." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "No issues with vintage clothing." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "Low threshold. Spread purchases across travel party if possible." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "Standard goods rules. Declare accurately." }
+    ]
+  },
+  {
+    "id": "nike-japan-exclusive",
+    "slug": "nike-japan-exclusive",
+    "title": "Nike Japan Exclusive Colorways",
+    "category": "Clothing",
+    "subcategory": "Sneakers",
+    "tier": "premium",
+    "buyPriceJPY": { "min": 12000, "max": 22000 },
+    "sellPriceUSD": { "min": 180, "max": 400 },
+    "roi": 9,
+    "roiTier": "high",
+    "tags": ["Fast Seller", "Limited Release", "High Demand"],
+    "cities": ["Tokyo", "Osaka"],
+    "minBudgetJPY": 12000,
+    "sellPlatforms": ["StockX", "GOAT", "eBay"],
+    "description": "Nike releases Japan-exclusive colorways and collaborations that never reach Western markets. Specific models — primarily Dunk Low Japan exclusives, certain Air Max 1 colorways, and Sacai collabs — command 2–4x retail on StockX and GOAT.",
+    "whatToLookFor": [
+      "Check inside tongue for 'Japan Exclusive' tag or Japanese sizing label.",
+      "Deadstock (DS) condition only — worn pairs lose 50%+ of resale premium.",
+      "Original box required for StockX authentication. Don't let shops toss it.",
+      "Deadstock Dunk Low JP colorways sell fastest — check release calendars.",
+      "Sizes US 8–11 move fastest. Avoid extremes on either end.",
+      "Sacai collabs, Fragment collabs, Atmos collabs carry the highest premium."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Nike Shibuya / Harajuku Stores",
+          "description": "Official retail. Japan-exclusive releases on drop day. Arrive early or join queue app.",
+          "icon": "👟"
+        },
+        {
+          "name": "Atmos Japan",
+          "description": "Sneaker boutique with exclusive Nike partnerships. Multiple Tokyo/Osaka locations.",
+          "icon": "🏪"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Shibuya Scramble Nike Store",
+          "description": "Best selection for Japan exclusives. App registration required for limited drops.",
+          "address": "13-17 Udagawacho, Shibuya City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Atmos Harajuku",
+          "description": "Exclusive Nike collab partner. First access to many Japan exclusives.",
+          "address": "1-13-12 Jingumae, Shibuya City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Sneak Art Osaka Amemura",
+          "description": "Best deadstock resale selection in Osaka. Good prices on recent Japan exclusives.",
+          "address": "1-8-24 Nishishinsaibashi, Chuo Ward, Osaka",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "日本限定カラーはありますか？",
+          "romaji": "Nihon gentei karā wa arimasu ka?",
+          "meaning": "Do you have Japan exclusive colorways? — direct and effective in sneaker shops."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "デッドストックはありますか？",
+          "romaji": "Deddo sutokku wa arimasu ka?",
+          "meaning": "Do you have deadstock (new/unworn)? — key condition qualifier."
+        },
+        {
+          "japanese": "箱はついていますか？",
+          "romaji": "Hako wa tsuite imasu ka?",
+          "meaning": "Does it come with the box? — essential for StockX authentication."
+        },
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — works at resale shops, not official stores."
+        },
+        {
+          "japanese": "最後の値段はいくらですか？",
+          "romaji": "Saigo no nedan wa ikura desu ka?",
+          "meaning": "What's your final price? — close the deal."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "StockX", "priceMin": 180, "priceMax": 400, "fee": "9.5%", "tip": "Authentication required. Japan exclusive tag is a selling point in listing notes." },
+      { "name": "GOAT", "priceMin": 190, "priceMax": 380, "fee": "9.5%", "tip": "Similar to StockX. Good for authenticated sales. Photos matter here." },
+      { "name": "eBay", "priceMin": 160, "priceMax": 320, "fee": "13.25%", "tip": "No authentication but more reach. International buyers pay premium for JP exclusives." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "Personal footwear fine under $800 de minimis." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "Multiple pairs will be scrutinized. Declare accurately." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "3+ pairs may trigger inspection. Spread across travel party." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "No issues with personal footwear." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "High-value shoes will be flagged. Keep receipts." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "Standard personal goods rules." }
+    ]
+  },
+  {
+    "id": "vintage-yamaha-hifi-amp",
+    "slug": "vintage-yamaha-hifi-amp",
+    "title": "Vintage Yamaha HiFi Amp",
+    "category": "Electronics",
+    "subcategory": "Audio",
+    "tier": "premium",
+    "buyPriceJPY": { "min": 5000, "max": 20000 },
+    "sellPriceUSD": { "min": 200, "max": 600 },
+    "roi": 15,
+    "roiTier": "high",
+    "tags": ["Collector Favorite", "Audio Market", "Heavy — Ship Only"],
+    "cities": ["Tokyo", "Osaka"],
+    "minBudgetJPY": 5000,
+    "sellPlatforms": ["eBay", "AudiogoN", "Facebook Groups"],
+    "description": "Vintage Yamaha integrated amplifiers (CA-1010, CA-2010, A-960) from the 1970s–80s are legendary in audiophile circles. Japan has massive supply at fraction of Western prices — a CA-1010 that sells for $500+ on eBay can be found for ¥8,000–15,000 in Tokyo Hard Off stores.",
+    "whatToLookFor": [
+      "Power on test — all channels should output cleanly with no hum or crackle.",
+      "CA-1010, CA-2010, A-960, A-1000 are the most desirable models.",
+      "Scratched faceplate drops value 30%. Check carefully under good light.",
+      "Knobs should turn smoothly — scratchy pots need cleaning, factor in time.",
+      "Check speaker terminals — corrosion is common, usually cleanable.",
+      "Weight limits air travel — plan to ship separately via sea freight for best margins."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Hard Off Electronics",
+          "description": "Audio section has amplifiers weekly. Priced low by generalist staff who don't know audiophile market.",
+          "icon": "🔊"
+        },
+        {
+          "name": "Book Off Super Bazaar",
+          "description": "Larger format stores carry bulky electronics including audio gear.",
+          "icon": "📻"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Akihabara Audio Alley",
+          "description": "Specialist audio shops on Sotokanda side street. Knowledgeable but fair pricing.",
+          "address": "4-chome Sotokanda, Chiyoda City, Tokyo",
+          "icon": "📍"
+        },
+        {
+          "name": "Namba Hard Off Osaka",
+          "description": "Largest Hard Off in Osaka. Best audio section outside Tokyo.",
+          "address": "5-1-60 Nanbanaka, Naniwa Ward, Osaka",
+          "icon": "📍"
+        },
+        {
+          "name": "Machida Hard Off (Tokyo outskirts)",
+          "description": "Less tourist traffic = lower prices. 45 min from Shinjuku, worth the trip.",
+          "address": "1-1-2 Norimonecho, Machida City, Tokyo",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "電源を入れてもいいですか？",
+          "romaji": "Dengen wo irete mo ii desu ka?",
+          "meaning": "May I power it on? — essential for testing amplifiers."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "音が出るか確認できますか？",
+          "romaji": "Oto ga deru ka kakunin dekimasu ka?",
+          "meaning": "Can I verify it produces sound? — full function test request."
+        },
+        {
+          "japanese": "修理の跡はありますか？",
+          "romaji": "Shūri no ato wa arimasu ka?",
+          "meaning": "Are there signs of previous repair? — crucial for vintage audio."
+        },
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — standard negotiation."
+        },
+        {
+          "japanese": "国際発送の手配はできますか？",
+          "romaji": "Kokusai hassō no tehai wa dekimasu ka?",
+          "meaning": "Can you arrange international shipping? — some shops offer this."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "eBay", "priceMin": 200, "priceMax": 550, "fee": "13.25%", "tip": "Domestic US shipping only for easier logistics. Free shipping builds buyer confidence." },
+      { "name": "AudiogoN", "priceMin": 250, "priceMax": 600, "fee": "5%", "tip": "Audiophile community. Detailed condition notes essential. Photos of internals help." },
+      { "name": "Facebook Groups", "priceMin": 220, "priceMax": 500, "fee": "0%", "tip": "Vintage Audio group, Hi-Fi For Sale group. Local pickup eliminates shipping entirely." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "No restrictions", "note": "Ship sea freight separately. Not practical for carry-on." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "£390 limit", "note": "High value electronics flagged. Must declare and pay VAT over limit." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "AUD $900 limit", "note": "GST on imports over threshold. Sea freight is cost-effective." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "CAD $800 limit", "note": "Duty applies over threshold. Calculate before buying high-value units." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "€430 limit", "note": "Low threshold. Sea freight + import VAT cuts into margin significantly." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "NZD $700 limit", "note": "GST applies. Factor into profit calculation." }
+    ]
+  },
+  {
+    "id": "higonokami-pocket-knife",
+    "slug": "higonokami-pocket-knife",
+    "title": "Higonokami Pocket Knife",
+    "category": "Tools",
+    "subcategory": "Cutlery",
+    "tier": "premium",
+    "buyPriceJPY": { "min": 800, "max": 3000 },
+    "sellPriceUSD": { "min": 35, "max": 90 },
+    "roi": 20,
+    "roiTier": "high",
+    "tags": ["Lightweight", "Easy to Pack", "Niche Collector Market"],
+    "cities": ["Kyoto", "Osaka", "Tokyo"],
+    "minBudgetJPY": 800,
+    "sellPlatforms": ["Etsy", "eBay", "Facebook Groups"],
+    "description": "Traditional Japanese folding knives made by blacksmiths in Miki City, Hyogo Prefecture. Western EDC (everyday carry) and knife collector communities pay $35–90 for knives that cost ¥800–3,000 in Japanese hardware and craft stores. The carbon steel version commands the highest premium.",
+    "whatToLookFor": [
+      "Nagao Kanekoma brand is most desirable — look for 兼駒 stamp on blade.",
+      "Blue/white/yellow packaging indicates authentic Miki City production.",
+      "Carbon steel (hagane) versions command 40% more than stainless.",
+      "Blade should open and close smoothly with satisfying click.",
+      "Larger sizes (No. 2, 3) sell better than smaller sizes in Western market.",
+      "Buy multiples — pack flat easily and customs rarely flags craft tools."
+    ],
+    "shops": {
+      "basic": [
+        {
+          "name": "Tokyu Hands / Loft",
+          "description": "Best retail source. Craft and tool sections. Wide selection at retail price.",
+          "icon": "🔪"
+        },
+        {
+          "name": "Traditional Hardware Shops",
+          "description": "Older neighborhoods in Kyoto and Osaka have standalone tool shops with authentic stock.",
+          "icon": "🛠️"
+        }
+      ],
+      "premium": [
+        {
+          "name": "Aritsugu Knife Shop Kyoto",
+          "description": "Famous knife shop in Nishiki Market. Also stocks traditional Higonokami and specialty knives.",
+          "address": "219 Kannonjicho, Nakagyo Ward, Kyoto",
+          "icon": "📍"
+        },
+        {
+          "name": "Nishiki Market Hardware Lane",
+          "description": "3 traditional tool dealers within 100m. Best prices in Kyoto for authentic pieces.",
+          "address": "Nishiki Market, Nakagyo Ward, Kyoto",
+          "icon": "📍"
+        },
+        {
+          "name": "Tokyu Hands Shibuya B2",
+          "description": "Largest selection in Tokyo. Full Nagao Kanekoma range including limited carbon steel sizes.",
+          "address": "12-18 Udagawacho, Shibuya City, Tokyo",
+          "icon": "📍"
+        }
+      ]
+    },
+    "phrases": {
+      "basic": [
+        {
+          "japanese": "炭素鋼のナイフはありますか？",
+          "romaji": "Tanso kō no naifu wa arimasu ka?",
+          "meaning": "Do you have carbon steel knives? — unlocks the premium stock."
+        }
+      ],
+      "premium": [
+        {
+          "japanese": "まとめて買いたいんですが",
+          "romaji": "Kore, matomete kaitain desu ga",
+          "meaning": "I'd like to buy several — works well for knife shops."
+        },
+        {
+          "japanese": "本物の肥後守ですか？",
+          "romaji": "Honmono no Higonokami desu ka?",
+          "meaning": "Is this an authentic Higonokami? — shows knowledge, builds respect."
+        },
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Could you make it a little cheaper? — especially effective buying 5+."
+        },
+        {
+          "japanese": "他にサイズはありますか？",
+          "romaji": "Hoka ni saizu wa arimasu ka?",
+          "meaning": "Do you have other sizes? — find the most sellable size range."
+        }
+      ]
+    },
+    "platforms": [
+      { "name": "Etsy", "priceMin": 40, "priceMax": 90, "fee": "6.5%", "tip": "Craft and handmade buyers here. Emphasize Japanese blacksmith tradition in listing." },
+      { "name": "eBay", "priceMin": 35, "priceMax": 75, "fee": "13.25%", "tip": "Good volume. List as 'Japanese folding knife EDC' for best search visibility." },
+      { "name": "Facebook Groups", "priceMin": 38, "priceMax": 80, "fee": "0%", "tip": "EDC and Knife Collector groups. Buyers are knowledgeable — be accurate on specs." }
+    ],
+    "customs": [
+      { "country": "United States", "flag": "🇺🇸", "limit": "Blade under 2.5 inches OK", "note": "Higonokami blades are ~2.5 inches. Check state laws on folders." },
+      { "country": "United Kingdom", "flag": "🇬🇧", "limit": "Under 3 inches non-locking only", "note": "Higonokami is non-locking — compliant. Do not carry in public." },
+      { "country": "Australia", "flag": "🇦🇺", "limit": "No restrictions on import", "note": "State laws vary for carry. Import itself is fine." },
+      { "country": "Canada", "flag": "🇨🇦", "limit": "Non-prohibited knives OK", "note": "Folding knives fine as long as not automatic or gravity-assisted." },
+      { "country": "Germany / EU", "flag": "🇩🇪", "limit": "Strict knife laws", "note": "One-hand opening may be restricted. Check country-specific rules before import." },
+      { "country": "New Zealand", "flag": "🇳🇿", "limit": "No restrictions on import", "note": "Carry rules apply but import is fine." }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F7F4EF;
+  --surface: #FFFFFF;
+  --black: #111111;
+  --red: #D92B3A;
+  --red-light: #FDF0F1;
+  --gold: #B8860B;
+  --gold-light: #FDF8EE;
+  --green: #1A7A4A;
+  --green-light: #EDF7F2;
+  --muted: #888480;
+  --border: #E8E4DE;
+  --text: #2A2825;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-dm-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
