@@ -34,7 +34,9 @@ export async function POST(req: NextRequest) {
   );
 
   if (!res.ok) {
-    return NextResponse.json({ error: "Vision API error" }, { status: 502 });
+    const errBody = await res.text();
+    console.error("Vision API error", res.status, errBody);
+    return NextResponse.json({ error: "Vision API error", detail: errBody }, { status: 502 });
   }
 
   const data = await res.json();
