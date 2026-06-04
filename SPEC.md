@@ -1,8 +1,14 @@
 # JapanFlip — Product Spec
 
-**Purpose:** A self-serve Japan resale price lookup tool. Users standing in a Japanese recycle shop type what they found and the price they see on the tag. JapanFlip returns a BUY IT / SKIP IT / MAYBE verdict with a full profit breakdown.
+**Last updated:** 2026-06-04
+
+**Purpose:** A self-serve Japan resale price lookup tool. A user standing in a Japanese recycle shop types what they found and the price on the tag. JapanFlip returns a BUY IT / SKIP IT / MAYBE verdict with a full profit breakdown, condition-adjusted pricing, shipping estimates, and inline customs warnings.
 
 **Business model:** One-time payment via Gumroad. No subscription. Three tiers.
+
+**Deployed at:** https://japanflip.vercel.app
+
+**Repo:** https://github.com/stephendotjp/japanflip (public, GitHub → Vercel auto-deploy)
 
 ---
 
@@ -10,13 +16,38 @@
 
 | Tier | Price | Access |
 |------|-------|--------|
-| Free | $0 | 3 lookups per day, verdict only (no breakdown) |
-| Basic | $9 one-time | Unlimited lookups, full profit breakdown, platform comparison, customs guide |
-| Premium | $24 one-time | Everything in Basic + saved history, live market data gate, phrase cards |
+| Free | $0 | 3 lookups/day, verdict + market data only (no profit breakdown) |
+| Basic | $9 one-time | Unlimited lookups, full profit breakdown, platform comparison, customs guide, lookup history (last 20 items, this device), trip summary |
+| Premium | $24 one-time | Everything in Basic + live data gate, extended history (50 items), phrase cards, CSV export |
 
-**Upgrade flow:** User clicks CTA → Gumroad payment page → Gumroad redirects to `/app/upgrade?email=...&tier=basic|premium` → app reads params, calls `setTier()`, persists to localStorage.
+**Upgrade flow:** User clicks CTA → Gumroad → Gumroad redirects to `/app/upgrade?email=...&tier=basic|premium` → app reads params, calls `setTier()`, persists to localStorage.
 
-**Auth reality:** Tier is stored in `localStorage` key `japanflip_user`. There is no server-side auth, no account system, no email verification. Gumroad redirect trusts URL params. This is intentional for the current stage.
+**Auth reality:** Tier is stored in `localStorage` key `japanflip_user`. No server-side auth, no account system, no email verification. Gumroad redirect trusts URL params. Intentional for current stage — no backend yet.
+
+---
+
+## User State (localStorage)
+
+Key: `japanflip_user`
+
+```ts
+{
+  tier: "free" | "basic" | "premium"
+  email: string | null
+  lookupCount: number        // resets daily
+  lookupDate: string         // ISO date string, e.g. "2026-06-04"
+  savedLookups: SavedLookup[] // capped at 20 (Basic) or 50 (Premium)
+  homeCountry: string        // default "US", user-selectable in CustomsInlineAlert
+  tripItems: TripItem[]      // today's "I'm buying this" items
+  tripDate: string           // ISO date, trip resets at midnight
+}
+```
+
+**Computed values in context:**
+- `isBasic` = `tier === "basic" || tier === "premium"`
+- `isPremium` = `tier === "premium"`
+- `todayCount` = `lookupCount` if `lookupDate === today`, else `0`
+- `currentTripItems` = `tripItems` if `tripDate === today`, else `[]`
 
 ---
 
@@ -27,234 +58,222 @@
 **Purpose:** Marketing and conversion. No auth required.
 
 **Sections (in order):**
-1. **Nav bar** — JapanFlip logo, "Sign In" link (→ `/app`), "Get Access — $9" CTA
-2. **Hero** — Headline copy, sub-copy, two CTAs (Get Basic / See How It Works), live HeroDemo island on the right
+1. **Nav** — Logo, "Sign In" (→ `/app`), "Get Access — $9" CTA (links to `NEXT_PUBLIC_GUMROAD_BASIC_URL`)
+2. **Hero** — Headline copy, two CTAs, interactive HeroDemo island (right column)
 3. **Ticker** — Scrolling marquee of recent sale examples (static copy)
 4. **How It Works** — Three steps: Find something / Check JapanFlip / Buy smart
-5. **Pricing** — Two cards: Basic $9 and Premium $24 with feature lists, CTA buttons linking to Gumroad
-6. **Social proof** — Testimonial cards (static copy)
-7. **CTA band** — Dark full-width section, "Stop guessing. Start flipping." with Try Free and Get Basic buttons
-8. **Footer** — Logo, disclaimer, nav links (How It Works, Pricing, Category Guides, Contact email)
+5. **Run the numbers** — `LandingCalculator` widget: JP price + US sell price → rough profit estimate. Uses live exchange rate. No auth required.
+6. **Pricing** — Two cards: Basic $9 and Premium $24, Gumroad CTA buttons
+7. **Social proof** — Static testimonial cards
+8. **CTA band** — Dark section, "Stop guessing. Start flipping."
+9. **Footer** — Logo, disclaimer, nav links
 
-**HeroDemo component:** Client island that simulates a lookup — animates through a fake search result to demonstrate the verdict card and profit number without requiring auth.
+**HeroDemo component:** Client island. User can change item name and price; ROI and verdict recalculate instantly using the base Seiko ROI as reference. Fetches live exchange rate from `/api/exchange-rate` on mount and displays it in the demo header (`¥{rate} = $1`). Calculations remain client-side for instant feedback.
 
-**Environment variable:** `NEXT_PUBLIC_GUMROAD_BASIC_URL` — if not set, CTA links to `/app/upgrade`.
+**LandingCalculator component:** Standalone client widget. Inputs: JP buy price (¥), expected US sell price ($). Output: rough net profit (before fees/shipping) and ROI. Uses live exchange rate. Clearly labelled as rough estimate — full breakdown requires the tool.
+
+**Env vars used:** `NEXT_PUBLIC_GUMROAD_BASIC_URL`, `NEXT_PUBLIC_GUMROAD_PREMIUM_URL`
 
 ---
 
 ### `/app` — Price Lookup (main tool)
 
-**Purpose:** The core product. User types an item and the JPY price they see in the shop; app returns a verdict and breakdown.
+**Purpose:** Core product. User types an item name, selects a category, enters the JPY price tag, picks a condition grade and item size. App returns a verdict and full profit breakdown.
 
-**Access:** Free (rate-limited), Basic, Premium.
+**Access:** Free (3/day), Basic, Premium.
 
-**Layout:** Sidebar (desktop) + mobile tab bar + TopBar with live exchange rate badge.
-
-**Exchange rate badge:** Shows `¥{rate} = $1 · Live rate`. Rate is fetched from `/api/exchange-rate` on mount. Displays `¥...` while loading.
-
-**Free tier usage bar:** Shown when `todayCount > 0 && todayCount < 3`. Displays remaining lookups and link to upgrade.
-
-**At-limit gate:** When free user hits 3 lookups/day, shows a dashed-border block with upgrade CTA. Search is disabled.
-
-**Components on this page:**
+**Layout:** Sidebar (desktop 220px) + mobile tab bar + TopBar with live rate badge.
 
 #### SearchCard
-- Item name text input
-- Category selector dropdown
-- JPY price number input
-- Submit button ("Check Flip Value")
-- Disabled state when at limit or loading
+
+Inputs:
+- Item name (text)
+- Category selector: Watches / Clothing / Electronics / Spirits / Sneakers / Tools & Knives / Other
+- JP price (¥)
+- **Condition selector:** S / A / B / C button group (default: A). Affects the estimated US sell price via multipliers:
+  - S = ×1.10 (mint condition premium)
+  - A = ×1.00 (baseline)
+  - B = ×0.80
+  - C = ×0.60
+  - Info tooltip explains the JP grading system.
+- **Size / Shipping selector:** Small / Medium / Large / Oversized button group. Auto-sets on category change:
+  - Watches → Small ($12), Clothing → Medium ($20), Electronics → Small, Spirits → Small, Sneakers → Medium, Tools & Knives → Small
+  - Shipping rates: Small $12 / Medium $20 / Large $45 / Oversized $80
+  - Oversized shows a gold warning: "Large items may not be cost-effective to ship. Verify carrier rates before buying."
+
+Both condition and size are passed to `/api/lookup` and affect all profit calculations.
 
 #### QuickChips
-- Row of pre-set example searches (e.g. "Seiko SKX007", "Olympus mju-II", "Levi's 501")
-- Clicking a chip runs a search immediately
-- Disabled when at limit or loading
 
-#### Loading state
-- Two skeleton blocks animate while API call is in flight
-- Status text: "Checking JP and US markets..."
-
-#### No-result state
-- Shown when `/api/lookup` returns null (item not in database)
-- Suggests three example searches as clickable pills
+Pre-set example searches. Each chip has a hardcoded size default matching its category. Condition defaults to A. Clicking runs the full search immediately.
 
 #### VerdictCard
-- Large display block with colored background: green (BUY IT), red (SKIP IT), gold (MAYBE)
-- Shows item name, verdict label, ROI multiplier, and `verdictReason` text
-- Shown to all tiers
+
+- Verdict label (BUY IT / SKIP IT / MAYBE) in large display type, color-coded
+- Verdict reason text
+- Right panel: You Pay, Condition grade, Avg Sell (condition-adjusted), After Fees profit, ROI
+- **"+ Add to trip" button:** Shown for BUY and MAYBE verdicts, Basic+ users only. Adds item to today's trip running total. Button changes to "✓ Added to trip" after clicking (per-session, resets on new search).
 
 #### MarketData (×2)
-- One card for Japan market, one for US market
-- Shows source platforms, average sold price, price range (min–max)
-- Recent sales list: title, source, days ago, price
-- Shown to all tiers
+
+JP market and US market cards. Shows source, avg sold price (condition-adjusted), price range, recent sales list. Shown to all tiers.
 
 #### ProfitBreakdown (Basic+)
-- Buy price in JPY and USD
-- Average US sell price
-- Platform fee, payment fee, shipping deducted line by line
-- Net profit in large display type
-- Gated behind Basic — free users see a `PremiumGate` component instead
+
+- Line-by-line breakdown: JP buy price, avg US sell price (condition-adjusted), platform fee, shipping (size-based), payment fee, net profit
+- **CustomsInlineAlert** at the bottom (see below)
 
 #### PlatformCards (Basic+)
-- Card per selling platform (eBay, Chrono24, etc.)
-- Shows fee %, fee amount, shipping, net profit
-- Highlights the recommended platform
-- Gated behind Basic
+
+Per-platform cards with fee %, net profit. Highlights recommended platform. All figures are condition- and size-adjusted.
 
 #### CustomsStrip (Basic+)
-- Row of country flags with duty-free status: ok / warn / danger
-- Countries: US, UK, AU, CA, EU
-- Gated behind Basic
+
+Customs status for 5 countries using the user's item value. Color-coded ok/warn/danger.
+
+#### CustomsInlineAlert (Basic+, inside ProfitBreakdown)
+
+Inline customs threshold check using `homeCountry` from UserContext. Three states:
+- **Under threshold** — green chip "Under your duty-free limit ✓"
+- **Near threshold (within 20%)** — gold chip warning
+- **Over threshold** — red chip "Exceeds duty-free limit — you will need to declare this item"
+
+Includes a country selector dropdown that updates `homeCountry` in UserContext (persisted to localStorage). Links to `/app/customs` for full details.
+
+Supported countries: US ($800), UK (~£390), AU (~AUD $900), CA (~CAD $800), EU (~€430), NZ, SG.
+
+#### TripSummary (Basic+)
+
+Shown below results on the main lookup page. Only visible if the user has added items today.
+- "Today's Trip · {date}" heading
+- List of added items with name, JP price, platform, net profit
+- Running total: "Estimated total profit: $XXX"
+- "Clear" button resets the trip
+- Persists to localStorage; resets at midnight via `tripDate` comparison
+
+#### LookupHistory (Basic+)
+
+Shown at bottom of page for Basic+ users. Shows last 5 lookups (preview). Full list at `/app/history`.
 
 #### PremiumGate
-- Two variants:
-  - Free → Basic gate: shown instead of full breakdown
-  - Basic → Premium gate: shown below breakdown for live data feature
-- Both link to `/app/upgrade`
 
-#### LookupHistory (Premium)
-- Shown at bottom of page when `isPremium` or `savedLookups.length > 0`
-- Lists recent lookups with item name, category, JP price, verdict badge, ROI
-- Lookups are saved to localStorage via `saveLookup()` in UserContext
+Two variants:
+- Free → Basic: shown instead of profit breakdown
+- Basic → Premium: shown below breakdown as a soft upsell for live data
 
 ---
 
 ### `/app/calculator` — Profit Calculator
 
-**Purpose:** Manual what-if modelling. User inputs any JP buy price and expected US sell price and gets a full profit projection.
+**Purpose:** Manual what-if modelling. Works for any item, not just catalog items.
 
 **Access:** All tiers (no gate).
 
-**Inputs:**
-- JP Buy Price (¥)
-- Expected US Sell Price ($)
-- Platform selector: eBay, Depop, Etsy, Chrono24, StockX
-- Shipping Cost ($) — defaults to $12
-- Selling Country selector: US, UK, AU, CA, EU (affects customs threshold check)
+**Inputs:** JP Buy Price (¥), Expected US Sell Price ($), Platform, Shipping ($), Selling Country
 
-**Outputs (shown when both prices entered):**
-- Net Profit — large display number, green if positive, red if negative
-- ROI multiplier
-- Breakdown table: JP buy price (¥ and ~$), US sell price, platform fee (%), payment fee, shipping, net profit total
-- Break-even Buy — maximum JPY price the user should pay to not lose money
-- Customs status chip — green "Under limit" or gold "Declare" based on selected country threshold
+**Exchange rate:** Fetched live from `/api/exchange-rate` on mount. Inputs are disabled while loading. Falls back to 154.2 silently if fetch fails. Live rate shown next to section label.
 
-**Current issue:** Exchange rate is hardcoded as `const EXCHANGE_RATE = 154.2` in the page file. Should use the live rate from `/api/exchange-rate`.
+**Outputs:** Net Profit (large, color-coded), ROI, full breakdown table, Break-even Buy Price, Customs status chip.
 
 ---
 
 ### `/app/customs` — Customs Checker
 
-**Purpose:** Standalone customs rules reference. User selects destination country and item type to get specific rules.
+**Purpose:** Standalone customs reference. Select destination country + item type.
 
 **Access:** All tiers (no gate).
 
-**Countries:** US, UK, AU, CA, EU (Germany), NZ, Singapore — 7 total.
+**Countries:** US, UK, AU, CA, EU, NZ, Singapore (7 total).
 
-**Item types:** General Goods, Alcohol / Spirits, Knives & Tools, Electronics — 4 total.
-
-**Output:**
-- Status card with color-coded status (ok / warn / danger), status icon, limit, and detailed note
-- General duty-free limit card for the selected country
-
-**Status colors:**
-- ok → green
-- warn → gold
-- danger → red
+**Item types:** General Goods, Alcohol / Spirits, Knives & Tools, Electronics (4 total).
 
 ---
 
 ### `/app/phrases` — Phrase Cards
 
-**Purpose:** Japanese negotiation phrases for use in recycle shops and flea markets.
+**Purpose:** Japanese phrases for recycle shop interactions.
 
 **Access:** 1 phrase per section free; all phrases behind Premium gate.
 
-**Data source:** `data/phrases.json` — sections array, each section has `id`, `title`, `phrases[]`.
+**Data source:** `data/phrases.json`
 
-**Each phrase card shows:**
-- Japanese characters (large display font)
-- Romaji (pronunciation)
-- English meaning
-- Usage note (context for when to use it)
+**Sections (8):**
+1. Asking About Items (4 phrases)
+2. Asking About Condition & Authenticity (4 phrases)
+3. Opening Negotiation (3 phrases)
+4. Asking About Condition (3 phrases)
+5. Bulk Buying (2 phrases)
+6. Unpriced Items (2 phrases)
+7. Purchasing (4 phrases)
+8. Leaving / Closing (4 phrases)
 
-**Free preview:** 1 phrase per section is shown; remaining phrases in each section are rendered but wrapped in `LockOverlay` with blur.
+Each phrase card: Japanese characters, romaji, English meaning, usage note.
 
-**Upgrade CTA:** Banner at top for non-premium users showing total phrase count and link to upgrade. Unlock block at bottom.
+**Free preview:** 1 phrase per section shown; rest blurred with `LockOverlay`.
 
 ---
 
 ### `/app/history` — Saved Lookups
 
-**Purpose:** Full history of the user's past lookups with verdict and ROI.
+**Purpose:** Full history of past lookups.
 
-**Access:** Premium only. Non-premium users see a full-page lock gate.
+**Access:** Basic+ (was Premium-only previously). Non-Basic users see a gate.
 
-**Display:** List of saved lookups ordered newest first. Each row shows:
-- Item name
-- Category, JP price, time ago (e.g. "3h ago", "2d ago")
-- Verdict badge (BUY / SKIP / MAYBE)
-- ROI multiplier
+**Gate message:** "Lookup history is available on Basic and Premium plans. Last 20 lookups saved on this device."
 
-**Storage:** Persisted in localStorage via UserContext. Max 50 entries (oldest dropped).
+**For Basic users:** Shows cap reminder "Showing last 20 lookups. Upgrade to Premium for 50 →"
 
-**Empty state:** Prompt with link back to Price Lookup.
+**For Premium users:** Shows "Export CSV ↓" button at top right. CSV includes: Date, Item, Category, JP Price (¥), JP Price ($), Verdict, ROI. Filename: `japanflip-history-YYYY-MM-DD.csv`. Browser-native download, no library.
 
----
+**Display:** Newest first. Item name, category, JP price, time ago, verdict badge, ROI.
 
-### `/app/guides` — Category Guides
-
-**Purpose:** Grid of resale categories with a guide for each.
-
-**Access:** All tiers. One category (Retro Gaming) is marked with a "PRO" badge — currently no gate enforced in the route.
-
-**Categories (8):**
-| Category | Emoji | Difficulty |
-|----------|-------|------------|
-| Clothing & Denim | 👖 | Easy |
-| Watches | ⌚ | Medium |
-| Film Cameras | 📷 | Medium |
-| Spirits & Whisky | 🥃 | Easy |
-| Sneakers | 👟 | Hard |
-| Vintage Audio | 🔊 | Medium |
-| Knives & Tools | 🔪 | Medium |
-| Retro Gaming | 🎮 | Hard (PRO badge) |
+**Storage:** localStorage via UserContext. Cap: Basic = 20, Premium = 50 (enforced in `saveLookup()`). Saving triggered for `isBasic` users (not just Premium).
 
 ---
 
-### `/app/guides/[category]` — Guide Detail Page
+### `/app/guides` — Category Guides Grid
 
-**Purpose:** Deep-dive guide for a specific category.
+**Purpose:** Grid of 8 resale categories.
 
-**Sections per guide:**
-- Summary paragraph
-- Find difficulty / Sell difficulty chips
-- What to Look For (bulleted list)
-- What to Avoid (bulleted list)
-- Where to Find (bulleted list — specific shops/regions)
-- Typical Price Ranges (tiered: Entry / Sweet spot / Premium in JPY)
-- Best Platforms to Sell (name + contextual note)
+**Access:** All tiers. Retro Gaming shows a PRO badge.
 
-**All 8 categories have complete guide content** hardcoded inline in the page file.
+**Categories:** Watches, Clothing & Denim, Film Cameras, Spirits & Whisky, Sneakers, Vintage Audio, Knives & Tools, Retro Gaming (PRO)
 
-**Back link:** "← Guides" navigates back to `/app/guides`.
+---
+
+### `/app/guides/[category]` — Guide Detail
+
+**Purpose:** Deep-dive guide for one category.
+
+**Access:** All categories open to all tiers except `gaming` → Premium only. Non-Premium users see a `PremiumGate` component replacing the guide content.
+
+**Guide page is a client component** (uses `useUser()` for the Premium gate check).
+
+**Content per guide:** Summary, Find/Sell difficulty chips, What to Look For, What to Avoid, Where to Find, Typical Price Ranges (JPY), Best Platforms to Sell.
+
+**All 8 category guides** have complete content hardcoded inline in `app/app/guides/[category]/page.tsx`.
 
 ---
 
 ### `/app/upgrade` — Upgrade / Payment Handler
 
-**Purpose:** Shows pricing and handles Gumroad redirect to activate tier.
+**Purpose:** Pricing display and Gumroad redirect handler.
 
-**Gumroad redirect handler:** On mount, reads `?email=...&tier=basic|premium` from URL params. If valid, calls `setTier()` and shows a confirmation screen ("You're in 🎉").
+**Gumroad redirect:** Reads `?email=...&tier=basic|premium` on mount, activates tier, shows confirmation screen.
 
-**Pricing cards:**
-- Basic: $9 — 5 features listed, "Get Basic — $9" button links to `NEXT_PUBLIC_GUMROAD_BASIC_URL`
-- Premium: $24 — 5 features listed (includes Basic), "Get Premium — $24" button links to `NEXT_PUBLIC_GUMROAD_PREMIUM_URL`
+**Basic features listed:**
+- Unlimited lookups
+- Full profit breakdown
+- Platform comparison (eBay, Depop, Etsy, StockX)
+- Customs guide by country
+- 30-day sold data
+- Lookup history — last 20 items (this device)
 
-**Current tier awareness:** Cards update based on user's existing tier (highlights active plan, shows "Active ✓", hides irrelevant CTAs).
-
-**Contact fallback:** "If something goes wrong, email your receipt to shaolinmonkuk@gmail.com."
+**Premium features listed:**
+- Everything in Basic
+- Live data — updated daily
+- Extended history — last 50 lookups
+- Japanese phrase cards per category
 
 ---
 
@@ -262,97 +281,128 @@
 
 ### `GET /api/exchange-rate`
 - Fetches live JPY/USD rate from `api.frankfurter.app/latest?from=USD&to=JPY`
-- Cached via Next.js `next: { revalidate: 3600 }` (1 hour)
+- Cached via Next.js `revalidate: 3600` (1 hour)
 - Falls back to `154.2` if Frankfurter is unreachable
 - Returns: `{ rate: number }`
 
 ### `POST /api/lookup`
-- Body: `{ item: string, category: string, priceJPY: number }`
-- Fetches live exchange rate from Frankfurter (same cache)
-- Currently: runs `getMockData()` against 5 hardcoded items
-- Returns: `LookupResult | null` (null = item not found)
-- **Pending:** Replace `getMockData` with eBay Browse API (sold listings) once developer account is approved. The route is structured so this is a one-function swap.
+- Body: `{ item, category, priceJPY, condition?, size? }`
+- `condition` defaults to `"A"`, `size` defaults to `"Small"`
+- Fetches live exchange rate, runs `getMockData()` with condition multiplier and size-based shipping
+- Returns: `LookupResult | null`
+- **TODO:** Replace `getMockData` with eBay Browse API once developer account is approved. Route is structured for a one-function swap.
 
 ---
 
-## Data Architecture
+## Data & Logic
 
-### Current lookup data (mock phase)
-- `data/lookups/*.json` — 5 files: seiko-skx007, vintage-levis-501, olympus-mju-ii, nikka-from-the-barrel, yamaha-receiver
-- Each file is a full `LookupResult` object with hardcoded market data and recent sales
-- `lib/mockData.ts` does keyword fuzzy matching (e.g. "seiko" or "watch" → seiko-skx007) and adjusts ROI proportionally based on user's entered price vs the base price in the file
-- Anything that doesn't fuzzy-match → null → "No data on this yet"
+### Lookup catalog (mock phase)
 
-### Planned lookup data (eBay phase)
-- `/api/lookup` will call eBay Browse API `search` endpoint with `filter=buyingOptions:{FIXED_PRICE},soldItems:true`
-- Average the top sold listings to get `avgSoldPrice` and recent sales
-- Build `LookupResult` from real data
-- JP market data: still pending a reliable source (Mercari JP has no public API; Yahoo Japan Shopping API is an option)
+5 items in `data/lookups/*.json`: seiko-skx007, vintage-levis-501, olympus-mju-ii, nikka-from-the-barrel, yamaha-receiver.
 
-### User state
-- Persisted to `localStorage` key `japanflip_user`
-- Schema: `{ tier, email, lookupCount, lookupDate, savedLookups[] }`
-- `lookupDate` is today's ISO date string — used to reset count each day
-- `savedLookups` capped at 50 entries
+`lib/mockData.ts` — `getMockData(query, category, priceJPY, rate, condition, size)`:
+1. Fuzzy keyword match to find the closest catalog item
+2. Apply condition multiplier to base avg sell price → `newAvgSell`
+3. Look up shipping cost from `sizeShipping` map
+4. Recalculate all platform figures (feeAmount, paymentFee, netProfit) using `newAvgSell` and size-based shipping
+5. Adjust ROI: `(baseBuyJPY / priceJPY) * base.roi * conditionMultiplier`
+6. Return full `LookupResult` with adjusted figures
 
-### Phrase data
-- `data/phrases.json` — sections with phrase cards
+Anything that doesn't fuzzy-match → `null` → "No data on this yet".
 
-### Guide data
-- Guide content is hardcoded inline in `app/app/guides/[category]/page.tsx`
-- `data/guides/watches.json` exists but is not used by any route (orphan file)
+### Types (`lib/types.ts`)
 
----
+Key types: `Tier`, `Verdict`, `RoiTier`, `SavedLookup`, `TripItem`, `Platform`, `LookupResult`, `MarketData`, `CustomsEntry`, `Sale`.
 
-## Layout & Navigation
+### Verdict logic (`lib/utils.ts`)
 
-### Sidebar (`components/layout/Sidebar.tsx`)
-- Fixed 220px black sidebar on desktop
-- Nav links: Price Lookup, Calculator, Customs, Guides, Phrase Cards, History, Upgrade
-- Shows user tier badge
-- Hidden on mobile
-
-### Mobile Tab Bar (`components/layout/MobileTabBar.tsx`)
-- Bottom tab bar on mobile
-- Core nav items
-
-### TopBar (`components/layout/TopBar.tsx`)
-- Per-page header: title (large display font), optional subtitle, optional badge slot (used for live rate on Lookup page)
+- ROI ≥ 7 → BUY (green)
+- ROI 3–7 → MAYBE (gold)
+- ROI < 3 → SKIP (red)
+- Spirits category → always MAYBE (legal complexity override)
 
 ---
 
 ## UI Design System
 
 - **Fonts:** Bebas Neue (`font-display`), DM Sans (`font-body`), DM Mono (`font-mono`)
-- **Colors via CSS variables:** `--red` (#D92B3A), `--green` (#1A7A4A), `--gold`, `--black`, `--muted`, `--surface`, `--border`, `--bg`
-- **Light variants:** `--red-light`, `--green-light`, `--gold-light` for tinted backgrounds
-- **Verdict colors:** BUY = green (`#4ADE80`), SKIP = red, MAYBE = gold
+- **Colors (CSS variables):** `--red` #D92B3A, `--green` #1A7A4A, `--gold` #B8860B, `--black`, `--muted`, `--surface`, `--border`, `--bg`
+- **Light variants:** `--red-light`, `--green-light`, `--gold-light`
+- **Verdict display colors:** BUY #4ADE80, SKIP #D92B3A, MAYBE #B8860B
 
 ---
 
-## Known Gaps and Issues
+## Infrastructure
 
-### Functional
-1. **Lookup catalog is 5 items.** Almost every real search returns "No data on this yet." Core product value is broken until eBay API is live.
-2. **Calculator uses hardcoded exchange rate.** `const EXCHANGE_RATE = 154.2` in `app/app/calculator/page.tsx`. Should fetch from `/api/exchange-rate`.
-3. **No real auth.** Tier lives in localStorage. Anyone can set `japanflip_user` in DevTools and unlock any tier. Acceptable for MVP; needs server-side validation before scaling.
-4. **Gumroad redirect trusts URL params.** No signature verification. Someone can manually visit `/app/upgrade?email=x&tier=premium` and get Premium access for free.
-5. **Saved lookups are device-local.** Premium promise says "synced across devices" but localStorage doesn't sync. Needs a backend store.
-6. **Retro Gaming guide has a PRO badge** on the grid card but the guide detail route has no access gate enforced.
+- **Framework:** Next.js 14, App Router, TypeScript, Tailwind CSS
+- **Deployment:** Vercel (Hobby plan), auto-deploy on push to `master`
+- **Repo:** GitHub (public — required for Vercel Hobby auto-deploy on private repos)
+- **Payments:** Gumroad (external). No webhooks — relies on redirect URL params.
+- **Exchange rate:** Frankfurter API (free, no key required), 1-hour cache
+- **No database.** All user state in localStorage.
+- **No backend auth.** Tier trust is entirely client-side.
 
-### Dead code
-7. **`/app/app/opportunity/[slug]`** — full route from the old curated opportunity list architecture. Not linked anywhere. Should be deleted.
-8. **`components/OpportunityCard.tsx`** — component from old architecture. Unused. Should be deleted.
-9. **`data/exchange-rate.json`** — static file with hardcoded rate. Superseded by `/api/exchange-rate`. Should be deleted.
-10. **`data/guides/watches.json`** — file exists but is not imported or used by any route. Dead file.
-11. **`components/Ticker.tsx`** (root components/) — separate from `components/landing/Ticker.tsx`. Likely orphan from old architecture. Verify and delete if unused.
-12. **`components/FilterRow.tsx`, `components/StatsRow.tsx`, `components/MobileNav.tsx`, `components/CustomsGrid.tsx`, `components/PlatformList.tsx`, `components/PhraseCard.tsx`** — root-level components not clearly imported by current routes. Verify and delete if unused.
+---
 
-### Missing features (listed in upgrade page but not yet built)
-13. **"Price trend charts"** — listed as a Premium feature on the upgrade page but no chart component exists anywhere.
-14. **"Live data — updated daily"** — listed as Premium feature; currently the Basic gate in the lookup page shows a `PremiumGate` component for "live market data" but there is no differentiated live vs static data path. The mock data is the same for all tiers.
+## What's Working
 
-### UX
-15. **No loading state for exchange rate.** The TopBar badge shows `¥...` while loading, which is fine, but there's no error state if Frankfurter fails (it silently stays as `¥...` forever).
-16. **QuickChips use hardcoded JPY price `4500`** for all chip searches regardless of item category — camera prices and watch prices have very different ranges.
-17. **No-result state offers three hardcoded suggestions** regardless of what the user searched. Should suggest related items based on the failed query.
+- Full lookup flow: search → verdict → market data → profit breakdown (condition + size adjusted)
+- Condition selector (S/A/B/C) affects sell price, ROI, and all profit figures
+- Size/shipping selector with category auto-defaults and Oversized warning
+- Inline customs alert in profit breakdown with per-user country preference
+- Trip summary — daily running total with midnight reset
+- Lookup history for Basic+ with cap enforcement (20/50)
+- CSV export for Premium history
+- Phrase cards (8 sections, 26 phrases) with free preview and Premium gate
+- Retro Gaming guide gated to Premium
+- Calculator with live exchange rate (no longer hardcoded)
+- Landing calculator widget (no auth required)
+- HeroDemo shows live exchange rate
+- All dead code removed (11 files deleted)
+
+---
+
+## Known Gaps & What's Still Needed
+
+### Critical (blocks real product value)
+
+1. **Lookup catalog is 5 items.** Most real searches return "No data on this yet." The product feels broken until the eBay Browse API is live. The API route is already structured for a one-function swap — `getMockData` in `/api/lookup/route.ts` is the only thing that needs replacing.
+
+2. **No server-side auth.** Tier lives in localStorage. Anyone can open DevTools and set `localStorage.setItem("japanflip_user", JSON.stringify({tier:"premium"}))`. Acceptable for MVP / solo launch; becomes a chargeback and fraud risk at any real scale. Needs a lightweight backend: verify Gumroad webhook signatures, store tier server-side, issue a session token.
+
+3. **Gumroad redirect trusts URL params.** No signature verification. Anyone can visit `/app/upgrade?email=x&tier=premium` and self-upgrade for free. Gumroad supports signed redirects — implement webhook validation before marketing at scale.
+
+4. **"Live data — updated daily"** is listed as a Premium feature but is not implemented. The mock data is identical for all tiers. The `PremiumGate` shown to Basic users for "live market data" is a UI stub — there is no differentiated data path.
+
+### UX / Product
+
+5. **No-result state is generic.** Three hardcoded suggestions (Seiko, Levi's, Olympus) regardless of what the user searched. Should suggest related items based on failed query category.
+
+6. **QuickChips prices are hardcoded.** May not reflect realistic price ranges as more catalog items are added.
+
+7. **History is device-local.** The upgrade page previously promised cross-device sync — this has been removed from copy. If a real backend is ever added, history should migrate to server-side storage.
+
+8. **No loading/error state if Frankfurter fails.** The live rate badge stays as `¥...` indefinitely. Should show a clear fallback state.
+
+9. **No onboarding for homeCountry.** The `CustomsInlineAlert` shows a country dropdown inline, but there's no first-run prompt to set it. Users may not notice it.
+
+### Future / Post-eBay API
+
+10. **Price trend charts (Premium)** — removed from upgrade copy until built. Needs eBay historical data and a chart component (Recharts or similar). Strong Premium differentiator once data exists.
+
+11. **JP market data is mocked.** Mercari JP has no public API. Options: Yahoo Japan Shopping API, manual scraping (check ToS), or a third-party JP resale aggregator.
+
+12. **"Trending This Week" on guides grid** — add a hot badge to 1–2 categories with highest recent sold volume once eBay data is live.
+
+13. **Smarter no-result state** — once the catalog is large enough, embed a similarity match for failed queries.
+
+---
+
+## What's Probably Not Needed (yet)
+
+- **Accounts / email login** — localStorage is fine until real revenue justifies the backend cost and complexity
+- **Push notifications** — no clear use case at current stage
+- **Native mobile app** — the web tool works fine on mobile; a PWA is a future consideration
+- **i18n / Japanese UI** — users are English-speaking tourists; Japanese phrases in the data are intentional content, not UI translations
+- **Admin dashboard** — 5 catalog items can be managed as JSON files; a CMS is unnecessary until the catalog grows beyond ~50 items
+- **Referral / affiliate system** — premature at pre-traction stage
