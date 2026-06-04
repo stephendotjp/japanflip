@@ -81,6 +81,11 @@ export function SearchCard({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ imageBase64: base64, mimeType }),
         });
+        if (!res.ok) {
+          setCameraState("error");
+          setCameraError("Couldn't identify item — please type it");
+          return;
+        }
         const { labels, webEntities } = await res.json();
         const match = mapLabelsToCategory(labels ?? [], webEntities ?? []);
 
