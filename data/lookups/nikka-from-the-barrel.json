@@ -1,0 +1,49 @@
+{
+  "query": "Nikka From The Barrel",
+  "category": "spirits",
+  "jpBuyPrice": 2800,
+  "usdEquivalent": 18.16,
+  "exchangeRate": 154.2,
+  "verdict": "maybe",
+  "verdictReason": "Strong spread — From The Barrel sells for $80–$130 in Western markets. ROI is solid at 5.5x. However: alcohol has strict customs rules per country, and you can typically only bring 1–2 bottles duty-free. Research your home country's limits before buying in bulk.",
+  "roi": 5.5,
+  "roiTier": "medium",
+  "jpMarket": {
+    "source": ["Mercari JP", "Yahoo Auctions"],
+    "avgSoldPrice": 3200,
+    "priceRange": { "min": 2200, "max": 5500 },
+    "recentSales": [
+      { "title": "Nikka From The Barrel 500ml", "source": "Mercari JP", "daysAgo": 4, "price": 2800, "sold": true },
+      { "title": "Nikka From The Barrel — unopened", "source": "Mercari JP", "daysAgo": 9, "price": 3100, "sold": true },
+      { "title": "Nikka FTB 500ml — gift box", "source": "Yahoo Auctions", "daysAgo": 6, "price": 3600, "sold": true },
+      { "title": "Nikka From The Barrel 2-bottle set", "source": "Yahoo Auctions", "daysAgo": 14, "price": 5200, "sold": true }
+    ]
+  },
+  "usMarket": {
+    "source": ["eBay", "Caskers"],
+    "avgSoldPrice": 105,
+    "priceRange": { "min": 80, "max": 130 },
+    "recentSales": [
+      { "title": "Nikka From the Barrel Japanese Whisky", "source": "eBay", "daysAgo": 3, "price": 98, "currency": "USD", "sold": true },
+      { "title": "Nikka From The Barrel 500ml sealed", "source": "eBay", "daysAgo": 8, "price": 115, "currency": "USD", "sold": true },
+      { "title": "Nikka FTB — unopened, receipt", "source": "eBay", "daysAgo": 11, "price": 125, "currency": "USD", "sold": true },
+      { "title": "Nikka From The Barrel", "source": "eBay", "daysAgo": 5, "price": 90, "currency": "USD", "sold": true }
+    ]
+  },
+  "profitBreakdown": {
+    "buyPrice": 18.16,
+    "avgSellPrice": 105,
+    "platforms": [
+      { "name": "eBay", "fee": 0.1325, "feeAmount": 13.91, "shipping": 18, "paymentFee": 3.15, "netProfit": 51.78, "recommended": true, "note": "Most buyers here. Add 'sealed, unopened' to title." },
+      { "name": "Facebook Marketplace", "fee": 0.05, "feeAmount": 5.25, "shipping": 0, "paymentFee": 0, "netProfit": 81.59, "recommended": false, "note": "Local pickup only — no shipping alcohol in most states" },
+      { "name": "Local wine shop", "fee": 0, "feeAmount": 0, "shipping": 0, "paymentFee": 0, "netProfit": 86.84, "recommended": false, "note": "Consignment with specialty liquor shops — best margin, slow cycle" }
+    ]
+  },
+  "customs": [
+    { "country": "United States", "flag": "🇺🇸", "status": "warn", "limit": "1 liter duty-free", "note": "Over 1L: 19.8¢/liter tax + potential state restrictions" },
+    { "country": "United Kingdom", "flag": "🇬🇧", "status": "warn", "limit": "1 liter spirits duty-free", "note": "Standard traveler allowance applies" },
+    { "country": "Australia", "flag": "🇦🇺", "status": "warn", "limit": "2.25 liters duty-free", "note": "Declare all alcohol. Over limit: duty applies." },
+    { "country": "Canada", "flag": "🇨🇦", "status": "warn", "limit": "1.14 liters duty-free", "note": "Provincial liquor regulations vary" },
+    { "country": "Germany / EU", "flag": "🇩🇪", "status": "warn", "limit": "1 liter spirits duty-free", "note": "Must declare; keep receipt" }
+  ]
+}

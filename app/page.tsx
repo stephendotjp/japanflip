@@ -1,291 +1,292 @@
-"use client";
-
 import Link from "next/link";
-import { useUser } from "@/context/UserContext";
-import Ticker from "@/components/Ticker";
-import opportunities from "@/data/opportunities.json";
+import { HeroDemo } from "@/components/landing/HeroDemo";
+import { Ticker } from "@/components/landing/Ticker";
+import { PricingCards } from "@/components/landing/PricingCards";
+import { SocialProof } from "@/components/landing/SocialProof";
+import { LandingCalculator } from "@/components/landing/LandingCalculator";
 
-const sampleOpps = opportunities.slice(0, 6);
+const GUMROAD_BASIC = process.env.NEXT_PUBLIC_GUMROAD_BASIC_URL || "/app/upgrade";
 
 const howItWorks = [
-  { step: "01", title: "Buy the Guide", desc: "Get Basic ($9) or Premium ($24) access to this month's curated flip list." },
-  { step: "02", title: "Shop Smart", desc: "Hit the recycle shops, flea markets, and specialty stores on your list." },
-  { step: "03", title: "Fly Home", desc: "Pack your finds. We include customs rules and packing tips for every item." },
-  { step: "04", title: "Sell & Profit", desc: "List on Depop, eBay, or Etsy using our platform guides and listing templates." },
-];
-
-const basicFeatures = [
-  "6 curated opportunities this month",
-  "Buy price ranges",
-  "US sell price data",
-  "Platform recommendations",
-  "Instant access",
-];
-
-const premiumFeatures = [
-  "Everything in Basic",
-  "All 24 opportunities",
-  "Exact shop addresses + maps",
-  "Japanese negotiation phrases",
-  "Customs guide by country",
-  "Listing templates per platform",
-  "Photo identification guides",
+  {
+    step: "01",
+    title: "Find something",
+    desc: "In any recycle shop, Hard Off, Book Off, or flea market.",
+  },
+  {
+    step: "02",
+    title: "Check JapanFlip",
+    desc: "Type what you found and the price. Takes 10 seconds.",
+  },
+  {
+    step: "03",
+    title: "Buy smart",
+    desc: "BUY IT, SKIP IT, or MAYBE — with the numbers to back it.",
+  },
 ];
 
 export default function LandingPage() {
-  const { setTier, tier } = useUser();
-
-  const handleGetBasic = () => {
-    setTier("basic");
-    window.location.href = "/app";
-  };
-
-  const handleGetPremium = () => {
-    setTier("premium");
-    window.location.href = "/app";
-  };
-
   return (
-    <div className="min-h-screen bg-[#F7F4EF]">
+    <div style={{ background: "var(--bg)" }}>
       {/* Nav */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-[#E8E4DE] bg-[#F7F4EF]/80 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-1">
-          <span className="font-display text-2xl text-[#111111] tracking-wide">Japan</span>
-          <span className="font-display text-2xl text-[#D92B3A] tracking-wide">Flip</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <span className="font-mono-custom text-[11px] text-[#888480] hidden md:block">
-            Updated Monthly · June 2026
-          </span>
-          {tier !== "free" ? (
+      <nav
+        className="sticky top-0 z-50 bg-white border-b border-border px-5 md:px-10"
+        style={{ borderColor: "var(--border)" }}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
+          <div className="flex items-baseline gap-2">
+            <Link href="/" className="flex items-baseline gap-0">
+              <span className="font-display text-2xl text-black tracking-wide">Japan</span>
+              <span className="font-display text-2xl tracking-wide" style={{ color: "var(--red)" }}>
+                Flip
+              </span>
+            </Link>
+            <span className="hidden md:block font-mono text-[10px] tracking-[2px] uppercase text-muted ml-2">
+              The Japan Resale Tool
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
             <Link
               href="/app"
-              className="font-mono-custom text-[11px] px-4 py-2 bg-[#111111] text-white hover:bg-[#D92B3A] transition-colors"
+              className="font-body text-sm text-muted hover:text-text transition-colors"
             >
-              Open Dashboard →
+              Sign In
             </Link>
-          ) : (
-            <button
-              onClick={handleGetBasic}
-              className="font-mono-custom text-[11px] px-4 py-2 bg-[#D92B3A] text-white hover:bg-[#111111] transition-colors"
+            <Link
+              href={GUMROAD_BASIC}
+              className="px-4 py-2 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              style={{ background: "var(--red)" }}
             >
-              Get Basic — $9
-            </button>
-          )}
+              Get Access — $9
+            </Link>
+          </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex flex-col items-start justify-center px-6 md:px-20 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center px-5 md:px-10 py-16 overflow-hidden">
+        {/* Decorative Japanese text */}
         <div
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
           aria-hidden
         >
           <span
-            className="font-display text-[30vw] text-[#111111] leading-none"
-            style={{ opacity: 0.03 }}
+            className="font-display text-[20vw] leading-none"
+            style={{ color: "var(--text)", opacity: 0.03 }}
           >
             日本
           </span>
         </div>
 
-        <div className="relative z-10 max-w-3xl">
-          <p className="font-mono-custom text-xs text-[#888480] uppercase tracking-widest mb-6">
-            Japan Arbitrage · June 2026 Edition
-          </p>
-          <h1 className="font-display leading-none" style={{ fontSize: "clamp(72px, 12vw, 140px)" }}>
-            <span className="block text-[#111111]">Pay For</span>
-            <span className="block text-[#D92B3A]">YOUR TRIP</span>
-            <span
-              className="block"
-              style={{
-                WebkitTextStroke: "2px #111111",
-                color: "transparent",
-              }}
+        <div className="max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center relative z-10">
+          {/* Left */}
+          <div className="space-y-6 animate-fadeUp">
+            <h1 className="font-display leading-none">
+              <span className="block text-[clamp(3rem,8vw,5rem)] text-black">You Found</span>
+              <span
+                className="block text-[clamp(3.5rem,10vw,6.5rem)]"
+                style={{ color: "var(--red)" }}
+              >
+                SOMETHING
+              </span>
+              <span
+                className="block text-[clamp(3rem,8vw,5rem)]"
+                style={{
+                  WebkitTextStroke: "2px var(--black)",
+                  color: "transparent",
+                }}
+              >
+                Worth $200
+              </span>
+            </h1>
+
+            <p
+              className="font-body text-lg max-w-md leading-relaxed"
+              style={{ color: "var(--muted)" }}
             >
-              To Japan
-            </span>
-          </h1>
-          <p className="mt-8 font-mono-custom text-sm text-[#888480] max-w-lg leading-relaxed">
-            Every month we find 20+ real arbitrage opportunities — things you can buy in Japan for
-            cheap and resell back home for serious profit.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <button
-              onClick={handleGetBasic}
-              className="font-mono-custom text-sm px-8 py-4 bg-[#D92B3A] text-white hover:bg-[#111111] transition-colors"
-              style={{ clipPath: "polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px))" }}
-            >
-              Get Basic Access — $9
-            </button>
-            <span className="font-mono-custom text-[11px] text-[#888480]">
-              Full access from $24
-            </span>
+              You&apos;re standing in a recycle shop in Japan. Before you buy — check JapanFlip. We
+              tell you exactly what it&apos;s worth back home.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={GUMROAD_BASIC}
+                className="px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+                style={{ background: "var(--red)" }}
+              >
+                Get Basic — $9
+              </Link>
+              <Link
+                href="#how-it-works"
+                className="px-6 py-3 font-mono text-xs tracking-widest uppercase rounded-md border hover:bg-black hover:text-white transition-colors"
+                style={{ borderColor: "var(--black)", color: "var(--black)" }}
+              >
+                See How It Works
+              </Link>
+            </div>
+          </div>
+
+          {/* Right: live demo */}
+          <div className="animate-fadeUp" style={{ animationDelay: "100ms" }}>
+            <HeroDemo />
           </div>
         </div>
       </section>
 
+      {/* Ticker */}
       <Ticker />
 
-      {/* Sample opportunities grid */}
-      <section className="px-6 md:px-12 py-20">
-        <div className="flex items-baseline justify-between mb-8">
-          <h2 className="font-display text-4xl text-[#111111]">
-            Sample Opportunities — June 2026
-          </h2>
-        </div>
-        <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
-          {sampleOpps.map((opp, i) => {
-            const locked = i >= 4;
-            return (
+      {/* How It Works */}
+      <section id="how-it-works" className="px-5 md:px-10 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center gap-4 mb-12">
+            <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted whitespace-nowrap">
+              How it works
+            </span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {howItWorks.map((step, i) => (
               <div
-                key={opp.id}
-                className={`relative bg-white border border-[#E8E4DE] rounded p-5 space-y-4 transition-all duration-200 hover:border-[#D92B3A]/30 hover:-translate-y-0.5 ${locked ? "" : "cursor-pointer"}`}
+                key={step.step}
+                className="animate-fadeUp"
+                style={{ animationDelay: `${i * 100}ms` }}
               >
-                {locked && (
-                  <div className="absolute inset-0 z-10 rounded flex flex-col items-center justify-center bg-white/80 backdrop-blur-[3px]">
-                    <div className="w-8 h-8 rounded-full bg-[#111111] flex items-center justify-center mb-2">
-                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
-                        <rect x="5" y="11" width="14" height="10" rx="2" fill="white" />
-                        <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                      </svg>
-                    </div>
-                    <span className="font-mono-custom text-[10px] text-[#111111] uppercase tracking-widest">
-                      Premium Only
-                    </span>
-                  </div>
-                )}
-                <div className={locked ? "blur-[3px] select-none" : ""}>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="font-mono-custom text-[10px] text-[#888480] uppercase tracking-widest">
-                        {opp.category}
-                      </span>
-                      <p className="font-display text-xl text-[#111111]">{opp.title}</p>
-                    </div>
-                    <span
-                      className={`font-mono-custom text-sm px-2 py-1 rounded ${
-                        opp.roiTier === "high"
-                          ? "bg-[#EDF7F2] text-[#1A7A4A]"
-                          : "bg-[#FDF8EE] text-[#B8860B]"
-                      }`}
-                    >
-                      {opp.roi}x
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mt-3">
-                    <div className="bg-[#F7F4EF] rounded p-2">
-                      <p className="font-mono-custom text-[9px] text-[#888480] uppercase tracking-widest">Buy</p>
-                      <p className="font-mono-custom text-xs text-[#111111]">
-                        ¥{opp.buyPriceJPY.min.toLocaleString()}–¥{opp.buyPriceJPY.max.toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="bg-[#EDF7F2] rounded p-2">
-                      <p className="font-mono-custom text-[9px] text-[#1A7A4A] uppercase tracking-widest">Sell</p>
-                      <p className="font-mono-custom text-xs text-[#1A7A4A]">
-                        ${opp.sellPriceUSD.min}–${opp.sellPriceUSD.max}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <p
+                  className="font-display text-7xl leading-none mb-4"
+                  style={{ color: "var(--red)" }}
+                >
+                  {step.step}
+                </p>
+                <p className="font-display text-2xl text-black mb-2">{step.title}</p>
+                <p className="font-body text-sm" style={{ color: "var(--muted)" }}>
+                  {step.desc}
+                </p>
               </div>
-            );
-          })}
-        </div>
-        <div className="mt-10 text-center">
-          <button
-            onClick={handleGetBasic}
-            className="font-mono-custom text-sm px-8 py-4 bg-[#D92B3A] text-white hover:bg-[#111111] transition-colors"
-          >
-            Unlock Full List — $9
-          </button>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="px-6 md:px-12 py-20 border-t border-[#E8E4DE]">
-        <h2 className="font-display text-4xl text-[#111111] mb-10">How It Works</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-          {howItWorks.map(({ step, title, desc }) => (
-            <div key={step} className="space-y-3">
-              <p className="font-display text-7xl text-[#E8E4DE] leading-none">{step}</p>
-              <p className="font-display text-2xl text-[#111111]">{title}</p>
-              <p className="font-mono-custom text-[11px] text-[#888480] leading-relaxed">{desc}</p>
-            </div>
-          ))}
+      {/* Calculator */}
+      <section className="px-5 md:px-10 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted whitespace-nowrap">
+              Run the numbers
+            </span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <p className="font-display text-3xl md:text-4xl text-black mb-2 text-center">
+            Run the numbers before you buy.
+          </p>
+          <p className="font-body text-base text-muted text-center mb-8">
+            Quick estimate — no account needed. Full breakdown is inside the tool.
+          </p>
+          <LandingCalculator />
         </div>
       </section>
 
       {/* Pricing */}
-      <section className="px-6 md:px-12 py-20 border-t border-[#E8E4DE]">
-        <h2 className="font-display text-4xl text-[#111111] mb-10">Get Access</h2>
-        <div className="grid md:grid-cols-2 gap-5 max-w-2xl">
-          {/* Basic */}
-          <div className="bg-white border border-[#E8E4DE] rounded p-6 flex flex-col gap-5">
-            <div>
-              <p className="font-mono-custom text-[10px] text-[#888480] uppercase tracking-widest">Basic</p>
-              <p className="font-display text-5xl text-[#111111] mt-1">$9</p>
-              <p className="font-mono-custom text-[10px] text-[#888480]">one-time</p>
+      <section className="px-5 md:px-10 py-20" style={{ background: "var(--surface)" }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="flex items-center gap-4 justify-center mb-4">
+              <div className="flex-1 h-px bg-border max-w-[120px]" />
+              <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted">
+                What you get
+              </span>
+              <div className="flex-1 h-px bg-border max-w-[120px]" />
             </div>
-            <ul className="space-y-2 flex-1">
-              {basicFeatures.map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span className="font-mono-custom text-[11px] text-[#D92B3A]">→</span>
-                  <span className="font-mono-custom text-[11px] text-[#2A2825]">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={handleGetBasic}
-              className="w-full px-4 py-3 border border-[#111111] font-mono-custom text-xs text-[#111111] hover:bg-[#111111] hover:text-white transition-colors"
+            <p className="font-display text-4xl md:text-5xl text-black">Simple Pricing</p>
+            <p className="font-body text-base text-muted mt-2">
+              One-time. No subscription. No renewal.
+            </p>
+          </div>
+          <PricingCards />
+        </div>
+      </section>
+
+      {/* Social proof */}
+      <section className="px-5 md:px-10 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center gap-4 mb-12">
+            <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted whitespace-nowrap">
+              What people say
+            </span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+          <SocialProof />
+        </div>
+      </section>
+
+      {/* CTA band */}
+      <section className="px-5 md:px-10 py-20" style={{ background: "#111111" }}>
+        <div className="max-w-3xl mx-auto text-center space-y-6">
+          <p className="font-display text-5xl md:text-6xl text-white leading-none">
+            Stop guessing.
+            <br />
+            <span style={{ color: "var(--red)" }}>Start flipping.</span>
+          </p>
+          <p className="font-body text-base" style={{ color: "#ffffff80" }}>
+            3 free lookups. No account needed. $9 for unlimited.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Link
+              href="/app"
+              className="px-8 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md border border-white/20 hover:bg-white/10 transition-colors"
+            >
+              Try Free
+            </Link>
+            <Link
+              href={GUMROAD_BASIC}
+              className="px-8 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              style={{ background: "var(--red)" }}
             >
               Get Basic — $9
-            </button>
-          </div>
-
-          {/* Premium */}
-          <div className="bg-white border-2 border-[#D92B3A] rounded p-6 flex flex-col gap-5 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="font-mono-custom text-[10px] px-3 py-1 bg-[#D92B3A] text-white uppercase tracking-widest rounded">
-                Best Value
-              </span>
-            </div>
-            <div>
-              <p className="font-mono-custom text-[10px] text-[#888480] uppercase tracking-widest">Premium</p>
-              <p className="font-display text-5xl text-[#111111] mt-1">$24</p>
-              <p className="font-mono-custom text-[10px] text-[#888480]">one-time</p>
-            </div>
-            <ul className="space-y-2 flex-1">
-              {premiumFeatures.map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span className="font-mono-custom text-[11px] text-[#D92B3A]">→</span>
-                  <span className="font-mono-custom text-[11px] text-[#2A2825]">{f}</span>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={handleGetPremium}
-              className="w-full px-4 py-3 bg-[#D92B3A] font-mono-custom text-xs text-white hover:bg-[#B8860B] transition-colors"
-            >
-              Get Premium — $24
-            </button>
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="px-6 md:px-12 py-10 border-t border-[#E8E4DE]">
-        <div className="flex items-center gap-1 mb-3">
-          <span className="font-display text-xl text-[#111111]">Japan</span>
-          <span className="font-display text-xl text-[#D92B3A]">Flip</span>
+      <footer className="px-5 md:px-10 py-10 border-t border-border">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between gap-6">
+            <div>
+              <div className="flex items-baseline gap-0">
+                <span className="font-display text-xl text-black">Japan</span>
+                <span className="font-display text-xl" style={{ color: "var(--red)" }}>
+                  Flip
+                </span>
+              </div>
+              <p className="font-body text-xs text-muted mt-1 max-w-xs">
+                Not affiliated with any shop or brand. Built by someone who lives in Japan.
+              </p>
+            </div>
+            <nav className="flex flex-wrap gap-x-6 gap-y-2">
+              {[
+                { label: "How It Works", href: "#how-it-works" },
+                { label: "Pricing", href: "#" },
+                { label: "Category Guides", href: "/app/guides" },
+                { label: "Contact", href: "mailto:shaolinmonkuk@gmail.com" },
+              ].map((l) => (
+                <Link
+                  key={l.label}
+                  href={l.href}
+                  className="font-body text-sm text-muted hover:text-text transition-colors"
+                >
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <p className="font-mono text-[10px] text-muted mt-8">
+            JapanFlip uses publicly available market data for informational purposes only. Prices
+            vary. We make no guarantee of profit. Customs regulations are subject to change — always
+            verify before traveling.
+          </p>
         </div>
-        <p className="font-mono-custom text-[11px] text-[#888480] max-w-md leading-relaxed">
-          Not affiliated with any shop or brand. Updated monthly by someone who actually lives here.
-        </p>
-        <p className="font-mono-custom text-[10px] text-[#888480]/50 mt-3">
-          Prices are estimates based on observed market data. Actual resale results vary. Not financial advice.
-          Always check customs regulations for your country before traveling.
-        </p>
       </footer>
     </div>
   );

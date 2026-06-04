@@ -27,3 +27,13 @@ body {
   font-family: var(--font-dm-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes verdictReveal {
+  0% { transform: scale(0.97); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

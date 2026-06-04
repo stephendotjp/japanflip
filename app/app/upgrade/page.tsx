@@ -1,120 +1,196 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { Check } from "lucide-react";
+import { TopBar } from "@/components/layout/TopBar";
+import type { Tier } from "@/lib/types";
+
+const GUMROAD_BASIC = process.env.NEXT_PUBLIC_GUMROAD_BASIC_URL || "#";
+const GUMROAD_PREMIUM = process.env.NEXT_PUBLIC_GUMROAD_PREMIUM_URL || "#";
 
 const basicFeatures = [
-  "6 curated opportunities this month",
-  "Buy price ranges",
-  "US sell price data",
-  "Platform recommendations",
-  "Instant access",
+  "Unlimited lookups",
+  "Full profit breakdown",
+  "Platform comparison (eBay, Depop, Etsy, StockX)",
+  "Customs guide by country",
+  "30-day sold data",
+  "Lookup history — last 20 items (this device)",
 ];
 
 const premiumFeatures = [
   "Everything in Basic",
-  "All 24 opportunities",
-  "Exact shop addresses + maps",
-  "Japanese negotiation phrases",
-  "Customs guide by country",
-  "Listing templates per platform",
-  "Photo identification guides",
+  "Live data — updated daily",
+  "Extended history — last 50 lookups",
+  "Japanese phrase cards per category",
 ];
 
-export default function UpgradePage() {
+function UpgradePageInner() {
+  const searchParams = useSearchParams();
   const { tier, setTier } = useUser();
-  const router = useRouter();
-  const [confirmed, setConfirmed] = useState<"basic" | "premium" | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
 
-  const handleUpgrade = (newTier: "basic" | "premium") => {
-    setTier(newTier);
-    setConfirmed(newTier);
-    setTimeout(() => router.push("/app"), 2000);
-  };
+  // Handle Gumroad redirect: ?email=...&tier=basic|premium
+  useEffect(() => {
+    const email = searchParams.get("email");
+    const newTier = searchParams.get("tier") as Tier | null;
+    if (email && (newTier === "basic" || newTier === "premium")) {
+      setTier(newTier, email);
+      setConfirmed(true);
+    }
+  }, [searchParams, setTier]);
 
   if (confirmed) {
     return (
-      <div className="p-8 flex flex-col items-center justify-center min-h-[60vh] text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-[#EDF7F2] flex items-center justify-center">
-          <Check size={28} className="text-[#1A7A4A]" />
+      <div className="p-5 md:p-10 pb-10">
+        <div className="max-w-md mx-auto text-center space-y-5 pt-10">
+          <p className="text-5xl">🎉</p>
+          <p className="font-display text-4xl text-black">You&apos;re in</p>
+          <p className="font-body text-sm text-muted">
+            Your access is now active. Start looking up items below.
+          </p>
+          <Link
+            href="/app"
+            className="inline-block px-8 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+            style={{ background: "var(--red)" }}
+          >
+            Go to Price Lookup →
+          </Link>
         </div>
-        <h2 className="font-display text-4xl text-[#111111]">Access Unlocked</h2>
-        <p className="font-mono-custom text-sm text-[#888480]">
-          Welcome to JapanFlip {confirmed === "premium" ? "Premium" : "Basic"}. Taking you to your dashboard...
-        </p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 md:p-8 max-w-3xl space-y-8 pb-8">
-      <div>
-        <h1 className="font-display text-5xl text-[#111111] leading-none">Get Access</h1>
-        <p className="font-mono-custom text-xs text-[#888480] mt-2">
-          One-time payment · No subscription · Instant access
-        </p>
-      </div>
+    <div className="p-5 md:p-10 space-y-8 pb-10">
+      <TopBar
+        title="Get Access"
+        subtitle="One-time payment. No subscription. Use it forever."
+      />
 
-      <div className="grid md:grid-cols-2 gap-5">
+      {tier !== "free" && (
+        <div
+          className="px-4 py-3 rounded-md border"
+          style={{ background: "var(--green-light)", borderColor: "rgba(26,122,74,0.2)" }}
+        >
+          <p className="font-mono text-[11px]" style={{ color: "var(--green)" }}>
+            You&apos;re on {tier === "basic" ? "Basic" : "Premium"}.{" "}
+            {tier === "basic"
+              ? "Upgrade to Premium for live data and phrase cards."
+              : "You have full access."}
+          </p>
+        </div>
+      )}
+
+      <div className="grid md:grid-cols-2 gap-4 max-w-3xl">
         {/* Basic */}
-        <div className="bg-white border border-[#E8E4DE] rounded p-6 flex flex-col gap-5">
+        <div
+          className="bg-surface border rounded-xl p-6 space-y-5"
+          style={{
+            borderColor: tier === "basic" ? "var(--green)" : "var(--border)",
+            borderWidth: tier === "basic" ? 2 : 1,
+          }}
+        >
+          {tier === "basic" && (
+            <span
+              className="inline-block font-mono text-[10px] tracking-[2px] uppercase px-2 py-0.5 rounded text-white"
+              style={{ background: "var(--green)" }}
+            >
+              YOUR PLAN
+            </span>
+          )}
           <div>
-            <p className="font-mono-custom text-[10px] text-[#888480] uppercase tracking-widest">Basic</p>
-            <p className="font-display text-5xl text-[#111111] mt-1">$9</p>
-            <p className="font-mono-custom text-[10px] text-[#888480]">one-time</p>
+            <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted">Basic</p>
+            <p className="font-display text-5xl text-black mt-1">$9</p>
+            <p className="font-mono text-xs text-muted mt-1">One-time · No subscription</p>
           </div>
-          <ul className="space-y-2 flex-1">
+          <ul className="space-y-2">
             {basicFeatures.map((f) => (
-              <li key={f} className="flex items-start gap-2">
-                <Check size={13} className="text-[#1A7A4A] shrink-0 mt-0.5" />
-                <span className="font-mono-custom text-[11px] text-[#2A2825]">{f}</span>
+              <li key={f} className="flex items-start gap-2 font-body text-sm text-text">
+                <span style={{ color: "var(--green)" }} className="mt-0.5 shrink-0">→</span>
+                {f}
               </li>
             ))}
           </ul>
-          <button
-            onClick={() => handleUpgrade("basic")}
-            disabled={tier === "basic" || tier === "premium"}
-            className="w-full px-4 py-3 border border-[#111111] font-mono-custom text-xs text-[#111111] hover:bg-[#111111] hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {tier === "premium" ? "Downgrade not available" : tier === "basic" ? "Current plan" : "Get Basic — $9"}
-          </button>
+          {tier === "free" ? (
+            <a
+              href={GUMROAD_BASIC}
+              className="block text-center px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              style={{ background: "var(--red)" }}
+            >
+              Get Basic — $9
+            </a>
+          ) : (
+            <p className="text-center font-mono text-xs text-muted py-3">
+              {tier === "basic" ? "Active ✓" : "Included in Premium"}
+            </p>
+          )}
         </div>
 
         {/* Premium */}
-        <div className="bg-white border-2 border-[#D92B3A] rounded p-6 flex flex-col gap-5 relative">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span className="font-mono-custom text-[10px] px-3 py-1 bg-[#D92B3A] text-white uppercase tracking-widest rounded">
-              Best Value
+        <div
+          className="bg-surface border-2 rounded-xl p-6 space-y-5 relative"
+          style={{ borderColor: tier === "premium" ? "var(--green)" : "var(--red)" }}
+        >
+          {tier === "premium" ? (
+            <span
+              className="absolute -top-3 left-5 font-mono text-[10px] tracking-[2px] uppercase px-2 py-0.5 rounded text-white"
+              style={{ background: "var(--green)" }}
+            >
+              YOUR PLAN
             </span>
-          </div>
+          ) : (
+            <span
+              className="absolute -top-3 left-5 font-mono text-[10px] tracking-[2px] uppercase px-2 py-0.5 rounded text-white"
+              style={{ background: "var(--red)" }}
+            >
+              BEST VALUE
+            </span>
+          )}
           <div>
-            <p className="font-mono-custom text-[10px] text-[#888480] uppercase tracking-widest">Premium</p>
-            <p className="font-display text-5xl text-[#111111] mt-1">$24</p>
-            <p className="font-mono-custom text-[10px] text-[#888480]">one-time</p>
+            <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted">Premium</p>
+            <p className="font-display text-5xl text-black mt-1">$24</p>
+            <p className="font-mono text-xs text-muted mt-1">One-time · No subscription</p>
           </div>
-          <ul className="space-y-2 flex-1">
+          <ul className="space-y-2">
             {premiumFeatures.map((f) => (
-              <li key={f} className="flex items-start gap-2">
-                <Check size={13} className="text-[#D92B3A] shrink-0 mt-0.5" />
-                <span className="font-mono-custom text-[11px] text-[#2A2825]">{f}</span>
+              <li key={f} className="flex items-start gap-2 font-body text-sm text-text">
+                <span style={{ color: "var(--green)" }} className="mt-0.5 shrink-0">→</span>
+                {f}
               </li>
             ))}
           </ul>
-          <button
-            onClick={() => handleUpgrade("premium")}
-            disabled={tier === "premium"}
-            className="w-full px-4 py-3 bg-[#D92B3A] font-mono-custom text-xs text-white hover:bg-[#B8860B] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            {tier === "premium" ? "Current plan" : "Get Premium — $24"}
-          </button>
+          {tier !== "premium" ? (
+            <a
+              href={GUMROAD_PREMIUM}
+              className="block text-center px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              style={{ background: "var(--black)" }}
+            >
+              Get Premium — $24
+            </a>
+          ) : (
+            <p className="text-center font-mono text-xs text-muted py-3">Active ✓</p>
+          )}
         </div>
       </div>
 
-      <p className="font-mono-custom text-[10px] text-[#888480] text-center">
-        This is a prototype — no real payment is processed. Button simulates purchase for demo purposes.
+      <p className="font-body text-xs text-muted max-w-lg">
+        After payment, Gumroad will redirect you back here with your access activated automatically.
+        If something goes wrong, email your receipt to{" "}
+        <a href="mailto:shaolinmonkuk@gmail.com" className="underline">
+          shaolinmonkuk@gmail.com
+        </a>
+        .
       </p>
     </div>
+  );
+}
+
+export default function UpgradePage() {
+  return (
+    <Suspense>
+      <UpgradePageInner />
+    </Suspense>
   );
 }

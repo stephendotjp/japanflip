@@ -21,8 +21,9 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JapanFlip — Japan Arbitrage Opportunities",
-  description: "Find and flip profitable items from Japan to the US market.",
+  title: "JapanFlip — The Japan Resale Tool",
+  description:
+    "Standing in a recycle shop in Japan? Check JapanFlip to know if you should buy it. Real sold data from JP and US markets. BUY IT, SKIP IT, or MAYBE — in seconds.",
 };
 
 export default function RootLayout({
@@ -32,7 +33,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable}`}>
+      <body
+        className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable}`}
+      >
         <UserProvider>{children}</UserProvider>
       </body>
     </html>

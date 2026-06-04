@@ -1,0 +1,49 @@
+{
+  "query": "Vintage Levi's 501",
+  "category": "clothing",
+  "jpBuyPrice": 800,
+  "usdEquivalent": 5.19,
+  "exchangeRate": 154.2,
+  "verdict": "buy",
+  "verdictReason": "Made-in-USA Levi's 501s are highly sought after. At ¥800 you are well below the JP average of ¥2,100. Check the tag — look for 'Made in USA' and the red tab. Condition matters: dark indigo with minimal fading sells fastest.",
+  "roi": 8.4,
+  "roiTier": "high",
+  "jpMarket": {
+    "source": ["Mercari JP", "Yahoo Auctions"],
+    "avgSoldPrice": 2100,
+    "priceRange": { "min": 600, "max": 6500 },
+    "recentSales": [
+      { "title": "Levi's 501 Made in USA — W32 L30", "source": "Mercari JP", "daysAgo": 2, "price": 1800, "sold": true },
+      { "title": "Vintage Levi's 501 — dark wash", "source": "Mercari JP", "daysAgo": 5, "price": 2400, "sold": true },
+      { "title": "Levi's 501 — faded, worn", "source": "Yahoo Auctions", "daysAgo": 8, "price": 900, "sold": true },
+      { "title": "Levi's 501 deadstock — mint", "source": "Yahoo Auctions", "daysAgo": 12, "price": 5800, "sold": true }
+    ]
+  },
+  "usMarket": {
+    "source": ["eBay", "Depop"],
+    "avgSoldPrice": 65,
+    "priceRange": { "min": 35, "max": 150 },
+    "recentSales": [
+      { "title": "Levi's 501 Made in USA W32", "source": "eBay", "daysAgo": 1, "price": 55, "currency": "USD", "sold": true },
+      { "title": "Vintage Levi's 501 dark wash", "source": "Depop", "daysAgo": 3, "price": 75, "currency": "USD", "sold": true },
+      { "title": "Levi's 501 W30 — great condition", "source": "eBay", "daysAgo": 5, "price": 48, "currency": "USD", "sold": true },
+      { "title": "Rare Levi's 501 redline W33", "source": "Depop", "daysAgo": 9, "price": 120, "currency": "USD", "sold": true }
+    ]
+  },
+  "profitBreakdown": {
+    "buyPrice": 5.19,
+    "avgSellPrice": 65,
+    "platforms": [
+      { "name": "Depop", "fee": 0.10, "feeAmount": 6.50, "shipping": 8, "paymentFee": 2.00, "netProfit": 43.31, "recommended": true },
+      { "name": "eBay", "fee": 0.1325, "feeAmount": 8.61, "shipping": 8, "paymentFee": 1.95, "netProfit": 41.25, "recommended": false },
+      { "name": "Etsy", "fee": 0.065, "feeAmount": 4.23, "shipping": 8, "paymentFee": 2.00, "netProfit": 45.58, "recommended": false, "note": "Vintage label helps here" }
+    ]
+  },
+  "customs": [
+    { "country": "United States", "flag": "🇺🇸", "status": "ok", "limit": "No restrictions", "note": "Under $800 duty-free personal exemption" },
+    { "country": "United Kingdom", "flag": "🇬🇧", "status": "ok", "limit": "£390 limit", "note": "Well under threshold" },
+    { "country": "Australia", "flag": "🇦🇺", "status": "ok", "limit": "AUD $900 limit", "note": "Fine as personal goods" },
+    { "country": "Canada", "flag": "🇨🇦", "status": "ok", "limit": "CAD $800 limit", "note": "Personal exemption applies" },
+    { "country": "Germany / EU", "flag": "🇩🇪", "status": "ok", "limit": "€430 limit", "note": "Well under threshold" }
+  ]
+}

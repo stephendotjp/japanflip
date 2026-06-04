@@ -1,0 +1,49 @@
+{
+  "query": "Seiko SKX007",
+  "category": "watches",
+  "jpBuyPrice": 4500,
+  "usdEquivalent": 29.18,
+  "exchangeRate": 154.2,
+  "verdict": "buy",
+  "verdictReason": "Strong and stable spread. The SKX007 consistently sells for $180–$320 in the US market. Demand has held steady for 18 months. At ¥4,500 you are well below the average JP sold price of ¥5,800.",
+  "roi": 7.4,
+  "roiTier": "high",
+  "jpMarket": {
+    "source": ["Mercari JP", "Yahoo Auctions"],
+    "avgSoldPrice": 5800,
+    "priceRange": { "min": 2500, "max": 8500 },
+    "recentSales": [
+      { "title": "Seiko SKX007 — Good condition", "source": "Mercari JP", "daysAgo": 3, "price": 3800, "sold": true },
+      { "title": "Seiko SKX007 — Box & papers", "source": "Mercari JP", "daysAgo": 7, "price": 7200, "sold": true },
+      { "title": "Seiko SKX007 — Scratched bezel", "source": "Mercari JP", "daysAgo": 14, "price": 2500, "sold": true },
+      { "title": "Seiko SKX009 (blue) — VGC", "source": "Yahoo Auctions", "daysAgo": 5, "price": 5100, "sold": true }
+    ]
+  },
+  "usMarket": {
+    "source": ["eBay", "Chrono24"],
+    "avgSoldPrice": 240,
+    "priceRange": { "min": 175, "max": 320 },
+    "recentSales": [
+      { "title": "Seiko SKX007 — Good condition", "source": "eBay", "daysAgo": 2, "price": 195, "currency": "USD", "sold": true },
+      { "title": "Seiko SKX007 — Box & papers", "source": "eBay", "daysAgo": 4, "price": 320, "currency": "USD", "sold": true },
+      { "title": "Seiko SKX007 — Bezel replaced", "source": "eBay", "daysAgo": 7, "price": 175, "currency": "USD", "sold": true },
+      { "title": "Seiko SKX009 (blue)", "source": "Chrono24", "daysAgo": 3, "price": 260, "currency": "USD", "sold": true }
+    ]
+  },
+  "profitBreakdown": {
+    "buyPrice": 29.18,
+    "avgSellPrice": 240,
+    "platforms": [
+      { "name": "eBay", "fee": 0.1325, "feeAmount": 31.80, "shipping": 12, "paymentFee": 7.20, "netProfit": 159.82, "recommended": true },
+      { "name": "Chrono24", "fee": 0.065, "feeAmount": 15.60, "shipping": 12, "paymentFee": 0, "netProfit": 183.22, "recommended": false, "note": "Slower, requires account" },
+      { "name": "WatchUSeek", "fee": 0, "feeAmount": 0, "shipping": 12, "paymentFee": 0, "netProfit": 198.82, "recommended": false, "note": "No fees but requires community presence" }
+    ]
+  },
+  "customs": [
+    { "country": "United States", "flag": "🇺🇸", "status": "ok", "limit": "No restrictions", "note": "Under $800 duty-free personal exemption" },
+    { "country": "United Kingdom", "flag": "🇬🇧", "status": "warn", "limit": "£390 limit", "note": "Declare if over threshold" },
+    { "country": "Australia", "flag": "🇦🇺", "status": "ok", "limit": "AUD $900 limit", "note": "Fine as personal goods" },
+    { "country": "Canada", "flag": "🇨🇦", "status": "ok", "limit": "CAD $800 limit", "note": "Personal exemption applies" },
+    { "country": "Germany / EU", "flag": "🇩🇪", "status": "warn", "limit": "€430 limit", "note": "Lower threshold, keep receipt" }
+  ]
+}

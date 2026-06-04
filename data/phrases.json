@@ -1,0 +1,208 @@
+{
+  "sections": [
+    {
+      "id": "asking-items",
+      "title": "Asking About Items",
+      "phrases": [
+        {
+          "japanese": "他にもありますか？",
+          "romaji": "Hoka ni mo arimasu ka?",
+          "meaning": "Do you have any more of these?",
+          "usageNote": "Use when you find something you like but want to check for better options in the back room or stockroom."
+        },
+        {
+          "japanese": "これだけですか？",
+          "romaji": "Kore dake desu ka?",
+          "meaning": "Is this the only one?",
+          "usageNote": "Direct follow-up if you are not happy with the condition of the only piece on display."
+        },
+        {
+          "japanese": "もっといい状態のものはありますか？",
+          "romaji": "Motto ii jōtai no mono wa arimasu ka?",
+          "meaning": "Do you have this in better condition?",
+          "usageNote": "Signals you are a serious buyer willing to pay more for quality. Often prompts staff to check the back."
+        },
+        {
+          "japanese": "時計はどこにありますか？",
+          "romaji": "Tokei wa doko ni arimasu ka?",
+          "meaning": "Where can I find watches?",
+          "usageNote": "Swap 時計 (tokei) for カメラ (kamera), 服 (fuku), or レコード (rekōdo) depending on what you are looking for."
+        }
+      ]
+    },
+    {
+      "id": "condition-authenticity",
+      "title": "Asking About Condition & Authenticity",
+      "phrases": [
+        {
+          "japanese": "状態はどうですか？",
+          "romaji": "Jōtai wa dō desu ka?",
+          "meaning": "What condition is this in?",
+          "usageNote": "Open-ended. Staff will usually give an honest answer — shops grade items internally and stake their reputation on it."
+        },
+        {
+          "japanese": "ちゃんと動きますか？",
+          "romaji": "Chanto ugokimasu ka?",
+          "meaning": "Does it work properly?",
+          "usageNote": "Stronger than just 動きますか — the word ちゃんと (properly) signals you care about function, not just that it powers on."
+        },
+        {
+          "japanese": "本物ですか？",
+          "romaji": "Honmono desu ka?",
+          "meaning": "Is this genuine / authentic?",
+          "usageNote": "Appropriate for luxury items, branded goods, or anything where counterfeits are common. Staff will not be offended."
+        },
+        {
+          "japanese": "傷や欠陥はありますか？",
+          "romaji": "Kizu ya kekkan wa arimasu ka?",
+          "meaning": "Are there any defects or damage?",
+          "usageNote": "More thorough than 傷はどこですか — covers both cosmetic and functional issues. Use before buying anything expensive."
+        }
+      ]
+    },
+    {
+      "id": "opening",
+      "title": "Opening Negotiation",
+      "phrases": [
+        {
+          "japanese": "もう少し安くなりますか？",
+          "romaji": "Mō sukoshi yasuku narimasu ka?",
+          "meaning": "Can you make it a little cheaper?",
+          "usageNote": "Polite opener. Use with a smile after a pause. Works about 40% of the time in recycle shops."
+        },
+        {
+          "japanese": "まとめて買うので、少し負けてもらえますか？",
+          "romaji": "Matomete kau node, sukoshi makete moraemasu ka?",
+          "meaning": "I'm buying several things — can you give me a small discount?",
+          "usageNote": "Most effective phrase when buying 2+ items. Show them the pile before asking."
+        },
+        {
+          "japanese": "これ、いくらですか？",
+          "romaji": "Kore, ikura desu ka?",
+          "meaning": "How much is this?",
+          "usageNote": "Essential for unpriced items. Point clearly at what you're asking about."
+        }
+      ]
+    },
+    {
+      "id": "condition",
+      "title": "Asking About Condition",
+      "phrases": [
+        {
+          "japanese": "動きますか？",
+          "romaji": "Ugokimasu ka?",
+          "meaning": "Does it work?",
+          "usageNote": "For electronics, cameras, watches. Simple and universally understood."
+        },
+        {
+          "japanese": "テストできますか？",
+          "romaji": "Tesuto dekimasu ka?",
+          "meaning": "Can I test it?",
+          "usageNote": "Most shops accommodate this request. For cameras, staff may have a battery available."
+        },
+        {
+          "japanese": "傷はどこですか？",
+          "romaji": "Kizu wa doko desu ka?",
+          "meaning": "Where are the scratches?",
+          "usageNote": "Forces transparency about flaws. Also signals you're an experienced buyer — often leads to better treatment."
+        }
+      ]
+    },
+    {
+      "id": "bulk",
+      "title": "Bulk Buying",
+      "phrases": [
+        {
+          "japanese": "全部でいくらですか？",
+          "romaji": "Zenbu de ikura desu ka?",
+          "meaning": "How much for everything together?",
+          "usageNote": "Use after selecting multiple items. Often triggers a spontaneous discount without needing to ask."
+        },
+        {
+          "japanese": "この３つをまとめてどうですか？",
+          "romaji": "Kono mittsu wo matomete dō desu ka?",
+          "meaning": "How about these three as a bundle?",
+          "usageNote": "Specific and polite. Swap the number: futatsu (2), mittsu (3), yottsu (4), itsutsu (5)."
+        }
+      ]
+    },
+    {
+      "id": "unpriced",
+      "title": "Unpriced Items",
+      "phrases": [
+        {
+          "japanese": "値段がついていないのですが…",
+          "romaji": "Nedan ga tsuite inai no desu ga...",
+          "meaning": "This doesn't have a price tag...",
+          "usageNote": "The trailing ellipsis is intentional. Pause after saying it — let them fill the silence with a price."
+        },
+        {
+          "japanese": "これはいくらで売ってもらえますか？",
+          "romaji": "Kore wa ikura de utte moraemasu ka?",
+          "meaning": "How much would you sell this for?",
+          "usageNote": "More direct version. Use for display cases or items behind glass."
+        }
+      ]
+    },
+    {
+      "id": "purchasing",
+      "title": "Purchasing",
+      "phrases": [
+        {
+          "japanese": "これをください。",
+          "romaji": "Kore o kudasai.",
+          "meaning": "I'll take this one.",
+          "usageNote": "The most useful phrase of all. Clear and polite — staff will immediately start processing the sale."
+        },
+        {
+          "japanese": "カードで払えますか？",
+          "romaji": "Kādo de haraemasu ka?",
+          "meaning": "Can I pay by card?",
+          "usageNote": "Most Hard Off and 2nd Street chains accept cards. Smaller independent shops are often cash only."
+        },
+        {
+          "japanese": "袋はありますか？",
+          "romaji": "Fukuro wa arimasu ka?",
+          "meaning": "Do you have a bag?",
+          "usageNote": "Japan introduced a plastic bag charge in 2020. Staff may not offer one automatically — ask if you need it."
+        },
+        {
+          "japanese": "領収書をいただけますか？",
+          "romaji": "Ryōshūsho o itadakemasu ka?",
+          "meaning": "Can I have a receipt?",
+          "usageNote": "Essential for customs declarations. Keep all receipts when buying items you plan to resell."
+        }
+      ]
+    },
+    {
+      "id": "closing",
+      "title": "Leaving / Closing",
+      "phrases": [
+        {
+          "japanese": "見ているだけです、ありがとう。",
+          "romaji": "Mite iru dake desu, arigatō.",
+          "meaning": "I'm just looking, thank you.",
+          "usageNote": "Use when approached by staff and you are not ready to buy. Polite and gives you space to browse."
+        },
+        {
+          "japanese": "考えてみます",
+          "romaji": "Kangaete mimasu",
+          "meaning": "I'll think about it",
+          "usageNote": "Use when walking away without offense. Often prompts a last-minute counteroffer from the seller."
+        },
+        {
+          "japanese": "ありがとうございました",
+          "romaji": "Arigatō gozaimashita",
+          "meaning": "Thank you very much",
+          "usageNote": "Always end with this regardless of outcome. Keeps the relationship warm for next time."
+        },
+        {
+          "japanese": "また来ます",
+          "romaji": "Mata kimasu",
+          "meaning": "I'll come back",
+          "usageNote": "Regular visitors get better treatment. Staff remember faces and become more flexible over multiple visits."
+        }
+      ]
+    }
+  ]
+}

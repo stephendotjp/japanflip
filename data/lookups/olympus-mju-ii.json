@@ -1,0 +1,49 @@
+{
+  "query": "Olympus mju-II",
+  "category": "electronics",
+  "jpBuyPrice": 3200,
+  "usdEquivalent": 20.75,
+  "exchangeRate": 154.2,
+  "verdict": "buy",
+  "verdictReason": "The mju-II (Stylus Epic) is one of the most desirable point-and-shoots in the West. At ¥3,200 you are below the JP average of ¥4,400. The 35mm f/2.8 lens and clamshell design are the reason. Test that the clamshell opens and the flash fires.",
+  "roi": 9.6,
+  "roiTier": "high",
+  "jpMarket": {
+    "source": ["Mercari JP", "Yahoo Auctions"],
+    "avgSoldPrice": 4400,
+    "priceRange": { "min": 2000, "max": 8500 },
+    "recentSales": [
+      { "title": "Olympus mju-II — Working, tested", "source": "Mercari JP", "daysAgo": 1, "price": 3800, "sold": true },
+      { "title": "Olympus μ[mju:]-II Black edition", "source": "Mercari JP", "daysAgo": 4, "price": 6200, "sold": true },
+      { "title": "Olympus mju-II — minor scratches", "source": "Yahoo Auctions", "daysAgo": 6, "price": 2800, "sold": true },
+      { "title": "Olympus Stylus Epic — gold", "source": "Yahoo Auctions", "daysAgo": 10, "price": 5500, "sold": true }
+    ]
+  },
+  "usMarket": {
+    "source": ["eBay", "Depop"],
+    "avgSoldPrice": 200,
+    "priceRange": { "min": 140, "max": 350 },
+    "recentSales": [
+      { "title": "Olympus Stylus Epic mju-II Tested", "source": "eBay", "daysAgo": 2, "price": 185, "currency": "USD", "sold": true },
+      { "title": "Olympus mju-II Silver — Great cond.", "source": "eBay", "daysAgo": 3, "price": 210, "currency": "USD", "sold": true },
+      { "title": "Olympus Stylus Epic — tested rolls", "source": "Depop", "daysAgo": 7, "price": 175, "currency": "USD", "sold": true },
+      { "title": "Olympus mju-II Black — mint", "source": "eBay", "daysAgo": 11, "price": 295, "currency": "USD", "sold": true }
+    ]
+  },
+  "profitBreakdown": {
+    "buyPrice": 20.75,
+    "avgSellPrice": 200,
+    "platforms": [
+      { "name": "eBay", "fee": 0.1325, "feeAmount": 26.50, "shipping": 10, "paymentFee": 6.00, "netProfit": 136.75, "recommended": true },
+      { "name": "Depop", "fee": 0.10, "feeAmount": 20.00, "shipping": 10, "paymentFee": 6.00, "netProfit": 143.25, "recommended": false, "note": "Younger audience, strong film camera demand" },
+      { "name": "Etsy", "fee": 0.065, "feeAmount": 13.00, "shipping": 10, "paymentFee": 6.00, "netProfit": 150.25, "recommended": false, "note": "Good for vintage electronics" }
+    ]
+  },
+  "customs": [
+    { "country": "United States", "flag": "🇺🇸", "status": "ok", "limit": "No restrictions", "note": "Under $800 duty-free personal exemption" },
+    { "country": "United Kingdom", "flag": "🇬🇧", "status": "ok", "limit": "£390 limit", "note": "Under threshold" },
+    { "country": "Australia", "flag": "🇦🇺", "status": "ok", "limit": "AUD $900 limit", "note": "Fine as personal goods" },
+    { "country": "Canada", "flag": "🇨🇦", "status": "ok", "limit": "CAD $800 limit", "note": "Personal exemption applies" },
+    { "country": "Germany / EU", "flag": "🇩🇪", "status": "ok", "limit": "€430 limit", "note": "Under threshold" }
+  ]
+}

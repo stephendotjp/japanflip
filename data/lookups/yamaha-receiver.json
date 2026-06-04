@@ -1,0 +1,49 @@
+{
+  "query": "Yamaha receiver",
+  "category": "electronics",
+  "jpBuyPrice": 5000,
+  "usdEquivalent": 32.42,
+  "exchangeRate": 154.2,
+  "verdict": "maybe",
+  "verdictReason": "Solid spread on vintage Yamaha receivers — they sell for $120–$180 on eBay. The challenge is shipping: receivers are heavy (5–12kg) and fragile. Shipping cost eats margin. Best strategy: sell locally or find a flat-rate domestic box.",
+  "roi": 4.6,
+  "roiTier": "medium",
+  "jpMarket": {
+    "source": ["Mercari JP", "Yahoo Auctions"],
+    "avgSoldPrice": 6500,
+    "priceRange": { "min": 2000, "max": 18000 },
+    "recentSales": [
+      { "title": "Yamaha CR-820 — working, no remote", "source": "Mercari JP", "daysAgo": 5, "price": 4800, "sold": true },
+      { "title": "Yamaha R-N602 stereo receiver", "source": "Mercari JP", "daysAgo": 8, "price": 8200, "sold": true },
+      { "title": "Yamaha A-S301 — good condition", "source": "Yahoo Auctions", "daysAgo": 3, "price": 5500, "sold": true },
+      { "title": "Yamaha CR-620 vintage — Japan-only", "source": "Yahoo Auctions", "daysAgo": 12, "price": 6800, "sold": true }
+    ]
+  },
+  "usMarket": {
+    "source": ["eBay", "Craigslist"],
+    "avgSoldPrice": 150,
+    "priceRange": { "min": 80, "max": 280 },
+    "recentSales": [
+      { "title": "Yamaha CR-820 Vintage Receiver — Works", "source": "eBay", "daysAgo": 6, "price": 135, "currency": "USD", "sold": true },
+      { "title": "Yamaha natural sound receiver", "source": "eBay", "daysAgo": 9, "price": 165, "currency": "USD", "sold": true },
+      { "title": "Yamaha A-S301 integrated amp", "source": "eBay", "daysAgo": 4, "price": 195, "currency": "USD", "sold": true },
+      { "title": "Yamaha vintage CR-620 Japan model", "source": "eBay", "daysAgo": 14, "price": 220, "currency": "USD", "sold": true }
+    ]
+  },
+  "profitBreakdown": {
+    "buyPrice": 32.42,
+    "avgSellPrice": 150,
+    "platforms": [
+      { "name": "eBay", "fee": 0.1325, "feeAmount": 19.88, "shipping": 45, "paymentFee": 4.50, "netProfit": 48.20, "recommended": true, "note": "Factor $35–$55 for ground shipping" },
+      { "name": "Facebook Marketplace", "fee": 0.05, "feeAmount": 7.50, "shipping": 0, "paymentFee": 0, "netProfit": 110.08, "recommended": false, "note": "Local only — best margin if you can find a buyer" },
+      { "name": "Audiogon", "fee": 0.035, "feeAmount": 5.25, "shipping": 45, "paymentFee": 0, "netProfit": 67.33, "recommended": false, "note": "Audiophile community — slow but better prices for vintage gear" }
+    ]
+  },
+  "customs": [
+    { "country": "United States", "flag": "🇺🇸", "status": "ok", "limit": "No restrictions", "note": "Electronics are unrestricted. Keep it in carry-on if possible — or ship separately." },
+    { "country": "United Kingdom", "flag": "🇬🇧", "status": "ok", "limit": "£390 limit", "note": "At ¥5,000 (~£25) you're well under" },
+    { "country": "Australia", "flag": "🇦🇺", "status": "ok", "limit": "AUD $900 limit", "note": "Fine as personal goods" },
+    { "country": "Canada", "flag": "🇨🇦", "status": "ok", "limit": "CAD $800 limit", "note": "Electronics typically fine" },
+    { "country": "Germany / EU", "flag": "🇩🇪", "status": "ok", "limit": "€430 limit", "note": "Under threshold at ¥5,000" }
+  ]
+}

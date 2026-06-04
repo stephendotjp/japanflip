@@ -31,6 +31,8 @@ const config: Config = {
         ticker: "ticker 30s linear infinite",
         pulse_dot: "pulse_dot 2s ease-in-out infinite",
         fadeIn: "fadeIn 0.4s ease forwards",
+        fadeUp: "fadeUp 0.4s ease forwards",
+        verdictReveal: "verdictReveal 0.3s ease forwards",
       },
       keyframes: {
         ticker: {
@@ -39,11 +41,19 @@ const config: Config = {
         },
         pulse_dot: {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.3" },
+          "50%": { opacity: "0.4" },
         },
         fadeIn: {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeUp: {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        verdictReveal: {
+          "0%": { transform: "scale(0.97)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
       },
     },
