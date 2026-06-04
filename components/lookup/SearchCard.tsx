@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { mapLabelsToCategory } from "@/lib/visionMap";
 
 interface SearchCardProps {
   onSearch: (item: string, category: string, priceJPY: number, condition: string, size: string) => void;
@@ -53,10 +54,59 @@ export function SearchCard({
   const [price, setPrice] = useState(initialPrice);
   const [condition, setCondition] = useState("A");
   const [size, setSize] = useState("Small");
+  const [cameraState, setCameraState] = useState<"idle" | "loading" | "error">("idle");
+  const [cameraError, setCameraError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSize(categoryDefaultSize[category] ?? "Small");
   }, [category]);
+
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCameraState("loading");
+    setCameraError("");
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = reader.result as string;
+      const base64 = dataUrl.split(",")[1];
+      const mimeType = file.type;
+
+      try {
+        const res = await fetch("/api/vision", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageBase64: base64, mimeType }),
+        });
+        const { labels, webEntities } = await res.json();
+        const match = mapLabelsToCategory(labels ?? [], webEntities ?? []);
+
+        if (!match) {
+          setCameraState("error");
+          setCameraError("Couldn't identify item — please type it");
+          return;
+        }
+
+        setItem(match.itemName);
+        setCategory(match.category);
+        setCameraState("idle");
+
+        if (fileInputRef.current) fileInputRef.current.value = "";
+
+        const numPrice = Number(price.replace(/[^0-9]/g, ""));
+        if (numPrice) {
+          onSearch(match.itemName, match.category, numPrice, condition, size);
+        }
+      } catch {
+        setCameraState("error");
+        setCameraError("Couldn't identify item — please type it");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,14 +126,47 @@ export function SearchCard({
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex flex-col md:flex-row gap-3">
-          <input
-            type="text"
-            value={item}
-            onChange={(e) => setItem(e.target.value)}
-            placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
-            disabled={disabled}
-            className="flex-[2] px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
-          />
+          <div className="flex-[2] flex gap-2">
+            <input
+              type="text"
+              value={item}
+              onChange={(e) => setItem(e.target.value)}
+              placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
+              disabled={disabled}
+              className="flex-1 px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
+            />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={handlePhotoSelect}
+            />
+            <button
+              type="button"
+              disabled={disabled || cameraState === "loading"}
+              onClick={() => {
+                setCameraError("");
+                setCameraState("idle");
+                fileInputRef.current?.click();
+              }}
+              title="Identify item from photo"
+              className="px-3 py-3 border border-border rounded-md bg-white hover:border-text transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {cameraState === "loading" ? (
+                <svg className="animate-spin w-4 h-4 text-muted" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              )}
+            </button>
+          </div>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -120,6 +203,12 @@ export function SearchCard({
             {loading ? "Checking..." : "Check It →"}
           </button>
         </div>
+
+        {cameraState === "error" && cameraError && (
+          <p className="font-mono text-[11px]" style={{ color: "var(--red)" }}>
+            {cameraError}
+          </p>
+        )}
 
         {/* Condition selector */}
         <div className="flex flex-wrap items-center gap-3">
