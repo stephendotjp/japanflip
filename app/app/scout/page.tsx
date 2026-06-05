@@ -91,6 +91,8 @@ export default function ScoutPage() {
   const [tab, setTab] = useState<"capture" | "pile">("capture");
   const [photo, setPhoto] = useState<string | null>(null);
   const [price, setPrice] = useState("");
+  const [storeNameInput, setStoreNameInput] = useState("");
+  const [notesInput, setNotesInput] = useState("");
   const [saving, setSaving] = useState(false);
   const [savedConfirm, setSavedConfirm] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -121,15 +123,17 @@ export default function ScoutPage() {
 
     setSaving(true);
 
+    const manualStoreName = storeNameInput.trim() || null;
+
     const item: ScoutItem = {
       id: crypto.randomUUID(),
       photoDataUrl: photo,
       priceJPY: numPrice,
-      storeName: null,
+      storeName: manualStoreName,
       storeCoords: null,
       category: null,
       itemName: null,
-      notes: "",
+      notes: notesInput.trim(),
       scoutedAt: new Date().toISOString(),
       resolved: false,
       verdict: null,
@@ -140,6 +144,8 @@ export default function ScoutPage() {
     setSavedConfirm(true);
     setPhoto(null);
     setPrice("");
+    setStoreNameInput("");
+    setNotesInput("");
 
     // Fire-and-forget background enrichment
     const savedId = item.id;
@@ -148,7 +154,8 @@ export default function ScoutPage() {
         updateScoutItem(savedId, {
           category: vision.category,
           itemName: vision.itemName,
-          storeName: store.storeName,
+          // only fill storeName from geo if user didn't provide one
+          ...(manualStoreName ? {} : { storeName: store.storeName }),
           storeCoords: store.storeCoords,
         });
       }
@@ -275,6 +282,24 @@ export default function ScoutPage() {
                   </div>
                 </div>
 
+                {/* Optional fields */}
+                <div className="w-full max-w-xs space-y-2">
+                  <input
+                    type="text"
+                    value={storeNameInput}
+                    onChange={(e) => setStoreNameInput(e.target.value)}
+                    placeholder="Store name (optional)"
+                    className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm text-text bg-white focus:outline-none focus:border-black placeholder:text-muted"
+                  />
+                  <input
+                    type="text"
+                    value={notesInput}
+                    onChange={(e) => setNotesInput(e.target.value)}
+                    placeholder="Notes (optional)"
+                    className="w-full px-4 py-3 border border-border rounded-xl font-body text-sm text-text bg-white focus:outline-none focus:border-black placeholder:text-muted"
+                  />
+                </div>
+
                 <button
                   onClick={handleSave}
                   disabled={saving || !price || Number(price) === 0}
@@ -366,6 +391,11 @@ export default function ScoutPage() {
                             : "Location unknown")}{" "}
                         · {timeAgo(scout.scoutedAt)}
                       </p>
+                      {scout.notes && (
+                        <p className="font-body text-[11px] truncate" style={{ color: "var(--muted)" }}>
+                          {scout.notes}
+                        </p>
+                      )}
                     </div>
 
                     {/* Right side */}
