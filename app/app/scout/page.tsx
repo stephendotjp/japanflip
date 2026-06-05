@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useUser } from "@/context/UserContext";
 import { TopBar } from "@/components/layout/TopBar";
 import { Badge } from "@/components/ui/Badge";
@@ -87,7 +86,7 @@ async function fetchStoreInfo(): Promise<{
 }
 
 export default function ScoutPage() {
-  const { isBasic, scoutItems, addScoutItem, updateScoutItem, removeScoutItem } = useUser();
+  const { scoutItems, addScoutItem, updateScoutItem, removeScoutItem } = useUser();
   const router = useRouter();
   const [tab, setTab] = useState<"capture" | "pile">("capture");
   const [photo, setPhoto] = useState<string | null>(null);
@@ -102,32 +101,6 @@ export default function ScoutPage() {
       return () => clearTimeout(t);
     }
   }, [savedConfirm]);
-
-  if (!isBasic) {
-    return (
-      <div className="p-5 md:p-10 space-y-6 pb-10">
-        <TopBar title="Scout Mode" subtitle="Capture items in-store, decide later." />
-        <div
-          className="border-2 border-dashed rounded-xl p-12 text-center space-y-4"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <p className="text-4xl">📷</p>
-          <p className="font-display text-3xl text-black">Basic Feature</p>
-          <p className="font-body text-sm text-muted max-w-sm mx-auto">
-            Scout Mode is available on Basic and above. Capture items quickly in-store
-            and research them later.
-          </p>
-          <Link
-            href="/app/upgrade"
-            className="inline-block px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
-            style={{ background: "var(--red)" }}
-          >
-            Get Basic — $9
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
