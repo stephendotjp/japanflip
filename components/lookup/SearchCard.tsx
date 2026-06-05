@@ -9,6 +9,7 @@ interface SearchCardProps {
   disabled?: boolean;
   initialItem?: string;
   initialPrice?: string;
+  initialCategory?: string;
 }
 
 const categories = [
@@ -48,9 +49,10 @@ export function SearchCard({
   disabled,
   initialItem = "",
   initialPrice = "",
+  initialCategory,
 }: SearchCardProps) {
   const [item, setItem] = useState(initialItem);
-  const [category, setCategory] = useState("Watches");
+  const [category, setCategory] = useState(initialCategory ?? "Watches");
   const [price, setPrice] = useState(initialPrice);
   const [condition, setCondition] = useState("A");
   const [size, setSize] = useState("Small");

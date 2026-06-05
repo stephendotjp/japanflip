@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import { getScoutItems } from "@/lib/scout";
 import { SearchCard } from "@/components/lookup/SearchCard";
 import { QuickChips } from "@/components/lookup/QuickChips";
 import { VerdictCard } from "@/components/lookup/VerdictCard";
@@ -20,20 +22,43 @@ import type { LookupResult, TripItem } from "@/lib/types";
 const FREE_LIMIT = 3;
 
 export default function PriceLookupPage() {
-  const { tier, isBasic, isPremium, todayCount, incrementLookup, saveLookup, savedLookups, addToTrip } =
+  const { tier, isBasic, isPremium, todayCount, incrementLookup, saveLookup, savedLookups, addToTrip, updateScoutItem } =
     useUser();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LookupResult | null>(null);
   const [noResult, setNoResult] = useState(false);
   const [lastItem, setLastItem] = useState("");
   const [rate, setRate] = useState<number | null>(null);
   const [lastCondition, setLastCondition] = useState("A");
+  const [scoutPrefill, setScoutPrefill] = useState<{
+    item: string;
+    category: string;
+    price: string;
+    scoutId: string;
+  } | null>(null);
+  const scoutResolved = useRef(false);
 
   useEffect(() => {
     fetch("/api/exchange-rate")
       .then((r) => r.json())
       .then((d) => setRate(d.rate));
   }, []);
+
+  useEffect(() => {
+    const scoutId = searchParams.get("scout");
+    if (!scoutId) return;
+    const items = getScoutItems();
+    const scout = items.find((i) => i.id === scoutId);
+    if (!scout) return;
+    setScoutPrefill({
+      item: scout.itemName ?? "",
+      category: scout.category ?? "Other",
+      price: String(scout.priceJPY),
+      scoutId,
+    });
+    scoutResolved.current = false;
+  }, [searchParams]);
 
   const atLimit = tier === "free" && todayCount >= FREE_LIMIT;
 
@@ -60,6 +85,14 @@ export default function PriceLookupPage() {
 
     setResult(data);
     incrementLookup();
+
+    if (scoutPrefill && !scoutResolved.current) {
+      scoutResolved.current = true;
+      updateScoutItem(scoutPrefill.scoutId, {
+        resolved: true,
+        verdict: data.verdict,
+      });
+    }
 
     if (isBasic) {
       saveLookup({
@@ -117,7 +150,14 @@ export default function PriceLookupPage() {
         </div>
       )}
 
-      <SearchCard onSearch={handleSearch} loading={loading} disabled={atLimit} />
+      <SearchCard
+        onSearch={handleSearch}
+        loading={loading}
+        disabled={atLimit}
+        initialItem={scoutPrefill?.item}
+        initialPrice={scoutPrefill?.price}
+        initialCategory={scoutPrefill?.category}
+      />
       <QuickChips onSelect={handleSearch} disabled={atLimit || loading} />
 
       {/* At limit gate */}

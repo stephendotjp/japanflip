@@ -1,7 +1,13 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import type { Tier, SavedLookup, TripItem } from "@/lib/types";
+import type { Tier, SavedLookup, TripItem, ScoutItem } from "@/lib/types";
+import {
+  saveScoutItem,
+  getScoutItems,
+  updateScoutItem as utilUpdateScoutItem,
+  deleteScoutItem,
+} from "@/lib/scout";
 
 interface UserState {
   tier: Tier;
@@ -12,6 +18,7 @@ interface UserState {
   homeCountry: string;
   tripItems: TripItem[];
   tripDate: string;
+  scoutItems: ScoutItem[];
 }
 
 interface UserContextValue extends UserState {
@@ -21,6 +28,9 @@ interface UserContextValue extends UserState {
   setHomeCountry: (country: string) => void;
   addToTrip: (item: TripItem) => void;
   clearTrip: () => void;
+  addScoutItem: (item: ScoutItem) => void;
+  updateScoutItem: (id: string, patch: Partial<ScoutItem>) => void;
+  removeScoutItem: (id: string) => void;
   isBasic: boolean;
   isPremium: boolean;
   todayCount: number;
@@ -36,6 +46,7 @@ const defaultState: UserState = {
   homeCountry: "US",
   tripItems: [],
   tripDate: "",
+  scoutItems: [],
 };
 
 const UserContext = createContext<UserContextValue | null>(null);
@@ -90,6 +101,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     persist({ ...state, tripItems: [], tripDate: "" });
   };
 
+  const addScoutItem = (item: ScoutItem) => {
+    saveScoutItem(item);
+    setState((s) => ({ ...s, scoutItems: getScoutItems() }));
+  };
+
+  const updateScoutItem = (id: string, patch: Partial<ScoutItem>) => {
+    utilUpdateScoutItem(id, patch);
+    setState((s) => ({ ...s, scoutItems: getScoutItems() }));
+  };
+
+  const removeScoutItem = (id: string) => {
+    deleteScoutItem(id);
+    setState((s) => ({ ...s, scoutItems: getScoutItems() }));
+  };
+
   const today = new Date().toISOString().split("T")[0];
   const todayCount = hydrated && state.lookupDate === today ? state.lookupCount : 0;
   const currentTripItems = hydrated && state.tripDate === today ? state.tripItems : [];
@@ -107,6 +133,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setHomeCountry,
         addToTrip,
         clearTrip,
+        addScoutItem,
+        updateScoutItem,
+        removeScoutItem,
         isBasic,
         isPremium,
         todayCount,

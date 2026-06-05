@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
+import { getScoutItems } from "@/lib/scout";
 
 interface NavItem {
   label: string;
@@ -14,6 +16,7 @@ interface NavItem {
 
 const tools: NavItem[] = [
   { label: "Price Lookup", href: "/app", icon: "⊕" },
+  { label: "Scout Mode", href: "/app/scout", icon: "◎" },
   { label: "Profit Calculator", href: "/app/calculator", icon: "⊞" },
   { label: "Customs Checker", href: "/app/customs", icon: "✈" },
   { label: "Saved Lookups", href: "/app/history", icon: "◉", premiumOnly: true },
@@ -28,6 +31,12 @@ const learn: NavItem[] = [
 export function Sidebar() {
   const pathname = usePathname();
   const { tier, isBasic, isPremium } = useUser();
+  const [unresolvedCount, setUnresolvedCount] = useState(0);
+
+  useEffect(() => {
+    const count = getScoutItems().filter((i) => !i.resolved).length;
+    setUnresolvedCount(count);
+  }, [pathname]);
 
   const isActive = (href: string) =>
     href === "/app" ? pathname === "/app" : pathname.startsWith(href);
@@ -58,6 +67,7 @@ export function Sidebar() {
         {tools.map(({ label, href, icon, premiumOnly, soon }) => {
           const active = !soon && isActive(href);
           const locked = premiumOnly && !isPremium;
+          const showScoutBadge = href === "/app/scout" && unresolvedCount > 0;
           return (
             <Link
               key={href}
@@ -71,6 +81,14 @@ export function Sidebar() {
             >
               <span className="text-base w-5 text-center shrink-0">{icon}</span>
               <span className="font-body text-[13px] flex-1">{label}</span>
+              {showScoutBadge && (
+                <span
+                  className="font-mono text-[9px] px-1.5 py-0.5 rounded-full min-w-[18px] text-center"
+                  style={{ background: "#D92B3A44", color: "#D92B3A" }}
+                >
+                  {unresolvedCount}
+                </span>
+              )}
               {locked && !isPremium && isBasic && (
                 <span className="font-mono text-[9px] px-1.5 py-0.5 rounded" style={{ background: "#B8860B22", color: "#B8860B" }}>
                   PRO

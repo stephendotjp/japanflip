@@ -1,5 +1,19 @@
 export type Tier = "free" | "basic" | "premium";
 
+export interface ScoutItem {
+  id: string;
+  photoDataUrl: string;
+  priceJPY: number;
+  storeName: string | null;
+  storeCoords: { lat: number; lng: number } | null;
+  category: string | null;
+  itemName: string | null;
+  notes: string;
+  scoutedAt: string;
+  resolved: boolean;
+  verdict: "buy" | "skip" | "maybe" | null;
+}
+
 export interface TripItem {
   id: string;
   itemName: string;
