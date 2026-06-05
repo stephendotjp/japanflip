@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
@@ -21,7 +21,7 @@ import type { LookupResult, TripItem } from "@/lib/types";
 
 const FREE_LIMIT = 3;
 
-export default function PriceLookupPage() {
+function PriceLookupInner() {
   const { tier, isBasic, isPremium, todayCount, incrementLookup, saveLookup, savedLookups, addToTrip, updateScoutItem } =
     useUser();
   const searchParams = useSearchParams();
@@ -266,5 +266,13 @@ export default function PriceLookupPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function PriceLookupPage() {
+  return (
+    <Suspense>
+      <PriceLookupInner />
+    </Suspense>
   );
 }
