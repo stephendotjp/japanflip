@@ -58,6 +58,7 @@ export function SearchCard({
   const [cameraState, setCameraState] = useState<"idle" | "loading" | "error">("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const itemInputRef = useRef<HTMLInputElement>(null);
+  const priceInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (initialItem !== undefined) setItem(initialItem);
@@ -127,6 +128,9 @@ export function SearchCard({
         setCameraState("idle");
 
         if (fileInputRef.current) fileInputRef.current.value = "";
+
+        // Focus price field so user knows to enter the ¥ price from the tag
+        setTimeout(() => priceInputRef.current?.focus(), 50);
 
         const numPrice = Number(price.replace(/[^0-9]/g, ""));
         if (numPrice) {
@@ -220,6 +224,7 @@ export function SearchCard({
               ¥
             </span>
             <input
+              ref={priceInputRef}
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
