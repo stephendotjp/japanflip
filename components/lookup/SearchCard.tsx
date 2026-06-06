@@ -60,6 +60,18 @@ export function SearchCard({
   const itemInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (initialItem !== undefined) setItem(initialItem);
+  }, [initialItem]);
+
+  useEffect(() => {
+    if (initialPrice !== undefined) setPrice(initialPrice);
+  }, [initialPrice]);
+
+  useEffect(() => {
+    if (initialCategory) setCategory(initialCategory);
+  }, [initialCategory]);
+
+  useEffect(() => {
     setSize(categoryDefaultSize[category] ?? "Small");
   }, [category]);
 

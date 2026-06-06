@@ -40,6 +40,10 @@ function PriceLookupInner() {
     scoutId: string;
   } | null>(null);
   const scoutResolved = useRef(false);
+  const currentScoutIdRef = useRef<string | null>(null);
+  // Always holds the latest handleSearch — lets the searchParams effect call it without stale closure
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSearchRef = useRef<(...args: any[]) => void>(() => {});
 
   useEffect(() => {
     fetch("/api/exchange-rate")
@@ -55,17 +59,28 @@ function PriceLookupInner() {
 
   useEffect(() => {
     const scoutId = searchParams.get("scout");
-    if (!scoutId) return;
+    if (!scoutId) {
+      currentScoutIdRef.current = null;
+      return;
+    }
     const items = getScoutItems();
     const scout = items.find((i) => i.id === scoutId);
     if (!scout) return;
+
+    currentScoutIdRef.current = scoutId;
+    scoutResolved.current = false;
+
     setScoutPrefill({
       item: scout.itemName ?? "",
       category: scout.category ?? "Other",
       price: String(scout.priceJPY),
       scoutId,
     });
-    scoutResolved.current = false;
+
+    // Auto-search if vision already identified the item
+    if (scout.itemName && scout.priceJPY) {
+      handleSearchRef.current(scout.itemName, scout.category ?? "Other", scout.priceJPY);
+    }
   }, [searchParams]);
 
   const atLimit = tier === "free" && todayCount >= FREE_LIMIT;
@@ -99,9 +114,9 @@ function PriceLookupInner() {
     setResult(data);
     incrementLookup();
 
-    if (scoutPrefill && !scoutResolved.current) {
+    if (currentScoutIdRef.current && !scoutResolved.current) {
       scoutResolved.current = true;
-      updateScoutItem(scoutPrefill.scoutId, {
+      updateScoutItem(currentScoutIdRef.current, {
         resolved: true,
         verdict: data.verdict,
       });
@@ -119,6 +134,9 @@ function PriceLookupInner() {
       });
     }
   };
+
+  // Keep the ref current so the searchParams effect can call the latest version
+  handleSearchRef.current = handleSearch;
 
   const handleAddToTrip = (tripItem: TripItem) => {
     addToTrip(tripItem);
