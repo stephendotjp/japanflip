@@ -61,12 +61,17 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await res.json();
-    const text: string = data.content?.[0]?.text ?? "";
+    const raw: string = data.content?.[0]?.text ?? "";
+    console.log("[vision] Claude raw response:", raw);
+
+    // Strip markdown code fences Claude sometimes adds despite the prompt
+    const text = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
 
     let parsed: { itemName: string | null; category: string | null };
     try {
       parsed = JSON.parse(text);
     } catch {
+      console.error("[vision] JSON parse failed on:", text);
       return NextResponse.json({ itemName: null, category: null });
     }
 
