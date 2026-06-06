@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { LookupResult, TripItem } from "@/lib/types";
+import { getVerdictContext } from "@/lib/verdictContext";
 
 const verdictConfig = {
   buy: { label: "BUY IT", color: "#4ADE80" },
@@ -23,6 +24,7 @@ interface VerdictCardProps {
 export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCardProps) {
   const [addedToTrip, setAddedToTrip] = useState(false);
   const config = verdictConfig[result.verdict];
+  const verdictContext = getVerdictContext(result.category, result.verdict);
   const bestPlatform = result.profitBreakdown.platforms.reduce((a, b) =>
     a.netProfit > b.netProfit ? a : b
   );
@@ -61,6 +63,12 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
           <p className="font-body text-sm leading-relaxed" style={{ color: "#ffffffb3" }}>
             {result.verdictReason}
           </p>
+
+          {verdictContext && (
+            <p className="font-body text-xs leading-relaxed mt-2" style={{ color: "#ffffff66" }}>
+              {verdictContext}
+            </p>
+          )}
 
           {onAddToTrip && result.verdict !== "skip" && (
             <button

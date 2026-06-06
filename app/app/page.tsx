@@ -30,6 +30,8 @@ function PriceLookupInner() {
   const [noResult, setNoResult] = useState(false);
   const [lastItem, setLastItem] = useState("");
   const [rate, setRate] = useState<number | null>(null);
+  const [rateTime, setRateTime] = useState<string | null>(null);
+  const [gateData, setGateData] = useState<{ item: string; priceJPY: number } | null>(null);
   const [lastCondition, setLastCondition] = useState("A");
   const [scoutPrefill, setScoutPrefill] = useState<{
     item: string;
@@ -42,7 +44,13 @@ function PriceLookupInner() {
   useEffect(() => {
     fetch("/api/exchange-rate")
       .then((r) => r.json())
-      .then((d) => setRate(d.rate));
+      .then((d) => {
+        setRate(d.rate);
+        const now = new Date();
+        setRateTime(
+          `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`
+        );
+      });
   }, []);
 
   useEffect(() => {
@@ -63,7 +71,12 @@ function PriceLookupInner() {
   const atLimit = tier === "free" && todayCount >= FREE_LIMIT;
 
   const handleSearch = async (item: string, category: string, priceJPY: number, condition = "A", size = "Small") => {
-    if (atLimit) return;
+    if (atLimit) {
+      setGateData({ item, priceJPY });
+      setResult(null);
+      setNoResult(false);
+      return;
+    }
     setResult(null);
     setNoResult(false);
     setLoading(true);
@@ -126,7 +139,7 @@ function PriceLookupInner() {
           >
             <PulsingDot />
             <span className="font-mono text-[11px]" style={{ color: "var(--green)" }}>
-              ¥{rate ? rate.toFixed(1) : "..."} = $1 · Live rate
+              ¥{rate ? rate.toFixed(1) : "..."} = $1{rateTime ? ` · as of ${rateTime}` : " · Live rate"}
             </span>
           </div>
         }
@@ -153,23 +166,59 @@ function PriceLookupInner() {
       <SearchCard
         onSearch={handleSearch}
         loading={loading}
-        disabled={atLimit}
+        disabled={false}
         initialItem={scoutPrefill?.item}
         initialPrice={scoutPrefill?.price}
         initialCategory={scoutPrefill?.category}
       />
-      <QuickChips onSelect={handleSearch} disabled={atLimit || loading} />
+      <QuickChips onSelect={handleSearch} disabled={loading} />
 
-      {/* At limit gate */}
-      {atLimit && (
+      {/* At limit gate — blurred card when they tried a 4th search */}
+      {atLimit && gateData && (
+        <div className="relative rounded-xl overflow-hidden">
+          <div
+            className="blur-sm pointer-events-none select-none p-8 space-y-3"
+            style={{ background: "#111111" }}
+          >
+            <div className="h-4 w-20 rounded" style={{ background: "#ffffff22" }} />
+            <div className="h-12 w-48 rounded" style={{ background: "#ffffff22" }} />
+            <div className="h-3 w-full rounded mt-4" style={{ background: "#ffffff11" }} />
+            <div className="h-3 w-3/4 rounded" style={{ background: "#ffffff11" }} />
+            <div className="h-3 w-1/2 rounded" style={{ background: "#ffffff11" }} />
+          </div>
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 space-y-3"
+            style={{ background: "rgba(0,0,0,0.6)" }}
+          >
+            <p className="font-mono text-sm" style={{ color: "#ffffffb3" }}>
+              {gateData.item} · ¥{gateData.priceJPY.toLocaleString()}
+            </p>
+            <p className="font-display text-2xl text-white leading-tight">
+              You&apos;ve used your 3 free lookups today.
+            </p>
+            <p className="font-body text-sm" style={{ color: "#ffffff80" }}>
+              Unlock unlimited lookups.
+            </p>
+            <Link
+              href="/app/upgrade"
+              className="mt-1 px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              style={{ background: "var(--red)" }}
+            >
+              Get Basic — $9 →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* At limit — simple state when they haven't tried a 4th search yet */}
+      {atLimit && !gateData && !result && (
         <div
           className="border-2 border-dashed rounded-xl p-8 text-center space-y-4"
           style={{ borderColor: "var(--border)" }}
         >
           <p className="font-display text-3xl text-black">3 Free Lookups Used</p>
           <p className="font-body text-sm text-muted max-w-sm mx-auto">
-            You&apos;ve used your 3 free lookups today. Get Basic for unlimited lookups and the full
-            profit breakdown.
+            Get Basic for unlimited lookups.
           </p>
           <Link
             href="/app/upgrade"
@@ -236,21 +285,15 @@ function PriceLookupInner() {
             />
           </div>
 
-          {isBasic ? (
-            <>
-              <ProfitBreakdown result={result} />
-              <PlatformCards platforms={result.profitBreakdown.platforms} />
-              <CustomsStrip customs={result.customs} />
-              {!isPremium && (
-                <PremiumGate
-                  feature="live market data"
-                  upgradeHref="/app/upgrade"
-                  isPremiumOnly
-                />
-              )}
-            </>
-          ) : (
-            <PremiumGate feature="full profit breakdown" upgradeHref="/app/upgrade" />
+          <ProfitBreakdown result={result} />
+          <PlatformCards platforms={result.profitBreakdown.platforms} />
+          <CustomsStrip customs={result.customs} />
+          {!isPremium && (
+            <PremiumGate
+              feature="live market data"
+              upgradeHref="/app/upgrade"
+              isPremiumOnly
+            />
           )}
         </div>
       )}

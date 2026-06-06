@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { mapLabelsToCategory } from "@/lib/visionMap";
 
 interface SearchCardProps {
   onSearch: (item: string, category: string, priceJPY: number, condition: string, size: string) => void;
@@ -57,8 +56,8 @@ export function SearchCard({
   const [condition, setCondition] = useState("A");
   const [size, setSize] = useState("Small");
   const [cameraState, setCameraState] = useState<"idle" | "loading" | "error">("idle");
-  const [cameraError, setCameraError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const itemInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSize(categoryDefaultSize[category] ?? "Small");
@@ -69,7 +68,6 @@ export function SearchCard({
     if (!file) return;
 
     setCameraState("loading");
-    setCameraError("");
 
     const resizeImage = (file: File): Promise<{ base64: string; mimeType: string }> =>
       new Promise((resolve, reject) => {
@@ -101,35 +99,34 @@ export function SearchCard({
         });
         if (!res.ok) {
           setCameraState("error");
-          setCameraError("Couldn't identify item — please type it");
+          setTimeout(() => itemInputRef.current?.focus(), 50);
           return;
         }
-        const { labels, webEntities } = await res.json();
-        const match = mapLabelsToCategory(labels ?? [], webEntities ?? []);
+        const { itemName, category: detectedCategory } = await res.json();
 
-        if (!match) {
+        if (!itemName) {
           setCameraState("error");
-          setCameraError("Couldn't identify item — please type it");
+          setTimeout(() => itemInputRef.current?.focus(), 50);
           return;
         }
 
-        setItem(match.itemName);
-        setCategory(match.category);
+        setItem(itemName);
+        if (detectedCategory) setCategory(detectedCategory);
         setCameraState("idle");
 
         if (fileInputRef.current) fileInputRef.current.value = "";
 
         const numPrice = Number(price.replace(/[^0-9]/g, ""));
         if (numPrice) {
-          onSearch(match.itemName, match.category, numPrice, condition, size);
+          onSearch(itemName, detectedCategory ?? category, numPrice, condition, size);
         }
       } catch {
         setCameraState("error");
-        setCameraError("Couldn't identify item — please type it");
+        setTimeout(() => itemInputRef.current?.focus(), 50);
       }
     } catch {
       setCameraState("error");
-      setCameraError("Couldn't identify item — please type it");
+      setTimeout(() => itemInputRef.current?.focus(), 50);
     }
   };
 
@@ -153,12 +150,14 @@ export function SearchCard({
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-[2] flex gap-2">
             <input
+              ref={itemInputRef}
               type="text"
               value={item}
               onChange={(e) => setItem(e.target.value)}
               placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
               disabled={disabled}
               className="flex-1 px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
+              style={cameraState === "error" ? { borderColor: "var(--muted)" } : undefined}
             />
             <input
               ref={fileInputRef}
@@ -172,7 +171,6 @@ export function SearchCard({
               type="button"
               disabled={disabled || cameraState === "loading"}
               onClick={() => {
-                setCameraError("");
                 setCameraState("idle");
                 fileInputRef.current?.click();
               }}
@@ -229,9 +227,9 @@ export function SearchCard({
           </button>
         </div>
 
-        {cameraState === "error" && cameraError && (
-          <p className="font-mono text-[11px]" style={{ color: "var(--red)" }}>
-            {cameraError}
+        {cameraState === "error" && (
+          <p className="font-mono text-[11px]" style={{ color: "var(--muted)" }}>
+            Couldn&apos;t identify this item — what is it?
           </p>
         )}
 

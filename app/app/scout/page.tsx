@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { TopBar } from "@/components/layout/TopBar";
 import { Badge } from "@/components/ui/Badge";
-import { mapLabelsToCategory } from "@/lib/visionMap";
 import type { ScoutItem } from "@/lib/types";
 
 function timeAgo(isoStr: string): string {
@@ -48,9 +47,8 @@ async function fetchVisionData(
       body: JSON.stringify({ imageBase64: base64, mimeType: "image/jpeg" }),
     });
     if (!res.ok) return { category: null, itemName: null };
-    const { labels, webEntities } = await res.json();
-    const match = mapLabelsToCategory(labels ?? [], webEntities ?? []);
-    return match ?? { category: null, itemName: null };
+    const { itemName, category } = await res.json();
+    return { category: category ?? null, itemName: itemName ?? null };
   } catch {
     return { category: null, itemName: null };
   }
@@ -89,6 +87,8 @@ export default function ScoutPage() {
   const { scoutItems, addScoutItem, updateScoutItem, removeScoutItem } = useUser();
   const router = useRouter();
   const [tab, setTab] = useState<"capture" | "pile">("capture");
+  const [namingId, setNamingId] = useState<string | null>(null);
+  const [namingValue, setNamingValue] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [price, setPrice] = useState("");
   const [storeNameInput, setStoreNameInput] = useState("");
@@ -376,11 +376,38 @@ export default function ScoutPage() {
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-sm text-text truncate">
-                        {scout.itemName ?? (
-                          <span style={{ color: "var(--muted)" }}>Unknown item</span>
-                        )}
-                      </p>
+                      {namingId === scout.id ? (
+                        <input
+                          autoFocus
+                          type="text"
+                          value={namingValue}
+                          onChange={(e) => setNamingValue(e.target.value)}
+                          onBlur={() => {
+                            if (namingValue.trim()) updateScoutItem(scout.id, { itemName: namingValue.trim() });
+                            setNamingId(null);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              if (namingValue.trim()) updateScoutItem(scout.id, { itemName: namingValue.trim() });
+                              setNamingId(null);
+                            } else if (e.key === "Escape") {
+                              setNamingId(null);
+                            }
+                          }}
+                          placeholder="What is it?"
+                          className="font-body text-sm text-text w-full border-b border-black focus:outline-none bg-transparent"
+                        />
+                      ) : scout.itemName ? (
+                        <p className="font-body text-sm text-text truncate">{scout.itemName}</p>
+                      ) : (
+                        <button
+                          onClick={() => { setNamingId(scout.id); setNamingValue(""); }}
+                          className="font-body text-sm italic truncate"
+                          style={{ color: "var(--muted)" }}
+                        >
+                          Tap to name
+                        </button>
+                      )}
                       <p className="font-mono text-lg font-medium">
                         ¥{scout.priceJPY.toLocaleString()}
                       </p>

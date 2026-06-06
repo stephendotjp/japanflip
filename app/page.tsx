@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { HeroDemo } from "@/components/landing/HeroDemo";
-import { Ticker } from "@/components/landing/Ticker";
 import { PricingCards } from "@/components/landing/PricingCards";
 import { SocialProof } from "@/components/landing/SocialProof";
 import { LandingCalculator } from "@/components/landing/LandingCalculator";
@@ -132,9 +131,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Ticker */}
-      <Ticker />
 
       {/* How It Works */}
       <section id="how-it-works" className="px-5 md:px-10 py-20">

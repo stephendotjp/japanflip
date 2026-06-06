@@ -5,28 +5,28 @@
       "title": "Asking About Items",
       "phrases": [
         {
-          "japanese": "他にもありますか？",
-          "romaji": "Hoka ni mo arimasu ka?",
-          "meaning": "Do you have any more of these?",
-          "usageNote": "Use when you find something you like but want to check for better options in the back room or stockroom."
+          "japanese": "倉庫に他にもありますか？",
+          "romaji": "Sōko ni hoka ni mo arimasu ka?",
+          "meaning": "Do you have more in the stockroom?",
+          "usageNote": "Use at Hard Off when floor stock looks thin or condition-graded poorly — staff sometimes have better pieces not yet shelved. Works best if you point at the category section."
+        },
+        {
+          "japanese": "元の箱はありますか？",
+          "romaji": "Moto no hako wa arimasu ka?",
+          "meaning": "Does this come with the original box?",
+          "usageNote": "Complete-in-box adds significant resale value, especially for retro gaming and electronics. Always ask before committing — the box may be stored separately at the counter."
+        },
+        {
+          "japanese": "付属品は揃っていますか？",
+          "romaji": "Fuzokuhin wa sorotte imasu ka?",
+          "meaning": "Are all the accessories included?",
+          "usageNote": "Chargers, straps, and original manuals affect resale price. A watch without its original bracelet or strap can sell for 20–40% less to Western collectors."
         },
         {
           "japanese": "これだけですか？",
           "romaji": "Kore dake desu ka?",
-          "meaning": "Is this the only one?",
-          "usageNote": "Direct follow-up if you are not happy with the condition of the only piece on display."
-        },
-        {
-          "japanese": "もっといい状態のものはありますか？",
-          "romaji": "Motto ii jōtai no mono wa arimasu ka?",
-          "meaning": "Do you have this in better condition?",
-          "usageNote": "Signals you are a serious buyer willing to pay more for quality. Often prompts staff to check the back."
-        },
-        {
-          "japanese": "時計はどこにありますか？",
-          "romaji": "Tokei wa doko ni arimasu ka?",
-          "meaning": "Where can I find watches?",
-          "usageNote": "Swap 時計 (tokei) for カメラ (kamera), 服 (fuku), or レコード (rekōdo) depending on what you are looking for."
+          "meaning": "Is this the only one you have?",
+          "usageNote": "Direct follow-up when the only piece is low-grade or overpriced. Sometimes prompts staff to mention a similar item in a different section you haven't spotted yet."
         }
       ]
     },
@@ -35,28 +35,28 @@
       "title": "Asking About Condition & Authenticity",
       "phrases": [
         {
-          "japanese": "状態はどうですか？",
-          "romaji": "Jōtai wa dō desu ka?",
-          "meaning": "What condition is this in?",
-          "usageNote": "Open-ended. Staff will usually give an honest answer — shops grade items internally and stake their reputation on it."
+          "japanese": "傷はどこですか？",
+          "romaji": "Kizu wa doko desu ka?",
+          "meaning": "Where are the scratches / damage?",
+          "usageNote": "Forces transparency. JP shops grade conservatively, so a stated B-grade often has only minor marks. Ask before buying anything above ¥5,000 — staff will point out every flaw they know of."
         },
         {
-          "japanese": "ちゃんと動きますか？",
-          "romaji": "Chanto ugokimasu ka?",
-          "meaning": "Does it work properly?",
-          "usageNote": "Stronger than just 動きますか — the word ちゃんと (properly) signals you care about function, not just that it powers on."
+          "japanese": "修理したことはありますか？",
+          "romaji": "Shūri shita koto wa arimasu ka?",
+          "meaning": "Has this been repaired before?",
+          "usageNote": "Critical for watches and cameras. Undisclosed repairs can affect resale value and function. Reputable chain shops like Hard Off are usually honest about known service history."
         },
         {
           "japanese": "本物ですか？",
           "romaji": "Honmono desu ka?",
           "meaning": "Is this genuine / authentic?",
-          "usageNote": "Appropriate for luxury items, branded goods, or anything where counterfeits are common. Staff will not be offended."
+          "usageNote": "Appropriate for luxury goods, branded clothing, or anything where fakes circulate. JP recycle shops verify authenticity before accepting items — asking confirms you know your market."
         },
         {
-          "japanese": "傷や欠陥はありますか？",
-          "romaji": "Kizu ya kekkan wa arimasu ka?",
-          "meaning": "Are there any defects or damage?",
-          "usageNote": "More thorough than 傷はどこですか — covers both cosmetic and functional issues. Use before buying anything expensive."
+          "japanese": "どこから来た商品ですか？",
+          "romaji": "Doko kara kita shōhin desu ka?",
+          "meaning": "Where did this item come from?",
+          "usageNote": "Asks about provenance. At Hard Off, items come from local seller drop-offs — staff may know if it came from a collector or an estate sale, which can matter for rare pieces."
         }
       ]
     },
@@ -68,19 +68,19 @@
           "japanese": "もう少し安くなりますか？",
           "romaji": "Mō sukoshi yasuku narimasu ka?",
           "meaning": "Can you make it a little cheaper?",
-          "usageNote": "Polite opener. Use with a smile after a pause. Works about 40% of the time in recycle shops."
+          "usageNote": "Polite opener that works about 40% of the time. Most effective on items above ¥10,000 or with a yellow sale sticker — those are already marked down and staff have pricing flexibility."
         },
         {
           "japanese": "まとめて買うので、少し負けてもらえますか？",
           "romaji": "Matomete kau node, sukoshi makete moraemasu ka?",
-          "meaning": "I'm buying several things — can you give me a small discount?",
-          "usageNote": "Most effective phrase when buying 2+ items. Show them the pile before asking."
+          "meaning": "I'm buying several — can you give me a small discount?",
+          "usageNote": "Most effective phrase when buying 2+ items. Show the pile before asking. Works better at independent shops than chain stores — BookOff and Hard Off staff have limited discount authority."
         },
         {
-          "japanese": "これ、いくらですか？",
-          "romaji": "Kore, ikura desu ka?",
-          "meaning": "How much is this?",
-          "usageNote": "Essential for unpriced items. Point clearly at what you're asking about."
+          "japanese": "できるだけ安くしてもらえますか？",
+          "romaji": "Dekiru dake yasuku shite moraemasu ka?",
+          "meaning": "What's the best price you can offer?",
+          "usageNote": "More direct than the polite opener. Use when you're serious and want to open a real negotiation. Pair with a pause after asking — silence often prompts a counteroffer."
         }
       ]
     },
@@ -89,22 +89,22 @@
       "title": "Asking About Condition",
       "phrases": [
         {
-          "japanese": "動きますか？",
-          "romaji": "Ugokimasu ka?",
-          "meaning": "Does it work?",
-          "usageNote": "For electronics, cameras, watches. Simple and universally understood."
+          "japanese": "ちゃんと動きますか？",
+          "romaji": "Chanto ugokimasu ka?",
+          "meaning": "Does it work properly?",
+          "usageNote": "Stronger than just 動きますか — ちゃんと signals you care about full function, not just power-on. Critical for electronics and cameras in the B/C grade section at Hard Off."
         },
         {
           "japanese": "テストできますか？",
           "romaji": "Tesuto dekimasu ka?",
           "meaning": "Can I test it?",
-          "usageNote": "Most shops accommodate this request. For cameras, staff may have a battery available."
+          "usageNote": "Most shops accommodate this. For cameras, staff often have a battery ready. For audio gear, ask to plug in. Note: Hard Off Junk section items are always sold as-is — skip this there."
         },
         {
-          "japanese": "傷はどこですか？",
-          "romaji": "Kizu wa doko desu ka?",
-          "meaning": "Where are the scratches?",
-          "usageNote": "Forces transparency about flaws. Also signals you're an experienced buyer — often leads to better treatment."
+          "japanese": "返品できますか？",
+          "romaji": "Henpin dekimasu ka?",
+          "meaning": "Can I return this?",
+          "usageNote": "Ask before committing to expensive items. Hard Off and BookOff chains generally allow returns within a week for faulty goods. Independent shops often don't — always confirm."
         }
       ]
     },
@@ -116,13 +116,13 @@
           "japanese": "全部でいくらですか？",
           "romaji": "Zenbu de ikura desu ka?",
           "meaning": "How much for everything together?",
-          "usageNote": "Use after selecting multiple items. Often triggers a spontaneous discount without needing to ask."
+          "usageNote": "Use after selecting multiple items. Often triggers a spontaneous discount without needing to negotiate — especially when buying 5+ pieces. Show the pile clearly before asking."
         },
         {
-          "japanese": "この３つをまとめてどうですか？",
-          "romaji": "Kono mittsu wo matomete dō desu ka?",
-          "meaning": "How about these three as a bundle?",
-          "usageNote": "Specific and polite. Swap the number: futatsu (2), mittsu (3), yottsu (4), itsutsu (5)."
+          "japanese": "この３つまとめていくらですか？",
+          "romaji": "Kono mittsu matomete ikura desu ka?",
+          "meaning": "How much for these three as a bundle?",
+          "usageNote": "Specific and polite — more effective than a vague all-in offer. Swap the number as needed: futatsu (2), mittsu (3), yottsu (4), itsutsu (5)."
         }
       ]
     },
@@ -133,14 +133,14 @@
         {
           "japanese": "値段がついていないのですが…",
           "romaji": "Nedan ga tsuite inai no desu ga...",
-          "meaning": "This doesn't have a price tag...",
-          "usageNote": "The trailing ellipsis is intentional. Pause after saying it — let them fill the silence with a price."
+          "meaning": "This doesn't seem to have a price tag...",
+          "usageNote": "The trailing ellipsis is intentional — pause after saying it. Common with items in display cases or freshly shelved stock. Staff will either price it on the spot or check with a manager."
         },
         {
-          "japanese": "これはいくらで売ってもらえますか？",
-          "romaji": "Kore wa ikura de utte moraemasu ka?",
-          "meaning": "How much would you sell this for?",
-          "usageNote": "More direct version. Use for display cases or items behind glass."
+          "japanese": "これ、おいくらですか？",
+          "romaji": "Kore, o-ikura desu ka?",
+          "meaning": "How much is this, please?",
+          "usageNote": "Polite form — the お (o-) prefix adds respect. Use when approaching senior staff or before starting a negotiation. Point clearly at what you're asking about."
         }
       ]
     },
@@ -149,28 +149,28 @@
       "title": "Purchasing",
       "phrases": [
         {
-          "japanese": "これをください。",
-          "romaji": "Kore o kudasai.",
+          "japanese": "これをいただきます。",
+          "romaji": "Kore o itadakimasu.",
           "meaning": "I'll take this one.",
-          "usageNote": "The most useful phrase of all. Clear and polite — staff will immediately start processing the sale."
+          "usageNote": "Slightly more formal than ください — signals you're a respectful buyer. Good habit in higher-end shops or after the seller has been particularly helpful during a test or negotiation."
         },
         {
           "japanese": "カードで払えますか？",
           "romaji": "Kādo de haraemasu ka?",
           "meaning": "Can I pay by card?",
-          "usageNote": "Most Hard Off and 2nd Street chains accept cards. Smaller independent shops are often cash only."
-        },
-        {
-          "japanese": "袋はありますか？",
-          "romaji": "Fukuro wa arimasu ka?",
-          "meaning": "Do you have a bag?",
-          "usageNote": "Japan introduced a plastic bag charge in 2020. Staff may not offer one automatically — ask if you need it."
+          "usageNote": "Most Hard Off and 2nd Street chains accept cards. Smaller independent shops are often cash only. Always carry ¥10,000–20,000 in cash as backup when hitting multiple shops."
         },
         {
           "japanese": "領収書をいただけますか？",
           "romaji": "Ryōshūsho o itadakemasu ka?",
           "meaning": "Can I have a receipt?",
-          "usageNote": "Essential for customs declarations. Keep all receipts when buying items you plan to resell."
+          "usageNote": "Essential for customs declarations when taking items home. Keep every receipt — especially for items above your home country's duty-free threshold."
+        },
+        {
+          "japanese": "袋に入れてもらえますか？",
+          "romaji": "Fukuro ni irete moraemasu ka?",
+          "meaning": "Could you bag this for me?",
+          "usageNote": "Japan introduced a plastic bag charge in 2020 — staff may not offer one automatically. Ask if you need it, especially for fragile or bulky items you're taking on the train."
         }
       ]
     },
@@ -181,26 +181,26 @@
         {
           "japanese": "見ているだけです、ありがとう。",
           "romaji": "Mite iru dake desu, arigatō.",
-          "meaning": "I'm just looking, thank you.",
-          "usageNote": "Use when approached by staff and you are not ready to buy. Polite and gives you space to browse."
+          "meaning": "I'm just browsing, thank you.",
+          "usageNote": "Use when approached by staff and not ready to commit. Japanese staff will respect this immediately and give you space — no need to explain further."
         },
         {
-          "japanese": "考えてみます",
-          "romaji": "Kangaete mimasu",
-          "meaning": "I'll think about it",
-          "usageNote": "Use when walking away without offense. Often prompts a last-minute counteroffer from the seller."
+          "japanese": "考えてみます。",
+          "romaji": "Kangaete mimasu.",
+          "meaning": "I'll think about it.",
+          "usageNote": "Graceful way to walk away without offending. Sometimes prompts a last-minute counteroffer or a mention of a cheaper similar item. Useful when the price isn't quite right."
         },
         {
-          "japanese": "ありがとうございました",
-          "romaji": "Arigatō gozaimashita",
-          "meaning": "Thank you very much",
-          "usageNote": "Always end with this regardless of outcome. Keeps the relationship warm for next time."
+          "japanese": "やめておきます。",
+          "romaji": "Yamete okimasu.",
+          "meaning": "I'll pass on this.",
+          "usageNote": "Definitive but polite decline after inspecting. Less ambiguous than 考えてみます when you've found a dealbreaker. Use after a test or close inspection reveals a problem."
         },
         {
-          "japanese": "また来ます",
-          "romaji": "Mata kimasu",
-          "meaning": "I'll come back",
-          "usageNote": "Regular visitors get better treatment. Staff remember faces and become more flexible over multiple visits."
+          "japanese": "また来ます。",
+          "romaji": "Mata kimasu.",
+          "meaning": "I'll come back.",
+          "usageNote": "Regular visitors get better treatment over time — staff remember faces. If you find a shop with great stock, say this and mean it. Builds rapport for better negotiation on future visits."
         }
       ]
     }
