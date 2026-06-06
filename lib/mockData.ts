@@ -124,7 +124,7 @@ const categoryTemplates: Record<string, CategoryTemplate> = {
     platforms: [
       { name: "eBay", fee: 0.1325, paymentFeeRate: 0.03, shipping: 20, recommended: true, note: "Check alcohol shipping rules for your destination" },
     ],
-    verdictReason: (item, _roi) =>
+    verdictReason: () =>
       `Japanese whisky and spirits consistently command overseas premiums. Verify shipping legality for your home country before buying — alcohol import rules vary significantly.`,
     isSpirits: true,
   },
