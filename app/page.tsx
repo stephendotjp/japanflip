@@ -44,16 +44,16 @@ export default function LandingPage() {
               The Japan Resale Tool
             </span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
             <Link
               href="/app"
-              className="font-body text-sm text-muted hover:text-text transition-colors"
+              className="hidden sm:inline-block font-body text-sm text-muted hover:text-text transition-colors"
             >
               Sign In
             </Link>
             <Link
               href={GUMROAD_BASIC}
-              className="px-4 py-2 text-white font-mono text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity"
+              className="px-3 py-2 md:px-4 text-white font-mono text-[11px] md:text-xs tracking-widest uppercase rounded-md hover:opacity-90 transition-opacity whitespace-nowrap"
               style={{ background: "var(--red)" }}
             >
               Get Access — $9
@@ -81,15 +81,15 @@ export default function LandingPage() {
           {/* Left */}
           <div className="space-y-6 animate-fadeUp">
             <h1 className="font-display leading-none">
-              <span className="block text-[clamp(3rem,8vw,5rem)] text-black">You Found</span>
+              <span className="block text-[clamp(2.25rem,9vw,5rem)] text-black">You Found</span>
               <span
-                className="block text-[clamp(3.5rem,10vw,6.5rem)]"
+                className="block text-[clamp(2.5rem,11vw,6.5rem)]"
                 style={{ color: "var(--red)" }}
               >
                 SOMETHING
               </span>
               <span
-                className="block text-[clamp(3rem,8vw,5rem)]"
+                className="block text-[clamp(2.25rem,9vw,5rem)]"
                 style={{
                   WebkitTextStroke: "2px var(--black)",
                   color: "transparent",
