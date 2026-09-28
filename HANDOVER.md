@@ -2,7 +2,7 @@
 
 **Purpose:** Running log of session-level work and open threads, for whoever (human or AI) picks this project up next. For architecture/design-token reference see `AGENT.md`. For product scope and known gaps see `SPEC.md`.
 
-**Last session:** 2026-09-28
+**Last session:** 2026-09-29
 
 ---
 
@@ -21,6 +21,8 @@ Plan going forward: fix real problems the research evidenced, then market via ad
 3. **New design system applied.** Picked "Brex" from styles.refero.design (cool neutral grays, black text, one red accent) over "Raycast" (near-black canvas) specifically for legibility across unpredictable lighting — store aisle, daylight, hotel room — which is the actual usage pattern here. Body font DM Sans → Inter. Verdict colors (green/red/gold) and Bebas Neue display font were **deliberately left unchanged** — they're a semantic traffic-light system, not the decorative brand accent, and every one of these design systems assumes "one accent color only," which would hurt the at-a-glance BUY/SKIP/MAYBE readability the product depends on.
 
 4. Updated `SPEC.md` and `AGENT.md` to reflect all of the above.
+
+5. **Fixed a real mobile layout bug on the homepage.** The hero heading (`app/page.tsx`) used CSS `clamp()` for responsive sizing, but the minimum bound was wider than small phone viewports (320–375px) — since the hero section clips overflow, "SOMETHING" and "Worth $200" were getting visually cut off on the right instead of shrinking further. Lowered the clamp minimums. Also hardened the nav bar (logo + Sign In + CTA button had no wrap, tight on the smallest screens) and added `overflow-x: hidden` site-wide as a safety net. **Lesson:** the design-system pass (item 3 above) was declared done without actually loading the homepage at mobile width first — only the `/app` tool was spot-checked. Don't repeat that: check every page that changed, not just the one you happened to test.
 
 ## Open threads / next steps
 
@@ -41,3 +43,7 @@ Roughly in the order the research says they matter:
 ## Dev environment gotcha hit this session
 
 Running `npm run build` while `npm run dev` is still running against the same project corrupts the `.next` cache (both processes write to it) — this caused a false-positive "submit button stuck disabled" bug that looked like a real regression but wasn't. If dev server behaves strangely after a build, `rm -rf .next` and restart it.
+
+## Browser tool note
+
+Using Claude in Chrome (`mcp__claude-in-chrome__*`) for visual QA is fine and encouraged for this project — but it attached to Stephen's own active Brave browser window ("Tradesea" instance) during this session, which interrupted his actual browsing. Next time: open a dedicated new tab/window for automation rather than reusing whatever tab context comes back by default, and confirm with Stephen if it's unclear which browser instance is safe to drive.
