@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/context/UserContext";
-import { getScoutItems } from "@/lib/scout";
 
 interface NavItem {
   label: string;
@@ -19,7 +17,7 @@ const tools: NavItem[] = [
   { label: "Scout Mode", href: "/app/scout", icon: "◎" },
   { label: "Profit Calculator", href: "/app/calculator", icon: "⊞" },
   { label: "Customs Checker", href: "/app/customs", icon: "✈" },
-  { label: "Saved Lookups", href: "/app/history", icon: "◉", premiumOnly: true },
+  { label: "Saved Lookups", href: "/app/history", icon: "◉" },
 ];
 
 const learn: NavItem[] = [
@@ -29,13 +27,8 @@ const learn: NavItem[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { tier, isBasic, isPremium } = useUser();
-  const [unresolvedCount, setUnresolvedCount] = useState(0);
-
-  useEffect(() => {
-    const count = getScoutItems().filter((i) => !i.resolved).length;
-    setUnresolvedCount(count);
-  }, [pathname]);
+  const { tier, isBasic, isPremium, scoutItems } = useUser();
+  const unresolvedCount = scoutItems.filter((i) => !i.resolved).length;
 
   const isActive = (href: string) =>
     href === "/app" ? pathname === "/app" : pathname.startsWith(href);

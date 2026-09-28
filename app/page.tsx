@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { HeroDemo } from "@/components/landing/HeroDemo";
 import { PricingCards } from "@/components/landing/PricingCards";
-import { SocialProof } from "@/components/landing/SocialProof";
 import { LandingCalculator } from "@/components/landing/LandingCalculator";
 
 const GUMROAD_BASIC = process.env.NEXT_PUBLIC_GUMROAD_BASIC_URL || "/app/upgrade";
@@ -200,19 +199,6 @@ export default function LandingPage() {
             </p>
           </div>
           <PricingCards />
-        </div>
-      </section>
-
-      {/* Social proof */}
-      <section className="px-5 md:px-10 py-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex items-center gap-4 mb-12">
-            <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted whitespace-nowrap">
-              What people say
-            </span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
-          <SocialProof />
         </div>
       </section>
 

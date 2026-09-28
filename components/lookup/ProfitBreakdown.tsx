@@ -77,7 +77,7 @@ export function ProfitBreakdown({ result }: ProfitBreakdownProps) {
         </div>
       </div>
 
-      <CustomsInlineAlert itemValueUSD={result.profitBreakdown.avgSellPrice} />
+      <CustomsInlineAlert itemValueUSD={result.usdEquivalent} />
     </div>
   );
 }

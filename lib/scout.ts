@@ -58,7 +58,3 @@ export function updateScoutItem(id: string, patch: Partial<ScoutItem>): void {
 export function deleteScoutItem(id: string): void {
   writeItems(readItems().filter((i) => i.id !== id));
 }
-
-export function clearResolvedScoutItems(): void {
-  writeItems(readItems().filter((i) => !i.resolved));
-}

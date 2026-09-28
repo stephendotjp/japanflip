@@ -62,9 +62,9 @@ export default function CalculatorPage() {
     : 0;
 
   const ct = customsThresholds[country];
-  const valueUSD = usSellNum;
+  // Customs is assessed on what you paid, not what you'll resell it for.
   const thresholdUSD = ct.threshold * ct.rate;
-  const customsOk = valueUSD < thresholdUSD;
+  const customsOk = buyUSD < thresholdUSD;
 
   const hasResult = jpBuyNum > 0 && usSellNum > 0;
 
@@ -155,7 +155,7 @@ export default function CalculatorPage() {
 
             <div>
               <label className="font-mono text-[11px] uppercase tracking-widest text-muted block mb-1">
-                Selling Country
+                Home Country (customs)
               </label>
               <select
                 value={country}

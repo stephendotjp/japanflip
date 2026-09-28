@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Tier, SavedLookup, TripItem, ScoutItem } from "@/lib/types";
 import {
   saveScoutItem,
@@ -51,6 +51,12 @@ const defaultState: UserState = {
 
 const UserContext = createContext<UserContextValue | null>(null);
 
+// Local calendar date (not UTC) so the daily reset happens at the user's midnight — in Japan, UTC rolls over at 9am.
+function localDate(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<UserState>(defaultState);
   const [hydrated, setHydrated] = useState(false);
@@ -66,57 +72,63 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setHydrated(true);
   }, []);
 
-  const persist = (next: UserState) => {
-    setState(next);
-    localStorage.setItem("japanflip_user", JSON.stringify(next));
-  };
+  useEffect(() => {
+    if (hydrated) localStorage.setItem("japanflip_user", JSON.stringify(state));
+  }, [state, hydrated]);
 
-  const setTier = (tier: Tier, email?: string) => {
-    persist({ ...state, tier, email: email ?? state.email });
-  };
+  const setTier = useCallback((tier: Tier, email?: string) => {
+    setState((s) => ({ ...s, tier, email: email ?? s.email }));
+  }, []);
 
-  const incrementLookup = () => {
-    const today = new Date().toISOString().split("T")[0];
-    const count = state.lookupDate === today ? state.lookupCount + 1 : 1;
-    persist({ ...state, lookupCount: count, lookupDate: today });
-  };
+  const incrementLookup = useCallback(() => {
+    const today = localDate();
+    setState((s) => ({
+      ...s,
+      lookupCount: s.lookupDate === today ? s.lookupCount + 1 : 1,
+      lookupDate: today,
+    }));
+  }, []);
 
-  const saveLookup = (lookup: SavedLookup) => {
-    const cap = state.tier === "premium" ? 50 : 20;
-    const updated = [lookup, ...state.savedLookups].slice(0, cap);
-    persist({ ...state, savedLookups: updated });
-  };
+  const saveLookup = useCallback((lookup: SavedLookup) => {
+    setState((s) => ({
+      ...s,
+      savedLookups: [lookup, ...s.savedLookups].slice(0, s.tier === "premium" ? 50 : 20),
+    }));
+  }, []);
 
-  const setHomeCountry = (country: string) => {
-    persist({ ...state, homeCountry: country });
-  };
+  const setHomeCountry = useCallback((country: string) => {
+    setState((s) => ({ ...s, homeCountry: country }));
+  }, []);
 
-  const addToTrip = (item: TripItem) => {
-    const today = new Date().toISOString().split("T")[0];
-    const existingItems = state.tripDate === today ? state.tripItems : [];
-    persist({ ...state, tripItems: [...existingItems, item], tripDate: today });
-  };
+  const addToTrip = useCallback((item: TripItem) => {
+    const today = localDate();
+    setState((s) => ({
+      ...s,
+      tripItems: [...(s.tripDate === today ? s.tripItems : []), item],
+      tripDate: today,
+    }));
+  }, []);
 
-  const clearTrip = () => {
-    persist({ ...state, tripItems: [], tripDate: "" });
-  };
+  const clearTrip = useCallback(() => {
+    setState((s) => ({ ...s, tripItems: [], tripDate: "" }));
+  }, []);
 
-  const addScoutItem = (item: ScoutItem) => {
+  const addScoutItem = useCallback((item: ScoutItem) => {
     saveScoutItem(item);
     setState((s) => ({ ...s, scoutItems: getScoutItems() }));
-  };
+  }, []);
 
-  const updateScoutItem = (id: string, patch: Partial<ScoutItem>) => {
+  const updateScoutItem = useCallback((id: string, patch: Partial<ScoutItem>) => {
     utilUpdateScoutItem(id, patch);
     setState((s) => ({ ...s, scoutItems: getScoutItems() }));
-  };
+  }, []);
 
-  const removeScoutItem = (id: string) => {
+  const removeScoutItem = useCallback((id: string) => {
     deleteScoutItem(id);
     setState((s) => ({ ...s, scoutItems: getScoutItems() }));
-  };
+  }, []);
 
-  const today = new Date().toISOString().split("T")[0];
+  const today = localDate();
   const todayCount = hydrated && state.lookupDate === today ? state.lookupCount : 0;
   const currentTripItems = hydrated && state.tripDate === today ? state.tripItems : [];
 

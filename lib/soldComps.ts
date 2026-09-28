@@ -51,7 +51,8 @@ export async function fetchSoldComps(keyword: string): Promise<SoldComp[]> {
         currency: i.soldCurrency || "USD",
         daysAgo: daysAgo(i.endedAt),
       }))
-      .filter((s) => s.price > 0)
+      // Verdict math is in USD; a GBP/EUR sale mixed into the median would skew it.
+      .filter((s) => s.price > 0 && s.currency === "USD")
       .sort((a, b) => a.daysAgo - b.daysAgo);
   } catch {
     return [];

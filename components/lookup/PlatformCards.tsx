@@ -6,6 +6,8 @@ interface PlatformCardsProps {
 }
 
 export function PlatformCards({ platforms }: PlatformCardsProps) {
+  if (platforms.length === 0) return null;
+
   return (
     <div className="animate-fadeUp">
       <SectionLabel>Best Platform to Sell</SectionLabel>

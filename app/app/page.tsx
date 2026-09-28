@@ -54,7 +54,8 @@ function PriceLookupInner() {
         setRateTime(
           `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`
         );
-      });
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -98,12 +99,15 @@ function PriceLookupInner() {
     setLastItem(item);
     setLastCondition(condition);
 
-    const res = await fetch("/api/lookup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ item, category, priceJPY, condition, size }),
-    });
-    const data: LookupResult | null = await res.json();
+    let data: LookupResult | null = null;
+    try {
+      const res = await fetch("/api/lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item, category, priceJPY, condition, size }),
+      });
+      if (res.ok) data = await res.json();
+    } catch {}
     setLoading(false);
 
     if (!data) {

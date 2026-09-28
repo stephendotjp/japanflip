@@ -159,8 +159,8 @@ export function SearchCard({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="flex-[2] flex gap-2">
+        <div className="flex flex-col lg:flex-row gap-3">
+          <div className="flex-[2] min-w-0 flex gap-2">
             <input
               ref={itemInputRef}
               type="text"
@@ -168,7 +168,7 @@ export function SearchCard({
               onChange={(e) => setItem(e.target.value)}
               placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
               disabled={disabled}
-              className="flex-1 px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex-1 min-w-0 px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
               style={cameraState === "error" ? { borderColor: "var(--muted)" } : undefined}
             />
             <input
@@ -227,7 +227,7 @@ export function SearchCard({
               placeholder="0"
               min="0"
               disabled={disabled}
-              className="pl-7 pr-4 py-3 border border-border rounded-md font-mono text-sm text-text bg-white focus:outline-none focus:border-red/50 w-full md:w-32 disabled:opacity-40"
+              className="pl-7 pr-4 py-3 border border-border rounded-md font-mono text-sm text-text bg-white focus:outline-none focus:border-red/50 w-full lg:w-32 disabled:opacity-40"
             />
           </div>
           <button

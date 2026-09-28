@@ -6,9 +6,9 @@ const GUMROAD_PREMIUM = process.env.NEXT_PUBLIC_GUMROAD_PREMIUM_URL || "/app/upg
 const basicFeatures = [
   "Unlimited lookups",
   "Full profit breakdown",
-  "Platform comparison (eBay, Depop, Etsy, StockX)",
+  "eBay fees & shipping built into every verdict",
   "Customs guide by country",
-  "30-day sold data",
+  "Real eBay sold listings — click through to verify",
 ];
 
 const premiumFeatures = [

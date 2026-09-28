@@ -35,14 +35,31 @@ Roughly in the order the research says they matter:
 - **No live Japan-side market data.** `jpMarket` always returns an honest "no data" state — there's no live JP sold-price source. Either build one (the research found an Apify Mercari/Yahoo sold-price actor as a candidate) or simplify the UI to stop showing an empty JP panel.
 - **sold-comps.com is a dependency risk.** It's an unofficial third party scraping eBay; if eBay cracks down on it, the app's core data source disappears again. No mitigation planned yet — just something to watch.
 
-## Housekeeping noticed but not touched (pre-existing, flagging per instructions not to silently delete unrelated dead code)
+## Codebase audit (2026-09-29, later session)
 
-- `components/Sidebar.tsx` and `components/PremiumGate.tsx` are orphaned duplicates — nothing imports them. The real ones are `components/layout/Sidebar.tsx` and `components/lookup/PremiumGate.tsx`.
-- `lib/visionMap.ts` is dead code from a deprecated Google Vision integration (see `GOOGLE_VISION_API_KEY=NOLONGERINUSE` in `.env.local`) — current vision identification runs through Claude in `app/api/vision/route.ts` instead. `mapLabelsToCategory` is never called.
+Fixed:
+- **Crash on thin-evidence lookups** — `VerdictCard` reduced an empty platforms array (<3 comps). Guarded; "After Fees" and "Add to trip" hide when there's no platform data.
+- **Post-payment infinite render loop** — `/app/upgrade?email=…&tier=…` effect depended on `setTier`, which was a new function every render. `UserContext` now uses stable `useCallback` setters with functional updates.
+- **Lost writes in `UserContext`** — each setter spread a stale `state`, so two updates in one handler (e.g. `incrementLookup` + `saveLookup`) overwrote each other. Now functional updates; localStorage is written by one effect after hydration.
+- **Daily reset in UTC** — free-tier count reset at 9am JST. Now uses local date.
+- **Lookup spinner stuck forever** on network/API error — now falls through to the no-result state. `/api/lookup` validates input (400 on bad body).
+- **Non-USD comps** filtered out before the median (verified sold-comps returns `"USD"`).
+- **SearchCard overflow at 768–1024px** (the width you get with DevTools docked): row layout now starts at `lg`, inputs get `min-w-0`.
+- **Customs checks used resale price** — duty is assessed on what you paid. Inline alert and calculator now use the JP purchase price in USD.
+- **Fabricated testimonials removed** from the landing page (fake Reddit handles — risky with the skeptical Reddit audience and under FTC fake-review rules).
+- **Basic tier copy** no longer claims Depop/Etsy/StockX comparison or "30-day sold data".
+- Sidebar no longer shows "PRO" on Saved Lookups for Basic users; Scout badge counts update live.
+- Deleted dead code: orphan `components/Sidebar.tsx`, `components/PremiumGate.tsx`, `lib/visionMap.ts`, `data/opportunities.json`, unused Geist fonts, unused format helpers; uninstalled `clsx`, `lucide-react`, `tailwind-merge`. `.env.example` now lists the vars actually used.
+
+Not fixed — needs a decision:
+- **Premium tier sells features that don't exist**: "Live data — updated daily" (every lookup is already live for everyone), "Price trend charts", "Saved history across devices" (history is localStorage-only). Also the `PremiumGate` on results pitches "live market data". Either build them or rewrite the Premium pitch (real extras today: 50-item history + CSV export).
+- **Paywall is client-side only.** Anyone can visit `/app/upgrade?email=x&tier=premium`, or clear localStorage for more free lookups. `/api/lookup` and `/api/vision` have no rate limiting, so anyone can burn sold-comps and Anthropic credits.
+- **Comp relevance** — keyword search mixes variants (e.g. "Olympus mju-II" pulls in "Stylus Zoom 140 mju II"), which skews the median.
+- `README.md` is still create-next-app boilerplate; `camera-feature.md` describes the removed Google Vision flow.
 
 ## Dev environment gotcha hit this session
 
-Running `npm run build` while `npm run dev` is still running against the same project corrupts the `.next` cache (both processes write to it) — this caused a false-positive "submit button stuck disabled" bug that looked like a real regression but wasn't. If dev server behaves strangely after a build, `rm -rf .next` and restart it.
+Running `npm run build` while `npm run dev` is still running against the same project corrupts the `.next` cache (both processes write to it) — this caused a false-positive "submit button stuck disabled" bug that looked like a real regression but wasn't. If dev server behaves strangely after a build, `rm -rf .next` and restart it. (Happened again 2026-09-29: symptom is `main-app.js` 404ing and the page never hydrating — buttons do nothing. To verify a build without touching a running dev server, copy the repo to a temp dir and build/serve there.)
 
 ## Browser tool note
 

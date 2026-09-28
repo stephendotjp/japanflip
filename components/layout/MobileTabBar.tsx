@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { getScoutItems } from "@/lib/scout";
+import { useUser } from "@/context/UserContext";
 
 const tabs = [
   { label: "Lookup", href: "/app", icon: "⊕" },
@@ -14,11 +13,8 @@ const tabs = [
 
 export function MobileTabBar() {
   const pathname = usePathname();
-  const [unresolvedCount, setUnresolvedCount] = useState(0);
-
-  useEffect(() => {
-    setUnresolvedCount(getScoutItems().filter((i) => !i.resolved).length);
-  }, [pathname]);
+  const { scoutItems } = useUser();
+  const unresolvedCount = scoutItems.filter((i) => !i.resolved).length;
 
   return (
     <nav
