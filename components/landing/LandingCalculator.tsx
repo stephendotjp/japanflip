@@ -62,7 +62,7 @@ export function LandingCalculator() {
         {hasResult ? (
           <div
             className="rounded-xl p-6 text-center"
-            style={{ background: "#111111" }}
+            style={{ background: "#15191E" }}
           >
             <p className="font-mono text-[10px] tracking-[2px] uppercase mb-1" style={{ color: "#ffffff66" }}>
               Rough Profit (before fees &amp; shipping)

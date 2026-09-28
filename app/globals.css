@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 :root {
-  --bg: #F7F4EF;
+  --bg: #F3F3F7;
   --surface: #FFFFFF;
-  --black: #111111;
+  --black: #15191E;
   --red: #D92B3A;
   --red-light: #FDF0F1;
   --gold: #B8860B;
   --gold-light: #FDF8EE;
   --green: #1A7A4A;
   --green-light: #EDF7F2;
-  --muted: #888480;
-  --border: #E8E4DE;
-  --text: #2A2825;
+  --muted: #60646C;
+  --border: #B9BBC6;
+  --text: #000000;
 }
 
 * {
@@ -24,7 +24,7 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: var(--font-dm-sans), sans-serif;
+  font-family: var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 

@@ -196,7 +196,7 @@ function PriceLookupInner() {
         <div className="relative rounded-xl overflow-hidden">
           <div
             className="blur-sm pointer-events-none select-none p-8 space-y-3"
-            style={{ background: "#111111" }}
+            style={{ background: "#15191E" }}
           >
             <div className="h-4 w-20 rounded" style={{ background: "#ffffff22" }} />
             <div className="h-12 w-48 rounded" style={{ background: "#ffffff22" }} />
@@ -251,7 +251,7 @@ function PriceLookupInner() {
       {/* Loading skeleton */}
       {loading && (
         <div className="space-y-4">
-          <div className="rounded-xl h-44 animate-pulse" style={{ background: "#111111" }} />
+          <div className="rounded-xl h-44 animate-pulse" style={{ background: "#15191E" }} />
           <div className="grid md:grid-cols-2 gap-3">
             <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />
             <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, DM_Sans, DM_Mono } from "next/font/google";
+import { Bebas_Neue, Inter, DM_Mono } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/UserContext";
 
@@ -9,9 +9,9 @@ const bebasNeue = Bebas_Neue({
   variable: "--font-bebas",
 });
 
-const dmSans = DM_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-inter",
 });
 
 const dmMono = DM_Mono({
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${bebasNeue.variable} ${dmSans.variable} ${dmMono.variable}`}
+        className={`${bebasNeue.variable} ${inter.variable} ${dmMono.variable}`}
       >
         <UserProvider>{children}</UserProvider>
       </body>

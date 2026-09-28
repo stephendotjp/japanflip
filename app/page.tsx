@@ -217,7 +217,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA band */}
-      <section className="px-5 md:px-10 py-20" style={{ background: "#111111" }}>
+      <section className="px-5 md:px-10 py-20" style={{ background: "#15191E" }}>
         <div className="max-w-3xl mx-auto text-center space-y-6">
           <p className="font-display text-5xl md:text-6xl text-white leading-none">
             Stop guessing.

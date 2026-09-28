@@ -47,7 +47,7 @@ export function TripSummary() {
 
       <div
         className="flex justify-between items-center px-4 py-3 rounded-lg"
-        style={{ background: "#111111" }}
+        style={{ background: "#15191E" }}
       >
         <div>
           <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "#ffffff66" }}>

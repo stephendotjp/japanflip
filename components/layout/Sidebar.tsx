@@ -43,7 +43,7 @@ export function Sidebar() {
   return (
     <aside
       className="w-[220px] shrink-0 h-full flex flex-col overflow-y-auto"
-      style={{ background: "#111111" }}
+      style={{ background: "#15191E" }}
     >
       {/* Logo */}
       <div className="px-5 py-6 border-b border-white/10 shrink-0">

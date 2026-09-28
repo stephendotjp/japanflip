@@ -46,7 +46,7 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
   return (
     <div
       className="rounded-xl p-6 md:p-8 animate-verdictReveal"
-      style={{ background: "#111111" }}
+      style={{ background: "#15191E" }}
     >
       <div className="flex flex-col md:flex-row gap-6 md:gap-10">
         {/* Left: verdict + reason */}

@@ -71,26 +71,26 @@ Fonts are loaded in `app/layout.tsx` via `next/font/google` and exposed as CSS v
 | Variable | Font | Usage |
 |----------|------|-------|
 | `--font-bebas` | Bebas Neue | `font-display` class — headings, large numbers |
-| `--font-dm-sans` | DM Sans | Default body text |
+| `--font-inter` | Inter | Default body text (swapped from DM Sans — Brex-style design system, 2026-09) |
 | `--font-dm-mono` | DM Mono | `font-mono-custom` class — labels, prices, badges, metadata |
 
 **Never use** Tailwind's default `font-sans`/`font-mono` in this project. Use `font-display` and `font-mono-custom` instead.
 
-CSS color variables (defined in `globals.css`, also mapped in `tailwind.config.ts`):
+CSS color variables (defined in `globals.css`, also mapped in `tailwind.config.ts`), following the Brex-style neutral palette adopted 2026-09 (cool grays instead of warm cream/tan; verdict semantic colors red/gold/green are unchanged on purpose — they're a separate traffic-light system, not the decorative accent):
 
 ```
---bg: #F7F4EF        (page background)
---surface: #FFFFFF   (card background)
---black: #111111     (sidebar, dark panels)
---red: #D92B3A       (primary CTA, active states, ROI high badge)
+--bg: #F3F3F7        (page background — "Fog")
+--surface: #FFFFFF   (card background — "Paper")
+--black: #15191E     (sidebar, dark panels — "Carbon")
+--red: #D92B3A       (primary CTA, active states, ROI high badge — unchanged brand color)
 --red-light: #FDF0F1 (red tint backgrounds)
 --gold: #B8860B      (medium ROI badge, premium highlights)
 --gold-light: #FDF8EE
 --green: #1A7A4A     (sell price, fresh data badge)
 --green-light: #EDF7F2
---muted: #888480     (secondary text, labels)
---border: #E8E4DE    (card borders, dividers)
---text: #2A2825      (body copy)
+--muted: #60646C     (secondary text, labels — "Graphite")
+--border: #B9BBC6    (card borders, dividers — "Mist")
+--text: #000000      (body copy — "Ink")
 ```
 
 **Design rules:**

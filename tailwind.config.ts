@@ -9,22 +9,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#F7F4EF",
+        bg: "#F3F3F7",
         surface: "#FFFFFF",
-        black: "#111111",
+        black: "#15191E",
         red: "#D92B3A",
         "red-light": "#FDF0F1",
         gold: "#B8860B",
         "gold-light": "#FDF8EE",
         green: "#1A7A4A",
         "green-light": "#EDF7F2",
-        muted: "#888480",
-        border: "#E8E4DE",
-        text: "#2A2825",
+        muted: "#60646C",
+        border: "#B9BBC6",
+        text: "#000000",
       },
       fontFamily: {
         display: ["var(--font-bebas)", "sans-serif"],
-        body: ["var(--font-dm-sans)", "sans-serif"],
+        body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-dm-mono)", "monospace"],
       },
       animation: {

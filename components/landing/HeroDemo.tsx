@@ -86,7 +86,7 @@ export function HeroDemo() {
       </div>
 
       {/* Verdict */}
-      <div className="p-4" style={{ background: "#111111" }}>
+      <div className="p-4" style={{ background: "#15191E" }}>
         <p className="font-mono text-[10px] tracking-[2px] mb-1" style={{ color: "#ffffff66" }}>VERDICT</p>
         <p className="font-display text-4xl leading-none mb-2" style={{ color: config.color }}>
           {config.label}
