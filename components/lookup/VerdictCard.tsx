@@ -25,12 +25,13 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
   const [addedToTrip, setAddedToTrip] = useState(false);
   const config = verdictConfig[result.verdict];
   const verdictContext = getVerdictContext(result.category, result.verdict);
-  const bestPlatform = result.profitBreakdown.platforms.reduce((a, b) =>
-    a.netProfit > b.netProfit ? a : b
-  );
+  const bestPlatform =
+    result.profitBreakdown.platforms.length > 0
+      ? result.profitBreakdown.platforms.reduce((a, b) => (a.netProfit > b.netProfit ? a : b))
+      : null;
 
   const handleAddToTrip = () => {
-    if (!onAddToTrip) return;
+    if (!onAddToTrip || !bestPlatform) return;
     onAddToTrip({
       id: Date.now().toString(),
       itemName: result.query,
@@ -70,7 +71,7 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
             </p>
           )}
 
-          {onAddToTrip && result.verdict !== "skip" && (
+          {onAddToTrip && result.verdict !== "skip" && bestPlatform && (
             <button
               onClick={handleAddToTrip}
               disabled={addedToTrip}
@@ -116,14 +117,16 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
             </span>
           </div>
           <div className="border-t pt-3" style={{ borderColor: "#ffffff1a" }}>
-            <div className="flex justify-between items-baseline gap-2 mb-2">
-              <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
-                After Fees
-              </span>
-              <span className="font-mono text-sm" style={{ color: "#4ADE80" }}>
-                ~${Math.round(bestPlatform.netProfit)} profit
-              </span>
-            </div>
+            {bestPlatform && (
+              <div className="flex justify-between items-baseline gap-2 mb-2">
+                <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
+                  After Fees
+                </span>
+                <span className="font-mono text-sm" style={{ color: "#4ADE80" }}>
+                  ~${Math.round(bestPlatform.netProfit)} profit
+                </span>
+              </div>
+            )}
             <div className="flex justify-between items-baseline gap-2">
               <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
                 ROI
