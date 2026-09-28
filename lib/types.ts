@@ -43,6 +43,7 @@ export interface Sale {
   price: number;
   currency?: string;
   sold: boolean;
+  url?: string;
 }
 
 export interface Platform {

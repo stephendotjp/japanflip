@@ -1,6 +1,6 @@
 # JapanFlip — Product Spec
 
-**Last updated:** 2026-06-06
+**Last updated:** 2026-09-28
 
 **Purpose:** A self-serve Japan resale price lookup tool. A user standing in a Japanese recycle shop types (or photographs) what they found and the price on the tag. JapanFlip returns a BUY / SKIP / MAYBE verdict with a full profit breakdown, condition-adjusted pricing, shipping estimates, and inline customs warnings. Scout Mode lets users capture items quickly in-store and research them later.
 
@@ -20,7 +20,7 @@ Before reviewing or suggesting changes, note these intentional constraints:
 
 2. **All copy is placeholder.** Landing page headlines, upgrade page feature descriptions, testimonial cards, and all marketing text are draft/placeholder. A full copy pass is planned separately.
 
-3. **The lookup catalog is 5 specific mock items + category fallback.** Known items (Seiko SKX007, Levi's 501, Olympus mju-II, Nikka whisky, Yamaha receiver) return precise data. All other items fall back to category-level average pricing — real results, but estimated rather than item-specific. The `/api/lookup` route is structured for a one-function swap when eBay Browse API access is confirmed.
+3. **The lookup is backed by real sold data, not eBay's own API.** eBay denied developer API access on appeal, so `/api/lookup` calls sold-comps.com (`lib/soldComps.ts`), a third-party service that returns real, verifiable eBay sold listings (title, price, date, clickable link) without requiring an eBay developer account. `lib/lookup.ts` computes the verdict from the median of real sold prices. If fewer than 3 sold comps are found, the app returns an honest "not enough evidence" result instead of a confident-looking guess — it never fabricates a price the user can't check. The old 5-item mock catalog and category-average fallback (`lib/mockData.ts`) were removed for this reason.
 
 4. **No server-side auth is intentional for now.** Tier is stored in localStorage. The fraud risk is accepted at current stage.
 
@@ -210,11 +210,13 @@ interface ScoutItem {
 
 ### `POST /api/lookup`
 - Body: `{ item, category, priceJPY, condition?, size? }`
-- Logic:
-  1. `fuzzyMatch(item)` against 5 known items (Seiko, Levi's, Olympus, Nikka, Yamaha). If matched → precise mock data with condition/size adjustment.
-  2. If no match → `getCategoryFallback(item, category, priceJPY, rate, condition, size)` — uses category-level US resale averages to compute a real ROI and verdict. Never returns null.
-- Returns: `LookupResult` (always — no null)
-- **TODO:** Replace `getMockData` / `getCategoryFallback` with eBay Browse API when credentials confirmed. One-function swap at route level.
+- Logic (`lib/lookup.ts` → `lookupItem`):
+  1. Calls `fetchSoldComps(item)` (`lib/soldComps.ts`) — queries **sold-comps.com** for real, dated, clickable eBay sold listings matching the query. No eBay developer account needed.
+  2. If ≥3 sold comps found → verdict, ROI, and avg sell price are computed from the **median of real sold prices** (condition-adjusted). Sold listings are returned as-is so the user can click through and verify.
+  3. If <3 sold comps found → returns an honest "not enough evidence" result (verdict `maybe`, roi `0`, empty platform breakdown) instead of guessing.
+  4. Returns `null` only if `item` or `priceJPY` is missing from the request.
+- Japan-side market data (`jpMarket`) has no live source yet — always returned as an explicit "no data" state, not a fabricated estimate.
+- Requires `SOLD_COMPS_API_KEY` env var. If unset, `fetchSoldComps` returns `[]` and every lookup falls into the honest "not enough evidence" state (never mock data).
 
 ### `POST /api/vision`
 - Body: `{ imageBase64: string, mimeType: string }`
@@ -287,6 +289,7 @@ Returns 1–2 sentence copy explaining the structural reason this category is un
 - **Payments:** Gumroad (external). No webhooks — redirect URL params only.
 - **Exchange rate:** Frankfurter API (free, no key)
 - **Vision / item ID:** Anthropic Claude API (`ANTHROPIC_API_KEY`) — `claude-sonnet-4-6`
+- **Sold comps:** sold-comps.com (`SOLD_COMPS_API_KEY`) — real eBay sold listings, used instead of eBay's own developer API (access denied)
 - **Geolocation:** `navigator.geolocation` + Nominatim reverse geocode (free, no key)
 - **No database.** All user state in localStorage.
 - **No backend auth.**
@@ -316,19 +319,21 @@ Returns 1–2 sentence copy explaining the structural reason this category is un
 
 ### Critical
 
-1. **Category fallback is estimated, not real.** The fallback gives a verdict based on category averages — useful but not item-specific. The eBay Browse API swap in `/api/lookup/route.ts` is the single highest-priority technical task. One-function swap when credentials confirmed.
+1. **eBay's own developer API is not available** — account access was requested and denied. The lookup now runs on real data via sold-comps.com instead (see API Routes above), which is not eBay-official and could itself lose eBay data access in the future. No mitigation planned yet beyond monitoring.
 
-2. **No server-side auth.** Tier in localStorage is spoofable via DevTools. Acceptable for MVP; becomes fraud risk at scale. Needs: Gumroad webhook signature verification, server-side tier storage.
+2. **No live Japan-side market data source.** `jpMarket` always returns an explicit "no data" state — this is honest but means half the original two-market comparison UX is currently empty. Needs a real JP source (e.g. an Apify Mercari/Yahoo sold-price actor) or the JP panel should be removed/reworked until one exists.
 
-3. **Scout Mode tier gate removed for testing.** Must be restored before marketing. Gate logic: add `if (!isBasic) return <UpgradePrompt />` at top of scout page component.
+3. **No server-side auth.** Tier in localStorage is spoofable via DevTools. Acceptable for MVP; becomes fraud risk at scale. Needs: Gumroad webhook signature verification, server-side tier storage.
 
-4. **"Live data — updated daily"** listed as Premium feature but is a UI stub — not differentiated from Basic in practice.
+4. **Scout Mode tier gate removed for testing.** Must be restored before marketing. Gate logic: add `if (!isBasic) return <UpgradePrompt />` at top of scout page component.
+
+5. **"Live data — updated daily"** listed as Premium feature but is a UI stub — not differentiated from Basic in practice. Now that lookups are genuinely live, this tier boundary should be revisited.
 
 ### UX / Product
 
-5. **No-result state replaced by category fallback** but fallback verdictReason is clearly labelled as estimated. Users should understand they're getting a category average, not item-specific data.
+6. **"Not enough evidence" state needs real-world testing.** Obscure/misspelled item names or very niche Japan-only goods may frequently fall under the 3-comp threshold. Worth watching real usage before the retro-games/Pokémon/figures niche push, since those categories are the plan's core wedge.
 
-6. **QuickChips prices are hardcoded.** May drift from realistic ranges.
+7. **QuickChips prices are hardcoded.** May drift from realistic ranges.
 
 7. **No loading/error fallback if Frankfurter fails.** Rate badge stays as `¥...` indefinitely.
 
