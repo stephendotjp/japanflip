@@ -16,8 +16,6 @@ const categories = [
   "Clothing",
   "Electronics",
   "Spirits",
-  "Sneakers",
-  "Tools & Knives",
   "Other",
 ];
 
@@ -37,8 +35,6 @@ const categoryDefaultSize: Record<string, string> = {
   Clothing: "Medium",
   Electronics: "Small",
   Spirits: "Small",
-  Sneakers: "Medium",
-  "Tools & Knives": "Small",
   Other: "Small",
 };
 

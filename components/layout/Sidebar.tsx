@@ -25,7 +25,6 @@ const tools: NavItem[] = [
 const learn: NavItem[] = [
   { label: "Category Guides", href: "/app/guides", icon: "☰" },
   { label: "Shop Map", href: "#", icon: "◎", soon: true },
-  { label: "Phrase Cards", href: "/app/phrases", icon: "✦", premiumOnly: true },
 ];
 
 export function Sidebar() {

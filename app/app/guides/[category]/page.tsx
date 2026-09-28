@@ -12,9 +12,6 @@ const categoryMeta: Record<string, { emoji: string; label: string }> = {
   clothing: { emoji: "👖", label: "Clothing & Denim" },
   cameras: { emoji: "📷", label: "Film Cameras" },
   spirits: { emoji: "🥃", label: "Spirits & Whisky" },
-  sneakers: { emoji: "👟", label: "Sneakers" },
-  audio: { emoji: "🔊", label: "Vintage Audio" },
-  knives: { emoji: "🔪", label: "Knives & Tools" },
   gaming: { emoji: "🎮", label: "Retro Gaming" },
 };
 
@@ -165,103 +162,6 @@ const guideContent: Record<
       Premium: "¥8,000–20,000 (single malts, aged expressions)",
     },
     difficulty: { find: "Easy", sell: "Medium" },
-  },
-  sneakers: {
-    summary:
-      "Japan-exclusive Nike and Adidas colorways command serious premiums on StockX. The challenge is finding the right pairs at the right price — shops know their value.",
-    whatToLookFor: [
-      "Nike Japan-exclusive colorways — check release dates on sneakerhead sites",
-      "Adidas Originals Japan editions",
-      "New Balance made-in-Japan models — 1700J, 990v series",
-      "Deadstock (DS) in original box with all accessories",
-    ],
-    whatToAvoid: [
-      "Used or worn condition — margins collapse fast",
-      "Fake or replica shoes — Hard Off does screen but not perfectly",
-      "Common global releases — no premium over US retail",
-    ],
-    whereToFind: [
-      "ABC Mart closeout sections",
-      "Treasure Factory",
-      "Hard Off (rare but happens)",
-    ],
-    platforms: [
-      { name: "StockX", note: "Best for Japan-exclusive Nike/Adidas" },
-      { name: "GOAT", note: "Alternative to StockX, good for NB" },
-      { name: "eBay", note: "Good for rare or older releases" },
-    ],
-    priceRanges: {
-      Common: "¥8,000–15,000 (recent releases)",
-      "Sweet spot": "¥12,000–25,000 (Japan exclusives, deadstock)",
-      Premium: "¥25,000+ (rare collabs, limited runs)",
-    },
-    difficulty: { find: "Hard", sell: "Medium" },
-  },
-  audio: {
-    summary:
-      "Vintage Japanese audio gear — Yamaha, Kenwood, Pioneer, Marantz — is globally loved. The challenge is shipping: receivers are heavy. Focus on smaller pieces or local buyers.",
-    whatToLookFor: [
-      "Yamaha CR and A-series receivers — strong US demand",
-      "Kenwood integrated amplifiers — clean aesthetics, collector interest",
-      "Pioneer SX receivers — iconic silver-face models",
-      "Compact cassette decks — growing demand from tape enthusiasts",
-      "Open-reel tape machines — niche but serious buyers",
-    ],
-    whatToAvoid: [
-      "Pieces with known channel imbalance or distortion",
-      "Missing knobs or face damage — cosmetics matter",
-      "Anything requiring significant recap work without testing first",
-      "Very heavy pieces (15kg+) — shipping will eat all margin",
-    ],
-    whereToFind: [
-      "Hard Off — best source for vintage audio",
-      "Bookoff Super Bazaar — occasionally has audio sections",
-      "Yahoo Auctions Japan — for shipping to yourself",
-    ],
-    platforms: [
-      { name: "eBay", note: "Widest reach for vintage audio" },
-      { name: "Audiogon", note: "Specialist audiophile community" },
-      { name: "Facebook Marketplace", note: "Local pickup — best margin" },
-    ],
-    priceRanges: {
-      Entry: "¥2,000–6,000 (small integrated amps)",
-      "Sweet spot": "¥4,000–12,000 (Yamaha receivers)",
-      Premium: "¥15,000+ (reference equipment, rare models)",
-    },
-    difficulty: { find: "Medium", sell: "Medium" },
-  },
-  knives: {
-    summary:
-      "Japanese kitchen knives are world-class and significantly cheaper in Japan than in the West. Hand-forged gyutos and santokus from known makers can 3–5x in Western retail.",
-    whatToLookFor: [
-      "Hand-forged gyuto (chef's knife) from named smiths",
-      "Santoku knives from Sakai (Osaka) makers",
-      "Kiritsuke — versatile single-bevel, premium pricing",
-      "Whetstone sets — complement the knife sales",
-      "Any knife with 'Yoshihiro', 'Shun', 'Miyabi' markings",
-    ],
-    whatToAvoid: [
-      "Mass-produced department store knives — no premium",
-      "Heavily used with significant blade stock removal",
-      "Rust without knowing if it's surface or deep",
-      "Knives without maker markings — authentication is everything",
-    ],
-    whereToFind: [
-      "Kappabashi (Tokyo kitchen district) — retail but competitive",
-      "Hard Off occasional finds",
-      "Antique markets — rarest finds",
-    ],
-    platforms: [
-      { name: "eBay", note: "Widest reach for kitchen knives" },
-      { name: "Etsy", note: "Excellent for artisan and handmade knives" },
-      { name: "Reddit r/chefknives", note: "Informed buyers, fair prices" },
-    ],
-    priceRanges: {
-      Entry: "¥3,000–8,000 (production knives)",
-      "Sweet spot": "¥8,000–25,000 (hand-forged from named makers)",
-      Premium: "¥25,000+ (master smith pieces)",
-    },
-    difficulty: { find: "Medium", sell: "Easy" },
   },
   gaming: {
     summary:

@@ -2,14 +2,11 @@ import Link from "next/link";
 import { TopBar } from "@/components/layout/TopBar";
 
 const categories = [
-  { slug: "clothing", label: "Clothing & Denim", emoji: "👖", difficulty: "Easy", bgClass: "bg-green-light" },
-  { slug: "watches", label: "Watches", emoji: "⌚", difficulty: "Medium", bgClass: "bg-surface" },
-  { slug: "cameras", label: "Film Cameras", emoji: "📷", difficulty: "Medium", bgClass: "bg-surface" },
-  { slug: "spirits", label: "Spirits & Whisky", emoji: "🥃", difficulty: "Easy", bgClass: "bg-gold-light" },
-  { slug: "sneakers", label: "Sneakers", emoji: "👟", difficulty: "Hard", bgClass: "bg-surface" },
-  { slug: "audio", label: "Vintage Audio", emoji: "🔊", difficulty: "Medium", bgClass: "bg-surface" },
-  { slug: "knives", label: "Knives & Tools", emoji: "🔪", difficulty: "Medium", bgClass: "bg-surface" },
   { slug: "gaming", label: "Retro Gaming", emoji: "🎮", difficulty: "Hard", bgClass: "bg-surface", premium: true },
+  { slug: "clothing", label: "Clothing & Denim", emoji: "👖", difficulty: "Easy", bgClass: "bg-green-light" },
+  { slug: "cameras", label: "Film Cameras", emoji: "📷", difficulty: "Medium", bgClass: "bg-surface" },
+  { slug: "watches", label: "Watches", emoji: "⌚", difficulty: "Medium", bgClass: "bg-surface" },
+  { slug: "spirits", label: "Spirits & Whisky", emoji: "🥃", difficulty: "Easy", bgClass: "bg-gold-light" },
 ];
 
 const difficultyStyle: Record<string, string> = {

@@ -14,14 +14,6 @@ const context: Record<string, Record<string, string>> = {
   Spirits: {
     maybe: "Japanese whisky is priced for domestic buyers. Western auction demand runs well above local shop tags — but verify shipping legality for your home country before buying.",
   },
-  Sneakers: {
-    buy: "Japanese deadstock and limited releases are priced on domestic hype cycles, which often lag US/EU resale markets by months.",
-    maybe: "Japanese deadstock and limited releases are priced on domestic hype cycles, which often lag US/EU resale markets by months.",
-  },
-  "Tools & Knives": {
-    buy: "Japanese-made hand tools and knives are undervalued domestically and carry strong import premium with Western buyers.",
-    maybe: "Japanese-made hand tools and knives are undervalued domestically and carry strong import premium with Western buyers.",
-  },
   "Retro Gaming": {
     buy: "Japanese recycle shops price retro hardware for local demand. Western collectors pay a significant premium for Japanese-market editions and regional exclusives — especially complete-in-box.",
     maybe: "Japanese recycle shops price retro hardware for local demand. Western collectors pay a significant premium for Japanese-market editions and regional exclusives — especially complete-in-box.",

@@ -16,7 +16,6 @@ const premiumFeatures = [
   "Live data — updated daily",
   "Price trend charts",
   "Saved history across devices",
-  "Japanese phrase cards per category",
 ];
 
 export function PricingCards() {

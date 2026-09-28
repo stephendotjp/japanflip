@@ -23,7 +23,6 @@ const premiumFeatures = [
   "Everything in Basic",
   "Live data — updated daily",
   "Extended history — last 50 lookups",
-  "Japanese phrase cards per category",
 ];
 
 function UpgradePageInner() {
@@ -77,7 +76,7 @@ function UpgradePageInner() {
           <p className="font-mono text-[11px]" style={{ color: "var(--green)" }}>
             You&apos;re on {tier === "basic" ? "Basic" : "Premium"}.{" "}
             {tier === "basic"
-              ? "Upgrade to Premium for live data and phrase cards."
+              ? "Upgrade to Premium for live data and extended history."
               : "You have full access."}
           </p>
         </div>
