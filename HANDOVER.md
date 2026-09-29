@@ -2,7 +2,7 @@
 
 **Purpose:** Running log of session-level work and open threads, for whoever (human or AI) picks this project up next. For architecture/design-token reference see `AGENT.md`. For product scope and known gaps see `SPEC.md`.
 
-**Last session:** 2026-09-29
+**Last session:** 2026-09-29 → 30
 
 ---
 
@@ -19,13 +19,16 @@
 4. `tabs_context_mcp({createIfEmpty:true})`, test, then close every tab you opened with `tabs_close_mcp`.
 5. **Never** kill/close Brave processes while his Brave is open — all profiles share one process, so it would close his trading windows. Leave the Claude window for him.
 
-Visual QA matters to him — do it, via this routine. Fallback: headless Playwright driving installed Edge (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`).
+Visual QA matters to him — do it, via this routine. **For mobile-width QA prefer headless Playwright** driving installed Edge (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`), `playwright-core` installed in the session scratchpad: the minimized Brave window can't be resized and its screenshots often time out. **The app is mobile-first** — check 375px and 320px before desktop.
 
 **Testing builds:** his `npm run dev` on :3000 may be running. Don't build in the repo. Copy to the scratchpad (robocopy excluding `node_modules .next .git japan-flip-saas-research`, junction `node_modules` to the repo's), `npx next build`, `npx next start -p 3100`, test against `http://localhost:3100`. Stephen is not a developer — if the :3000 dev server needs a restart, do it for him (find the PID on port 3000, stop it, delete `.next`, `npm run dev` in the background). Last fixed 2026-09-29.
+
+**Vercel:** production is `https://japanflip.vercel.app`, auto-deploys on push to `master`. Env vars on Vercel (Production): `ANTHROPIC_API_KEY`, `SOLD_COMPS_API_KEY` (added 2026-09-30 — it was missing, so every live lookup had returned zero comps). The Vercel CLI works via `npx vercel` and is logged in as stephendotjp. Claude Code's auto-mode classifier blocks the agent from sending secrets to Vercel and from production deploys — Stephen has to say so explicitly in chat, or run it himself with `!`. A new env var only takes effect after a redeploy.
 
 **Git:** commit and push at the end of every task. No `Co-Authored-By` line (breaks Vercel on the private repo). Stage files explicitly — `japan-flip-saas-research/`, `japanflip-claude-code-prompt.md`, `scout-mode-prompt.md` are intentionally untracked. For multi-line commit messages use `git commit -F <file>` (PowerShell mangles quotes in here-strings).
 
 **Next up (in priority order):**
+- **Stephen is testing the new lookup on his phone** (camera + real shop tags). Expect feedback on photo ID accuracy, tag reading, and speed (~7–9s per photo).
 0. **Free-tier cap is switched OFF** (`ENFORCE_FREE_LIMIT = false` in `app/app/page.tsx`) so Stephen can test on Vercel. Turn it back on before ads.
 1. **Rate limiting + server-side checks** on `/api/lookup` and `/api/vision` before any ad spend — anyone can burn sold-comps and Anthropic credits; paywall is client-side only (see audit section).
 2. **Scout upgrade** (agreed with Stephen 2026-09-29): "check all" in the pile with verdict + sells-for on each card, sort by profit; name the nearest store from `data/shops.json` instead of Nominatim's address fragment; read the tag price at capture (vision already returns `tagPriceJPY`).
@@ -125,6 +128,14 @@ Goal set by Stephen: be the app flippers/tourists use instead of Google Lens / e
 - **Bug:** `app/app/layout.tsx` rendered every page twice (desktop tree + mobile tree, toggled by CSS at 768px). Each copy had its own state, so resizing across 768 "lost" a lookup result, and effects/fetches ran twice. Now one tree; sidebar/tab bar are shown/hidden with `md:` classes.
 - Lookup page tuned for 320–375px: compact `TopBar` (title + badge on one row, used by every page), search form as [item | Check] / [¥ price | category], verdict scrolls into view when a result lands, no autofocus on the price field (it popped the phone keyboard over the result), `AdjustPanel` stacked with 4-column pill grids, tighter padding.
 - **Mobile QA method that works:** headless Playwright driving installed Edge (`playwright-core` in the session scratchpad, not the repo), viewport 375×812 and 320×812 with `isMobile`, full-page screenshots + a horizontal-overflow check per page. The Claude Brave profile's screenshots time out while minimized, so it's unreliable for this.
+
+## Live-site fixes (2026-09-30, eighth session)
+
+- **Live lookups were always empty:** `SOLD_COMPS_API_KEY` existed only in `.env.local`. Added to Vercel Production, redeployed; the live API now returns real comps (Pokemon Gold GBC Japanese: 50 comps, 32 kept after filtering).
+- `lib/soldComps.ts` now **throws** on a missing key / HTTP error; `/api/lookup` returns **502 with the reason** and logs it. Before, an outage looked like "No matching sold listings", which is what hid the missing key.
+- Free-tier cap switched off for testing (`ENFORCE_FREE_LIMIT`, see Next up #0).
+- Comp filter: the spare-part words (gasket, case back, movement/dial/crystal/crown only, lens cap/hood) had never actually applied in the earlier commit — fixed, plus guide books / art books / posters.
+- Git history note: commit `aa00bcb` (the Price Lookup rebuild) went out with the previous commit's message by mistake ("Unblock lookup testing…"). Not rewritten, to avoid force-pushing `master`.
 
 ## Dev environment gotcha hit this session
 
