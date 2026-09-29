@@ -13,9 +13,9 @@ const basicFeatures = [
 
 const premiumFeatures = [
   "Everything in Basic",
-  "Live data — updated daily",
-  "Price trend charts",
-  "Saved history across devices",
+  "Retro Gaming sourcing guide",
+  "Extended history — last 50 lookups (this device)",
+  "Export your lookups to CSV",
 ];
 
 export function PricingCards() {

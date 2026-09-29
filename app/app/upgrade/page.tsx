@@ -21,8 +21,9 @@ const basicFeatures = [
 
 const premiumFeatures = [
   "Everything in Basic",
-  "Live data — updated daily",
-  "Extended history — last 50 lookups",
+  "Retro Gaming sourcing guide",
+  "Extended history — last 50 lookups (this device)",
+  "Export your lookups to CSV",
 ];
 
 function UpgradePageInner() {
@@ -76,7 +77,7 @@ function UpgradePageInner() {
           <p className="font-mono text-[11px]" style={{ color: "var(--green)" }}>
             You&apos;re on {tier === "basic" ? "Basic" : "Premium"}.{" "}
             {tier === "basic"
-              ? "Upgrade to Premium for live data and extended history."
+              ? "Upgrade to Premium for the Retro Gaming guide, 50-lookup history, and CSV export."
               : "You have full access."}
           </p>
         </div>

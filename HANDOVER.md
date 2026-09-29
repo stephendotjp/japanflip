@@ -29,7 +29,6 @@ Plan going forward: fix real problems the research evidenced, then market via ad
 Roughly in the order the research says they matter:
 
 - **Shop Map** — nav item already exists, marked "soon," not built. This is the single highest-evidence *unbuilt* pain in the research (271-upvote thread: famous districts are tourist-priced/picked-over, suburban Hard Off/Book Off are better but undocumented and decay fast).
-- **Profit Calculator rework** — currently just re-does the lookup's own math. The single most-upvoted pain in the whole corpus (133 & 142 ups) is "extra bag vs. shipping vs. proxy" — the calculator should answer that, not recompute a number the user already has.
 - **Customs Checker gap** — only covers home-country arrival duties. Missing the Japan-exit side entirely: "tax-free goods must leave with you, can't be mailed" and "you can't sell to Book Off as a tourist" — both real, repeated complaints with no answer in the app. Also not reachable from the mobile bottom tab bar, despite being the kind of thing checked in-the-moment at the airport.
 - **Retro Gaming isn't a first-class lookup category yet.** Guides already treats it as the flagship niche (Premium-gated), and `/api/vision` can detect "Retro Gaming" from a photo, but then silently remaps it to "Electronics" because `SearchCard`'s category picker doesn't have it as an option (see `CATEGORY_MAP` in `app/api/vision/route.ts`). Worth fixing if leaning further into the retro-games/Pokémon/figures niche.
 - **No live Japan-side market data.** `jpMarket` always returns an honest "no data" state — there's no live JP sold-price source. Either build one (the research found an Apify Mercari/Yahoo sold-price actor as a candidate) or simplify the UI to stop showing an empty JP panel.
@@ -52,10 +51,17 @@ Fixed:
 - Deleted dead code: orphan `components/Sidebar.tsx`, `components/PremiumGate.tsx`, `lib/visionMap.ts`, `data/opportunities.json`, unused Geist fonts, unused format helpers; uninstalled `clsx`, `lucide-react`, `tailwind-merge`. `.env.example` now lists the vars actually used.
 
 Not fixed — needs a decision:
-- **Premium tier sells features that don't exist**: "Live data — updated daily" (every lookup is already live for everyone), "Price trend charts", "Saved history across devices" (history is localStorage-only). Also the `PremiumGate` on results pitches "live market data". Either build them or rewrite the Premium pitch (real extras today: 50-item history + CSV export).
 - **Paywall is client-side only.** Anyone can visit `/app/upgrade?email=x&tier=premium`, or clear localStorage for more free lookups. `/api/lookup` and `/api/vision` have no rate limiting, so anyone can burn sold-comps and Anthropic credits.
 - **Comp relevance** — keyword search mixes variants (e.g. "Olympus mju-II" pulls in "Stylus Zoom 140 mju II"), which skews the median.
 - `README.md` is still create-next-app boilerplate; `camera-feature.md` describes the removed Google Vision flow.
+
+## Haul Calculator (2026-09-29, third session)
+
+- **`/app/calculator` rebuilt as "Haul Calculator"** — answers the top research pain (bag vs ship vs proxy) instead of recomputing lookup profit. Options: room in your bag / extra checked bag(s) (airline fee + JP suitcase, one bag per 23kg) / Japan Post quote / proxy fee + shipping quote. Each shows transport + estimated import tax; cheapest paid option highlighted. "Use today's trip" prefills the haul from trip items and then shows trip profit after getting it home.
+- Shipping costs are **user-entered quotes** (link to Japan Post's official rate calculator), not invented rate tables. Tax rates per destination are rough, dated Sep 2026, editable under "Tax assumptions". US models the end of the $800 de minimis for shipped goods (Aug 2025) vs the $800 traveller exemption (~3% flat on excess) for luggage.
+- Japan Post US mail: suspended after 2025 tariffs, **resumed July 2026** (per japanpost.jp notices) — calculator tells US users to check current status.
+- **Premium copy rewritten** to real extras only: Retro Gaming guide, 50-lookup history (this device), CSV export. `PremiumGate` no longer pitches "live data". Premium is now thin — needs a real differentiator.
+- Possible follow-up: sidebar says "Haul Calculator" but mobile tab bar still says "Calculator" (fits better). `LandingCalculator` on the homepage is still the old profit-style widget.
 
 ## Dev environment gotcha hit this session
 
@@ -63,4 +69,4 @@ Running `npm run build` while `npm run dev` is still running against the same pr
 
 ## Browser tool note
 
-Using Claude in Chrome (`mcp__claude-in-chrome__*`) for visual QA is fine and encouraged for this project — but it attached to Stephen's own active Brave browser window ("Tradesea" instance) during this session, which interrupted his actual browsing. Next time: open a dedicated new tab/window for automation rather than reusing whatever tab context comes back by default, and confirm with Stephen if it's unclear which browser instance is safe to drive.
+Using Claude in Chrome (`mcp__claude-in-chrome__*`) for visual QA is fine and encouraged for this project — but it attached to Stephen's own active Brave browser window ("Tradesea" instance) during this session, which interrupted his actual browsing. Next time: open a dedicated new tab/window for automation rather than reusing whatever tab context comes back by default, and confirm with Stephen if it's unclear which browser instance is safe to drive. **Happened again 2026-09-29 — always ask Stephen before any browser use.** He's OK with Edge or a fresh Brave window; the extension shows up as one device, and `tabs_context_mcp({createIfEmpty:true})` with no existing group opens its own new window.

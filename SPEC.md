@@ -34,7 +34,7 @@ Before reviewing or suggesting changes, note these intentional constraints:
 |------|-------|--------|
 | Free | $0 | 3 lookups/day, full result (verdict + profit breakdown) within limit; blurred gate on 4th+ attempt |
 | Basic | $9 one-time | Unlimited lookups, full result, platform comparison, customs guide, lookup history (last 20 items, this device), trip summary, Scout Mode |
-| Premium | $24 one-time | Everything in Basic + live data gate, extended history (50 items), phrase cards, CSV export |
+| Premium | $24 one-time | Everything in Basic + Retro Gaming guide, extended history (50 items, this device), CSV export |
 
 **Free tier detail:** Free users see the complete result — verdict, market data, profit breakdown, platform cards, customs — for their first 3 daily lookups. On the 4th+ attempt, the search form stays active but submitting shows a blurred placeholder card with an upgrade CTA instead of real results.
 
@@ -135,7 +135,7 @@ Inputs:
 - `ProfitBreakdown` — all tiers (free users within limit see full breakdown)
 - `PlatformCards` — all tiers within limit
 - `CustomsStrip` — customs status per country
-- `PremiumGate` (isPremiumOnly) — live market data gate for non-Premium users
+- `PremiumGate` (isPremiumOnly) — Premium upsell for non-Premium users (Retro Gaming guide, 50-item history, CSV export)
 
 ---
 
@@ -191,7 +191,7 @@ interface ScoutItem {
 
 ### Other Routes
 
-- `/app/calculator` — Profit calculator. All tiers. Manual what-if: JP price + US sell price → net profit, ROI, break-even.
+- `/app/calculator` — Haul calculator. All tiers. "Room in bag vs extra bag vs Japan Post vs proxy": total JP spend (or today's trip), weight, destination, user-entered quotes → transport + estimated import tax per option, cheapest highlighted, trip profit after getting it home. Tax assumptions per destination are rough, dated (Sep 2026), and editable. Warns about tax-free goods not being mailable and DDP re-billing.
 - `/app/customs` — Customs checker. All tiers. 7 countries × 4 item types.
 - `/app/history` — Saved lookups. Basic+ (gate for Free). Newest first, verdict badge, ROI. Premium: CSV export.
 - `/app/phrases` — Phrase cards. 1 free per section, all behind Premium gate. 8 sections, 26 phrases, all recycle-shop specific (negotiation, condition, authenticity, boxes/accessories, return policy, browsing etiquette) with Hard Off / 2nd Street usage notes.
@@ -327,7 +327,7 @@ Returns 1–2 sentence copy explaining the structural reason this category is un
 
 4. **Scout Mode tier gate removed for testing.** Must be restored before marketing. Gate logic: add `if (!isBasic) return <UpgradePrompt />` at top of scout page component.
 
-5. **"Live data — updated daily"** listed as Premium feature but is a UI stub — not differentiated from Basic in practice. Now that lookups are genuinely live, this tier boundary should be revisited.
+5. **Premium is thin.** Copy now lists only what exists (Retro Gaming guide, 50-item history, CSV export). "Live data", trend charts, and cross-device history were removed from the pitch (2026-09-29) — the tier needs a stronger real differentiator.
 
 ### UX / Product
 

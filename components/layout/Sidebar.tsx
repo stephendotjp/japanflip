@@ -15,7 +15,7 @@ interface NavItem {
 const tools: NavItem[] = [
   { label: "Price Lookup", href: "/app", icon: "⊕" },
   { label: "Scout Mode", href: "/app/scout", icon: "◎" },
-  { label: "Profit Calculator", href: "/app/calculator", icon: "⊞" },
+  { label: "Haul Calculator", href: "/app/calculator", icon: "⊞" },
   { label: "Customs Checker", href: "/app/customs", icon: "✈" },
   { label: "Saved Lookups", href: "/app/history", icon: "◉" },
 ];

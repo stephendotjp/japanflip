@@ -17,11 +17,11 @@ export function PremiumGate({ feature, upgradeHref, isPremiumOnly }: PremiumGate
     >
       <p className="text-2xl">🔒</p>
       <p className="font-display text-2xl text-black">
-        Upgrade for {isPremiumOnly ? "Live Data" : `Full ${feature.charAt(0).toUpperCase() + feature.slice(1)}`}
+        Upgrade for {isPremiumOnly ? "Premium" : `Full ${feature.charAt(0).toUpperCase() + feature.slice(1)}`}
       </p>
       <p className="font-body text-sm text-muted max-w-sm mx-auto">
         {isPremiumOnly
-          ? "Premium adds live market data updated daily and extended lookup history (50 items)."
+          ? "Premium adds the Retro Gaming sourcing guide, 50-lookup history, and CSV export."
           : `Get Basic for unlimited lookups, the full profit breakdown, platform comparison, customs guide, and lookup history.`}
       </p>
       <Link

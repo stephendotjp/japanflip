@@ -312,7 +312,7 @@ function PriceLookupInner() {
           <CustomsStrip customs={result.customs} />
           {!isPremium && (
             <PremiumGate
-              feature="live market data"
+              feature="premium"
               upgradeHref="/app/upgrade"
               isPremiumOnly
             />
