@@ -6,6 +6,37 @@
 
 ---
 
+## ⚠ START HERE (read before doing anything)
+
+**Browser testing — CRITICAL.** Stephen live-trades NQ futures in a Brave-based web app. Automation must never touch or pop over his windows. The only approved routine (confirmed working 2026-09-29 — "launched in the background without bothering me"):
+
+1. Brave profiles: `Default` = Work, `Profile 1` = Trading, `Profile 2` = **Claude**. The Claude extension is installed **only** in Profile 2.
+2. Launch the Claude profile minimized (fine even while his Brave is open):
+   ```powershell
+   Start-Process "C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" -ArgumentList '--profile-directory="Profile 2"','--start-minimized' -WindowStyle Minimized
+   ```
+3. `list_connected_browsers` → must show **exactly one** browser (Claude profile ID was `2d25e040-aabf-44da-883b-608edc7cef87`). Anything else → stop and ask Stephen.
+4. `tabs_context_mcp({createIfEmpty:true})`, test, then close every tab you opened with `tabs_close_mcp`.
+5. **Never** kill/close Brave processes while his Brave is open — all profiles share one process, so it would close his trading windows. Leave the Claude window for him.
+
+Visual QA matters to him — do it, via this routine. Fallback: headless Playwright driving installed Edge (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`).
+
+**Testing builds:** his `npm run dev` on :3000 may be running. Don't build in the repo. Copy to the scratchpad (robocopy excluding `node_modules .next .git japan-flip-saas-research`, junction `node_modules` to the repo's), `npx next build`, `npx next start -p 3100`, test against `http://localhost:3100`. His :3000 dev server had a stale `.next` (main-app.js 503) — he was told to delete `.next` and restart.
+
+**Git:** commit and push at the end of every task. No `Co-Authored-By` line (breaks Vercel on the private repo). Stage files explicitly — `japan-flip-saas-research/`, `japanflip-claude-code-prompt.md`, `scout-mode-prompt.md` are intentionally untracked. For multi-line commit messages use `git commit -F <file>` (PowerShell mangles quotes in here-strings).
+
+**Next up (in priority order):**
+1. **Rate limiting + server-side checks** on `/api/lookup` and `/api/vision` before any ad spend — anyone can burn sold-comps and Anthropic credits; paywall is client-side only (see audit section).
+2. Empty JP market panel — build a source (Apify Mercari/Yahoo actor) or hide it.
+3. Comp relevance (variant mixing skews the median).
+4. `LandingCalculator` on the homepage is still the old per-item profit widget — consider pointing it at the Haul Calculator idea.
+5. Premium tier is thin (Retro Gaming guide, 50-item history, CSV) — needs a real differentiator.
+6. Stephen to fill `data/shopNotes.json` with store visit notes; test Shop Map "Near me" on a real phone.
+7. After **Nov 1, 2026**: re-check tax-free copy on `/app/customs`, delete the pre-refund-system block.
+8. Stale docs: `README.md` boilerplate, `camera-feature.md` obsolete, `AGENT.md` still describes the old opportunities-list prototype.
+
+---
+
 ## Context
 
 Stephen is picking JapanFlip back up after a pause. He commissioned a separate AI agent to scan 46 Reddit threads (r/JapanTravelTips, r/Flipping, r/Buyee, r/AnimeFigures, etc.) for real tourist/flipper pain points — that research lives in `japan-flip-saas-research/` (not yet committed as of this session; still untracked in git). It produced a green-field "Should I Buy This?" MVP spec that assumes JapanFlip doesn't exist yet — **it doesn't.** Decision made this session: **keep building the existing app**, using that research as a feature/priority backlog, not a replacement architecture. See `japan-flip-saas-research/japan-tourist-resale-SAAS-PAINPOINTS-MASTER.md` for the ranked pain list if scoping future work.
@@ -58,7 +89,7 @@ Not fixed — needs a decision:
 - Shipping costs are **user-entered quotes** (link to Japan Post's official rate calculator), not invented rate tables. Tax rates per destination are rough, dated Sep 2026, editable under "Tax assumptions". US models the end of the $800 de minimis for shipped goods (Aug 2025) vs the $800 traveller exemption (~3% flat on excess) for luggage.
 - Japan Post US mail: suspended after 2025 tariffs, **resumed July 2026** (per japanpost.jp notices) — calculator tells US users to check current status.
 - **Premium copy rewritten** to real extras only: Retro Gaming guide, 50-lookup history (this device), CSV export. `PremiumGate` no longer pitches "live data". Premium is now thin — needs a real differentiator.
-- Possible follow-up: sidebar says "Haul Calculator" but mobile tab bar still says "Calculator" (fits better). `LandingCalculator` on the homepage is still the old profit-style widget.
+- Mobile tab now labelled "Haul". `LandingCalculator` on the homepage is still the old profit-style widget.
 
 ## Shop Map (2026-09-29, fourth session)
 
@@ -80,6 +111,6 @@ Not fixed — needs a decision:
 
 Running `npm run build` while `npm run dev` is still running against the same project corrupts the `.next` cache (both processes write to it) — this caused a false-positive "submit button stuck disabled" bug that looked like a real regression but wasn't. If dev server behaves strangely after a build, `rm -rf .next` and restart it. (Happened again 2026-09-29: symptom is `main-app.js` 404ing and the page never hydrating — buttons do nothing. To verify a build without touching a running dev server, copy the repo to a temp dir and build/serve there.)
 
-## Browser tool note
+## Browser tool history
 
-Using Claude in Chrome (`mcp__claude-in-chrome__*`) for visual QA is fine and encouraged for this project — but it attached to Stephen's own active Brave browser window ("Tradesea" instance) during this session, which interrupted his actual browsing. Next time: open a dedicated new tab/window for automation rather than reusing whatever tab context comes back by default, and confirm with Stephen if it's unclear which browser instance is safe to drive. **Happened again 2026-09-29 — always ask Stephen before any browser use.** He's OK with Edge or a fresh Brave window; the extension shows up as one device, and `tabs_context_mcp({createIfEmpty:true})` with no existing group opens its own new window.
+Before the Claude-profile routine (see START HERE), the extension attached to / popped over Stephen's active Brave window four times, interrupting live trading. `tabs_context_mcp({createIfEmpty:true})` alone did NOT prevent this. Only use the START HERE routine.
