@@ -21,7 +21,7 @@
 
 Visual QA matters to him — do it, via this routine. Fallback: headless Playwright driving installed Edge (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`).
 
-**Testing builds:** his `npm run dev` on :3000 may be running. Don't build in the repo. Copy to the scratchpad (robocopy excluding `node_modules .next .git japan-flip-saas-research`, junction `node_modules` to the repo's), `npx next build`, `npx next start -p 3100`, test against `http://localhost:3100`. His :3000 dev server had a stale `.next` (main-app.js 503) — he was told to delete `.next` and restart.
+**Testing builds:** his `npm run dev` on :3000 may be running. Don't build in the repo. Copy to the scratchpad (robocopy excluding `node_modules .next .git japan-flip-saas-research`, junction `node_modules` to the repo's), `npx next build`, `npx next start -p 3100`, test against `http://localhost:3100`. Stephen is not a developer — if the :3000 dev server needs a restart, do it for him (find the PID on port 3000, stop it, delete `.next`, `npm run dev` in the background). Last fixed 2026-09-29.
 
 **Git:** commit and push at the end of every task. No `Co-Authored-By` line (breaks Vercel on the private repo). Stage files explicitly — `japan-flip-saas-research/`, `japanflip-claude-code-prompt.md`, `scout-mode-prompt.md` are intentionally untracked. For multi-line commit messages use `git commit -F <file>` (PowerShell mangles quotes in here-strings).
 
