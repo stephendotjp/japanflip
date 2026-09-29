@@ -24,6 +24,8 @@ interface VerdictCardProps {
 export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCardProps) {
   const [addedToTrip, setAddedToTrip] = useState(false);
   const config = verdictConfig[result.verdict];
+  // No tag price yet, but enough comps to say what it sells for.
+  const valueOnly = result.valueOnly && result.compsUsed >= 3;
   const verdictContext = getVerdictContext(result.category, result.verdict);
   const bestPlatform =
     result.profitBreakdown.platforms.length > 0
@@ -53,13 +55,13 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
         {/* Left: verdict + reason */}
         <div className="flex-1">
           <p className="font-mono text-[10px] tracking-[2px] uppercase mb-2" style={{ color: "#ffffff66" }}>
-            VERDICT
+            {valueOnly ? "SELLS FOR ON EBAY" : "VERDICT"}
           </p>
           <p
             className="font-display text-6xl md:text-7xl leading-none mb-4"
-            style={{ color: config.color }}
+            style={{ color: valueOnly ? "#ffffff" : config.color }}
           >
-            {config.label}
+            {valueOnly ? `~$${Math.round(result.usMarket.avgSoldPrice)}` : config.label}
           </p>
           <p className="font-body text-sm leading-relaxed" style={{ color: "#ffffffb3" }}>
             {result.verdictReason}
@@ -92,14 +94,16 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
           className="md:w-56 rounded-lg p-5 space-y-3 shrink-0"
           style={{ background: "#ffffff0d" }}
         >
-          <div className="flex justify-between items-baseline gap-2">
-            <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
-              You Pay
-            </span>
-            <span className="font-mono text-sm text-right" style={{ color: "#ffffff" }}>
-              ¥{result.jpBuyPrice.toLocaleString()} / ~${result.usdEquivalent}
-            </span>
-          </div>
+          {!result.valueOnly && (
+            <div className="flex justify-between items-baseline gap-2">
+              <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
+                You Pay
+              </span>
+              <span className="font-mono text-sm text-right" style={{ color: "#ffffff" }}>
+                ¥{result.jpBuyPrice.toLocaleString()} / ~${result.usdEquivalent}
+              </span>
+            </div>
+          )}
           <div className="flex justify-between items-baseline gap-2">
             <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
               Condition
@@ -127,14 +131,25 @@ export function VerdictCard({ result, condition = "A", onAddToTrip }: VerdictCar
                 </span>
               </div>
             )}
-            <div className="flex justify-between items-baseline gap-2">
-              <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
-                ROI
-              </span>
-              <span className="font-display text-3xl" style={{ color: config.color }}>
-                {result.roi}x
-              </span>
-            </div>
+            {result.valueOnly ? (
+              <div className="flex justify-between items-baseline gap-2">
+                <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
+                  Range
+                </span>
+                <span className="font-mono text-sm" style={{ color: "#ffffffcc" }}>
+                  ${Math.round(result.usMarket.priceRange.min)}–${Math.round(result.usMarket.priceRange.max)}
+                </span>
+              </div>
+            ) : (
+              <div className="flex justify-between items-baseline gap-2">
+                <span className="font-mono text-[10px] tracking-widest uppercase" style={{ color: "#ffffff66" }}>
+                  ROI
+                </span>
+                <span className="font-display text-3xl" style={{ color: config.color }}>
+                  {result.roi}x
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

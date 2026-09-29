@@ -27,13 +27,14 @@ Visual QA matters to him — do it, via this routine. Fallback: headless Playwri
 
 **Next up (in priority order):**
 1. **Rate limiting + server-side checks** on `/api/lookup` and `/api/vision` before any ad spend — anyone can burn sold-comps and Anthropic credits; paywall is client-side only (see audit section).
-2. Empty JP market panel — build a source (Apify Mercari/Yahoo actor) or hide it.
-3. Comp relevance (variant mixing skews the median).
-4. `LandingCalculator` on the homepage is still the old per-item profit widget — consider pointing it at the Haul Calculator idea.
-5. Premium tier is thin (Retro Gaming guide, 50-item history, CSV) — needs a real differentiator.
-6. Stephen to fill `data/shopNotes.json` with store visit notes; test Shop Map "Near me" on a real phone.
-7. After **Nov 1, 2026**: re-check tax-free copy on `/app/customs`, delete the pre-refund-system block.
-8. Stale docs: `README.md` boilerplate, `camera-feature.md` obsolete, `AGENT.md` still describes the old opportunities-list prototype.
+2. **Scout upgrade** (agreed with Stephen 2026-09-29): "check all" in the pile with verdict + sells-for on each card, sort by profit; name the nearest store from `data/shops.json` instead of Nominatim's address fragment; read the tag price at capture (vision already returns `tagPriceJPY`).
+3. **Verdict thresholds** — BUY needs ROI ≥7x, SKIP <3x, so ¥20,000 SKX007 → ~$91 profit is "SKIP IT". Probably wrong for flippers; decide profit-based thresholds with Stephen.
+4. JP market data (Apify Mercari/Yahoo actor) — the empty JP panel is gone from the UI; only revisit if a source is built.
+5. `LandingCalculator` on the homepage is still the old per-item profit widget — consider pointing it at the Haul Calculator idea.
+6. Premium tier is thin (Retro Gaming guide, 50-item history, CSV) — needs a real differentiator.
+7. Stephen to fill `data/shopNotes.json` with store visit notes; test Shop Map "Near me" on a real phone.
+8. After **Nov 1, 2026**: re-check tax-free copy on `/app/customs`, delete the pre-refund-system block.
+9. Stale docs: `README.md` boilerplate, `camera-feature.md` obsolete, `AGENT.md` still describes the old opportunities-list prototype.
 
 ---
 
@@ -106,6 +107,17 @@ Not fixed — needs a decision:
 - **Customs Checker now has "Leaving Japan"** above the arrival checker: tax-free must leave with you (self-mailing hasn't counted since Apr 2025), the current regime vs the **refund system from Nov 1, 2026** (pay full price, refund after customs check, 90-day export, one missing item voids the whole receipt, resale exclusion dropped but carry-out quantity limit), "tourists can't sell to Book Off/Hard Off" (Secondhand Articles Dealer Act ID + Japan address), and a flipping note (tag prices include tax, so lookup math doesn't rely on tax-free). Sources: LIVE JAPAN 2026 tax-free guide, city-cost/Off-house seller rules. `REFUND_SYSTEM_START` in `app/app/customs/page.tsx` hides the old regime automatically after Nov 1 — **revisit the copy then** and delete the `before` block.
 - Mobile tab bar is now 6 tabs: Lookup, Scout, Shops, Haul (calculator), Customs, Guides.
 - **Retro Gaming is a lookup category**: added to `SearchCard`, removed the vision `CATEGORY_MAP` remap, Pokémon quick-chip uses it. Verdict context copy for it already existed. Lookup math treats it like any non-Spirits category.
+
+## Price Lookup rebuild: "snap → verdict" (2026-09-29, sixth session)
+
+Goal set by Stephen: be the app flippers/tourists use instead of Google Lens / eBay's app.
+- **Testing unblocked:** no daily free cap under `npm run dev`; only lookups with ≥3 matching comps count toward the free 3. On the live site Stephen can use `/app/upgrade?email=…&tier=premium` (the known client-side paywall hole).
+- **Camera-first UI** (`components/lookup/SearchCard.tsx`): big "Snap it" button; typing is secondary; **price is optional**. With no price the verdict card shows "SELLS FOR ~$X" and the Adjust panel focuses the price field.
+- **Vision** (`app/api/vision/route.ts`) now uses `@anthropic-ai/sdk` + structured output (zod), model `claude-sonnet-5-5` at effort `low`, `fallbacks: "default"`. Returns eBay-ready `searchQuery` (also as `itemName` for Scout), `alternatives` ("Not it?" chips), `tagPriceJPY` (read from the tag, tax-included), `conditionRank` (sets S/A/B/C), `warnings` (e.g. ジャンク = junk). Tested with a synthetic Hard Off tag: ~7–9s, all fields correct. Image sent at 1568px long edge.
+- **Verdict math moved client-side:** `/api/lookup` returns `{query, category, exchangeRate, comps}` (`LookupResponse`); `lib/lookup.ts#buildResult` is pure and runs in the browser, so tag price / condition / shipping / comp toggles update instantly without another sold-comps call or free lookup.
+- **Comp relevance** (`lib/comps.ts`): auto-excludes parts/not-working (eBay condition + title), accessories (incl. "X for SKX007"), lots, other model numbers (query tokens containing digits must appear in title; skipped if <3 would remain), price outliers (1.5×IQR, plus a floor at 25% of median). Each exclusion has a reason; `CompsList` shows all comps with ✕/+ toggles. Checked on live data: SKX007 drops SKX009/SKX033/bezels/hands/gaskets/lots; mju-II drops parts-only.
+- Removed the empty JP panel (`MarketData.tsx` deleted, `jpMarket` dropped from `LookupResult`). Condition/size moved from the search form into `AdjustPanel` under the verdict.
+- Junk-tagged items still use working-unit comps — the red warning is the only signal. Consider adjusting condition automatically if Stephen wants.
 
 ## Dev environment gotcha hit this session
 

@@ -2,8 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 
+export interface SearchExtras {
+  conditionRank?: string | null;
+}
+
 interface SearchCardProps {
-  onSearch: (item: string, category: string, priceJPY: number, condition: string, size: string) => void;
+  onSearch: (item: string, category: string, priceJPY: number | null, extras?: SearchExtras) => void;
   loading?: boolean;
   disabled?: boolean;
   initialItem?: string;
@@ -11,34 +15,43 @@ interface SearchCardProps {
   initialCategory?: string;
 }
 
-const categories = [
-  "Watches",
-  "Clothing",
-  "Electronics",
-  "Retro Gaming",
-  "Spirits",
-  "Other",
-];
+interface VisionResult {
+  itemName: string | null;
+  category: string | null;
+  alternatives: string[];
+  tagPriceJPY: number | null;
+  conditionRank: string | null;
+  warnings: string[];
+}
 
-const conditions = ["S", "A", "B", "C"] as const;
+const categories = ["Watches", "Clothing", "Electronics", "Retro Gaming", "Spirits", "Other"];
 
-const conditionLabels: Record<string, string> = {
-  S: "S — Like new / mint",
-  A: "A — Excellent, minor wear",
-  B: "B — Good, visible use",
-  C: "C — Fair, obvious wear",
-};
+// Long edge ~1568px is the size Claude reads best; enough to read a price tag.
+function resizeImage(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const MAX = 1568;
+      const scale = Math.min(1, MAX / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.85));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
 
-const sizes = ["Small", "Medium", "Large", "Oversized"] as const;
-
-const categoryDefaultSize: Record<string, string> = {
-  Watches: "Small",
-  Clothing: "Medium",
-  Electronics: "Small",
-  "Retro Gaming": "Small",
-  Spirits: "Small",
-  Other: "Small",
-};
+const CameraIcon = ({ className }: { className: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
 
 export function SearchCard({
   onSearch,
@@ -49,14 +62,13 @@ export function SearchCard({
   initialCategory,
 }: SearchCardProps) {
   const [item, setItem] = useState(initialItem);
-  const [category, setCategory] = useState(initialCategory ?? "Watches");
+  const [category, setCategory] = useState(initialCategory ?? "Other");
   const [price, setPrice] = useState(initialPrice);
-  const [condition, setCondition] = useState("A");
-  const [size, setSize] = useState("Small");
+  const [photo, setPhoto] = useState<string | null>(null);
   const [cameraState, setCameraState] = useState<"idle" | "loading" | "error">("idle");
+  const [vision, setVision] = useState<VisionResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const itemInputRef = useRef<HTMLInputElement>(null);
-  const priceInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (initialItem !== undefined) setItem(initialItem);
@@ -70,74 +82,46 @@ export function SearchCard({
     if (initialCategory) setCategory(initialCategory);
   }, [initialCategory]);
 
-  useEffect(() => {
-    setSize(categoryDefaultSize[category] ?? "Small");
-  }, [category]);
+  const numericPrice = () => {
+    const n = Number(price.replace(/[^0-9]/g, ""));
+    return n > 0 ? n : null;
+  };
 
   const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    if (fileInputRef.current) fileInputRef.current.value = "";
     if (!file) return;
 
     setCameraState("loading");
-
-    const resizeImage = (file: File): Promise<{ base64: string; mimeType: string }> =>
-      new Promise((resolve, reject) => {
-        const img = new Image();
-        const url = URL.createObjectURL(file);
-        img.onload = () => {
-          URL.revokeObjectURL(url);
-          const MAX = 1024;
-          const scale = Math.min(1, MAX / Math.max(img.width, img.height));
-          const canvas = document.createElement("canvas");
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          canvas.getContext("2d")!.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
-          resolve({ base64: dataUrl.split(",")[1], mimeType: "image/jpeg" });
-        };
-        img.onerror = reject;
-        img.src = url;
-      });
+    setVision(null);
 
     try {
-      const { base64, mimeType } = await resizeImage(file);
+      const dataUrl = await resizeImage(file);
+      setPhoto(dataUrl);
 
-      try {
-        const res = await fetch("/api/vision", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64: base64, mimeType }),
-        });
-        if (!res.ok) {
-          setCameraState("error");
-          setTimeout(() => itemInputRef.current?.focus(), 50);
-          return;
-        }
-        const { itemName, category: detectedCategory } = await res.json();
+      const res = await fetch("/api/vision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: dataUrl.split(",")[1], mimeType: "image/jpeg" }),
+      });
+      const v: VisionResult | null = res.ok ? await res.json() : null;
 
-        if (!itemName) {
-          setCameraState("error");
-          setTimeout(() => itemInputRef.current?.focus(), 50);
-          return;
-        }
-
-        setItem(itemName);
-        if (detectedCategory) setCategory(detectedCategory);
-        setCameraState("idle");
-
-        if (fileInputRef.current) fileInputRef.current.value = "";
-
-        // Focus price field so user knows to enter the ¥ price from the tag
-        setTimeout(() => priceInputRef.current?.focus(), 50);
-
-        const numPrice = Number(price.replace(/[^0-9]/g, ""));
-        if (numPrice) {
-          onSearch(itemName, detectedCategory ?? category, numPrice, condition, size);
-        }
-      } catch {
+      if (!v?.itemName) {
         setCameraState("error");
         setTimeout(() => itemInputRef.current?.focus(), 50);
+        return;
       }
+
+      setVision(v);
+      setCameraState("idle");
+      setItem(v.itemName);
+      const cat = v.category && categories.includes(v.category) ? v.category : category;
+      setCategory(cat);
+      // A price the user already typed wins over one read from the tag.
+      const tagPrice = numericPrice() ?? v.tagPriceJPY;
+      if (tagPrice) setPrice(String(tagPrice));
+
+      onSearch(v.itemName, cat, tagPrice, { conditionRank: v.conditionRank });
     } catch {
       setCameraState("error");
       setTimeout(() => itemInputRef.current?.focus(), 50);
@@ -146,173 +130,163 @@ export function SearchCard({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const numPrice = Number(price.replace(/[^0-9]/g, ""));
-    if (!item.trim() || !numPrice) return;
-    onSearch(item.trim(), category, numPrice, condition, size);
+    if (!item.trim()) return;
+    onSearch(item.trim(), category, numericPrice());
   };
 
-  return (
-    <div className="bg-surface rounded-xl border border-border p-5 md:p-6">
-      <div className="mb-4">
-        <h2 className="font-display text-2xl text-black">What did you find?</h2>
-        <p className="font-body text-sm mt-0.5" style={{ color: "var(--muted)" }}>
-          Enter the item and price tag. We check both JP and US markets.
-        </p>
-      </div>
+  const searchAlternative = (alt: string) => {
+    setItem(alt);
+    onSearch(alt, category, numericPrice());
+  };
 
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="flex flex-col lg:flex-row gap-3">
-          <div className="flex-[2] min-w-0 flex gap-2">
-            <input
-              ref={itemInputRef}
-              type="text"
-              value={item}
-              onChange={(e) => setItem(e.target.value)}
-              placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
-              disabled={disabled}
-              className="flex-1 min-w-0 px-4 py-3 border border-border rounded-md font-body text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={cameraState === "error" ? { borderColor: "var(--muted)" } : undefined}
-            />
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="hidden"
-              onChange={handlePhotoSelect}
-            />
-            <button
-              type="button"
-              disabled={disabled || cameraState === "loading"}
-              onClick={() => {
-                setCameraState("idle");
-                fileInputRef.current?.click();
-              }}
-              title="Identify item from photo"
-              className="px-3 py-3 border border-border rounded-md bg-white hover:border-text transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {cameraState === "loading" ? (
-                <svg className="animate-spin w-4 h-4 text-muted" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              )}
-            </button>
+  const busy = loading || cameraState === "loading";
+
+  return (
+    <div className="bg-surface rounded-xl border border-border p-5 md:p-6 space-y-4">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={handlePhotoSelect}
+      />
+
+      {/* Primary action: photo of the item + its tag */}
+      <button
+        type="button"
+        disabled={disabled || busy}
+        onClick={() => fileInputRef.current?.click()}
+        className="w-full flex items-center gap-4 p-4 md:p-5 rounded-xl text-left text-white transition-opacity hover:opacity-95 disabled:opacity-60 disabled:cursor-not-allowed"
+        style={{ background: "var(--black)" }}
+      >
+        <span
+          className="shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
+          style={{ background: "var(--red)" }}
+        >
+          {cameraState === "loading" ? (
+            <svg className="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+          ) : (
+            <CameraIcon className="w-7 h-7" />
+          )}
+        </span>
+        <span className="min-w-0">
+          <span className="block font-display text-2xl md:text-3xl leading-none">
+            {cameraState === "loading" ? "Reading photo..." : photo ? "Snap another" : "Snap it"}
+          </span>
+          <span className="block font-body text-sm mt-1" style={{ color: "#ffffffb3" }}>
+            {cameraState === "loading"
+              ? "Identifying the item and reading the tag"
+              : "Get the price tag in the shot — we read the ¥ price and grade."}
+          </span>
+        </span>
+      </button>
+
+      {/* What the photo told us */}
+      {photo && cameraState !== "loading" && (
+        <div className="flex gap-3 items-start">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={photo} alt="Your photo" className="w-16 h-16 rounded-lg object-cover border border-border shrink-0" />
+          <div className="min-w-0 space-y-1.5">
+            {cameraState === "error" ? (
+              <p className="font-body text-sm text-muted">
+                Couldn&apos;t identify this one — type what it is below.
+              </p>
+            ) : vision ? (
+              <>
+                <p className="font-mono text-[11px] text-muted">
+                  Identified as <span className="text-text">{vision.itemName}</span>
+                  {vision.tagPriceJPY ? ` · tag ¥${vision.tagPriceJPY.toLocaleString()}` : " · no tag price read"}
+                  {vision.conditionRank ? ` · rank ${vision.conditionRank}` : ""}
+                </p>
+                {vision.alternatives.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Not it?</span>
+                    {vision.alternatives.map((alt) => (
+                      <button
+                        key={alt}
+                        type="button"
+                        onClick={() => searchAlternative(alt)}
+                        disabled={busy}
+                        className="px-2.5 py-1 border border-border rounded-full font-mono text-[11px] text-muted hover:text-text hover:border-text disabled:opacity-40 transition-colors"
+                      >
+                        {alt}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : null}
           </div>
+        </div>
+      )}
+
+      {vision && vision.warnings.length > 0 && cameraState !== "loading" && (
+        <div
+          className="px-4 py-3 rounded-md border space-y-1"
+          style={{ background: "var(--red-light)", borderColor: "rgba(217,43,58,0.25)" }}
+        >
+          {vision.warnings.map((w) => (
+            <p key={w} className="font-body text-sm" style={{ color: "var(--red)" }}>
+              ⚠ {w}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* Secondary: type it */}
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
+          {photo ? "Edit the search" : "Or type it"}
+        </p>
+        <input
+          ref={itemInputRef}
+          type="text"
+          value={item}
+          onChange={(e) => setItem(e.target.value)}
+          placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
+          disabled={disabled}
+          className="w-full min-w-0 px-4 py-3 border border-border rounded-md font-body text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
+        />
+        <div className="flex gap-2">
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             disabled={disabled}
-            className="px-4 py-3 border border-border rounded-md font-mono text-xs text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
+            aria-label="Category"
+            className="flex-1 min-w-0 px-3 py-3 border border-border rounded-md font-mono text-xs text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
           >
             {categories.map((c) => (
               <option key={c}>{c}</option>
             ))}
           </select>
-          <div className="relative">
-            <span
-              className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm"
-              style={{ color: "var(--muted)" }}
-            >
+          <div className="relative flex-1 min-w-0">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm" style={{ color: "var(--muted)" }}>
               ¥
             </span>
             <input
-              ref={priceInputRef}
-              type="number"
+              type="text"
+              inputMode="numeric"
               value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="0"
-              min="0"
+              onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))}
+              placeholder="Price"
               disabled={disabled}
-              className="pl-7 pr-4 py-3 border border-border rounded-md font-mono text-sm text-text bg-white focus:outline-none focus:border-red/50 w-full lg:w-32 disabled:opacity-40"
+              aria-label="Tag price in yen"
+              className="w-full pl-7 pr-3 py-3 border border-border rounded-md font-mono text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
             />
           </div>
           <button
             type="submit"
-            disabled={loading || !item.trim() || !price || disabled}
-            className="px-6 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+            disabled={busy || !item.trim() || disabled}
+            className="px-5 py-3 text-white font-mono text-xs tracking-widest uppercase rounded-md transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
             style={{ background: "var(--red)" }}
           >
-            {loading ? "Checking..." : "Check It →"}
+            {loading ? "..." : "Check"}
           </button>
         </div>
-
-        {cameraState === "error" && (
-          <p className="font-mono text-[11px]" style={{ color: "var(--muted)" }}>
-            Couldn&apos;t identify this item — what is it?
-          </p>
-        )}
-
-        {/* Condition selector */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Condition</span>
-            <span
-              className="font-mono text-[9px] text-muted cursor-help"
-              title="JP recycle shops grade items S (mint) → A (excellent) → B (good) → C (fair). Affects estimated sell price."
-            >
-              ⓘ
-            </span>
-          </div>
-          <div className="flex gap-1.5">
-            {conditions.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCondition(c)}
-                disabled={disabled}
-                title={conditionLabels[c]}
-                className="px-3 py-1.5 rounded-md font-mono text-xs font-medium border transition-colors disabled:opacity-40"
-                style={{
-                  background: condition === c ? "var(--black)" : "transparent",
-                  color: condition === c ? "white" : "var(--muted)",
-                  borderColor: condition === c ? "var(--black)" : "var(--border)",
-                }}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Size selector */}
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted">Size / Shipping</span>
-          <div className="flex gap-1.5 flex-wrap">
-            {sizes.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setSize(s)}
-                disabled={disabled}
-                className="px-3 py-1.5 rounded-md font-mono text-xs font-medium border transition-colors disabled:opacity-40"
-                style={{
-                  background: size === s ? "var(--black)" : "transparent",
-                  color: size === s ? "white" : "var(--muted)",
-                  borderColor: size === s ? "var(--black)" : "var(--border)",
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {size === "Oversized" && (
-          <div
-            className="px-4 py-2.5 rounded-md border text-sm"
-            style={{ background: "var(--gold-light)", borderColor: "rgba(184,134,11,0.2)" }}
-          >
-            <span className="font-mono text-[11px]" style={{ color: "var(--gold)" }}>
-              ⚠ Large items may not be cost-effective to ship. Verify carrier rates before buying.
-            </span>
-          </div>
-        )}
       </form>
     </div>
   );

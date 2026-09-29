@@ -22,6 +22,7 @@ export interface SoldComp {
   price: number;
   currency: string;
   daysAgo: number;
+  condition: string;
 }
 
 function daysAgo(dateStr: string): number {
@@ -50,6 +51,7 @@ export async function fetchSoldComps(keyword: string): Promise<SoldComp[]> {
         price: parseFloat(i.soldPrice),
         currency: i.soldCurrency || "USD",
         daysAgo: daysAgo(i.endedAt),
+        condition: i.condition ?? "",
       }))
       // Verdict math is in USD; a GBP/EUR sale mixed into the median would skew it.
       .filter((s) => s.price > 0 && s.currency === "USD")

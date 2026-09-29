@@ -72,6 +72,27 @@ export interface MarketData {
   recentSales: Sale[];
 }
 
+// One eBay sold listing as sent to the client. `autoExcluded` holds the reason
+// the filter dropped it from the median; the user can override either way.
+export interface Comp {
+  id: string;
+  title: string;
+  url: string;
+  price: number;
+  daysAgo: number;
+  condition: string;
+  autoExcluded: string | null;
+}
+
+// What /api/lookup returns — raw evidence only. The verdict is computed in the
+// browser (lib/lookup.ts) so price, condition and comp exclusions update live.
+export interface LookupResponse {
+  query: string;
+  category: string;
+  exchangeRate: number;
+  comps: Comp[];
+}
+
 export interface LookupResult {
   query: string;
   category: string;
@@ -82,7 +103,9 @@ export interface LookupResult {
   verdictReason: string;
   roi: number;
   roiTier: RoiTier;
-  jpMarket: MarketData;
+  // True when no tag price was given — show what it sells for, not BUY/SKIP.
+  valueOnly: boolean;
+  compsUsed: number;
   usMarket: MarketData;
   profitBreakdown: {
     buyPrice: number;

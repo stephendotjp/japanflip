@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import { getScoutItems } from "@/lib/scout";
-import { SearchCard } from "@/components/lookup/SearchCard";
+import { buildResult } from "@/lib/lookup";
+import { SearchCard, type SearchExtras } from "@/components/lookup/SearchCard";
 import { QuickChips } from "@/components/lookup/QuickChips";
 import { VerdictCard } from "@/components/lookup/VerdictCard";
-import { MarketData } from "@/components/lookup/MarketData";
+import { AdjustPanel } from "@/components/lookup/AdjustPanel";
+import { CompsList } from "@/components/lookup/CompsList";
 import { ProfitBreakdown } from "@/components/lookup/ProfitBreakdown";
 import { PlatformCards } from "@/components/lookup/PlatformCards";
 import { CustomsStrip } from "@/components/lookup/CustomsStrip";
@@ -17,30 +19,39 @@ import { LookupHistory } from "@/components/lookup/LookupHistory";
 import { TripSummary } from "@/components/lookup/TripSummary";
 import { TopBar } from "@/components/layout/TopBar";
 import { PulsingDot } from "@/components/ui/PulsingDot";
-import type { LookupResult, TripItem } from "@/lib/types";
+import type { LookupResponse, LookupResult, TripItem } from "@/lib/types";
 
 const FREE_LIMIT = 3;
+
+const categoryDefaultSize: Record<string, string> = {
+  Clothing: "Medium",
+};
 
 function PriceLookupInner() {
   const { tier, isBasic, isPremium, todayCount, incrementLookup, saveLookup, savedLookups, addToTrip, updateScoutItem } =
     useUser();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<LookupResult | null>(null);
+  const [data, setData] = useState<LookupResponse | null>(null);
   const [noResult, setNoResult] = useState(false);
   const [lastItem, setLastItem] = useState("");
   const [rate, setRate] = useState<number | null>(null);
   const [rateTime, setRateTime] = useState<string | null>(null);
-  const [gateData, setGateData] = useState<{ item: string; priceJPY: number } | null>(null);
-  const [lastCondition, setLastCondition] = useState("A");
+  const [gateData, setGateData] = useState<{ item: string; priceJPY: number | null } | null>(null);
+  // These recompute the verdict locally from `data` — changing them never refetches.
+  const [priceJPY, setPriceJPY] = useState<number | null>(null);
+  const [condition, setCondition] = useState("A");
+  const [size, setSize] = useState("Small");
+  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const [scoutPrefill, setScoutPrefill] = useState<{
     item: string;
     category: string;
     price: string;
     scoutId: string;
   } | null>(null);
-  const scoutResolved = useRef(false);
   const currentScoutIdRef = useRef<string | null>(null);
+  // Set on each fetch; cleared once the verdict is saved to history / the scout item.
+  const pendingSaveRef = useRef(false);
   // Always holds the latest handleSearch — lets the searchParams effect call it without stale closure
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSearchRef = useRef<(...args: any[]) => void>(() => {});
@@ -69,7 +80,6 @@ function PriceLookupInner() {
     if (!scout) return;
 
     currentScoutIdRef.current = scoutId;
-    scoutResolved.current = false;
 
     setScoutPrefill({
       item: scout.itemName ?? "",
@@ -84,61 +94,83 @@ function PriceLookupInner() {
     }
   }, [searchParams]);
 
+  const result: LookupResult | null = useMemo(
+    () => (data ? buildResult(data, { priceJPY, condition, size, overrides }) : null),
+    [data, priceJPY, condition, size, overrides]
+  );
+
+  // Record a priced verdict once per lookup — on arrival if the price was already
+  // known, otherwise when the user finishes typing it into the adjust panel.
+  const commitResult = () => {
+    if (!pendingSaveRef.current || !result || result.valueOnly) return;
+    pendingSaveRef.current = false;
+
+    if (currentScoutIdRef.current) {
+      updateScoutItem(currentScoutIdRef.current, { resolved: true, verdict: result.verdict });
+    }
+    if (isBasic) {
+      saveLookup({
+        id: Date.now().toString(),
+        item: result.query,
+        category: result.category,
+        jpPrice: result.jpBuyPrice,
+        verdict: result.verdict,
+        roi: result.roi,
+        timestamp: Date.now(),
+      });
+    }
+  };
+  const commitRef = useRef(commitResult);
+  commitRef.current = commitResult;
+
+  useEffect(() => {
+    if (data) commitRef.current();
+  }, [data]);
+
   // No daily cap on localhost so the lookup flow can be tested end to end.
   const atLimit = process.env.NODE_ENV !== "development" && tier === "free" && todayCount >= FREE_LIMIT;
 
-  const handleSearch = async (item: string, category: string, priceJPY: number, condition = "A", size = "Small") => {
+  const handleSearch = async (
+    item: string,
+    category: string,
+    price: number | null,
+    extras?: SearchExtras & { size?: string }
+  ) => {
     if (atLimit) {
-      setGateData({ item, priceJPY });
-      setResult(null);
+      setGateData({ item, priceJPY: price });
+      setData(null);
       setNoResult(false);
       return;
     }
-    setResult(null);
+    setData(null);
     setNoResult(false);
     setLoading(true);
     setLastItem(item);
-    setLastCondition(condition);
+    setPriceJPY(price);
+    setCondition(extras?.conditionRank ?? "A");
+    setSize(extras?.size ?? categoryDefaultSize[category] ?? "Small");
+    setOverrides({});
 
-    let data: LookupResult | null = null;
+    let res: LookupResponse | null = null;
     try {
-      const res = await fetch("/api/lookup", {
+      const r = await fetch("/api/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ item, category, priceJPY, condition, size }),
+        body: JSON.stringify({ item, category }),
       });
-      if (res.ok) data = await res.json();
+      if (r.ok) res = await r.json();
     } catch {}
     setLoading(false);
 
-    if (!data) {
+    if (!res) {
       setNoResult(true);
       return;
     }
 
-    setResult(data);
-    // Only a real verdict uses up a free lookup — "not enough sold listings" shouldn't cost one.
-    if (data.profitBreakdown.platforms.length > 0) incrementLookup();
-
-    if (currentScoutIdRef.current && !scoutResolved.current) {
-      scoutResolved.current = true;
-      updateScoutItem(currentScoutIdRef.current, {
-        resolved: true,
-        verdict: data.verdict,
-      });
-    }
-
-    if (isBasic) {
-      saveLookup({
-        id: Date.now().toString(),
-        item,
-        category,
-        jpPrice: priceJPY,
-        verdict: data.verdict,
-        roi: data.roi,
-        timestamp: Date.now(),
-      });
-    }
+    pendingSaveRef.current = true;
+    setData(res);
+    // Only a lookup with enough matching sales uses up a free lookup.
+    if (res.comps.filter((c) => !c.autoExcluded).length >= 3) incrementLookup();
   };
 
   // Keep the ref current so the searchParams effect can call the latest version
@@ -152,7 +184,7 @@ function PriceLookupInner() {
     <div className="p-5 md:p-10 space-y-5 pb-10">
       <TopBar
         title="Price Lookup"
-        subtitle="Found something? Check if it's worth buying before you commit."
+        subtitle="Snap it or type it — see what it really sells for before you buy."
         badge={
           <div
             className="flex items-center gap-2 px-3 py-1.5 rounded-md border"
@@ -195,7 +227,14 @@ function PriceLookupInner() {
         initialPrice={scoutPrefill?.price}
         initialCategory={scoutPrefill?.category}
       />
-      <QuickChips onSelect={handleSearch} disabled={loading} />
+      {!data && !loading && (
+        <QuickChips
+          onSelect={(item, category, price, _condition, chipSize) =>
+            handleSearch(item, category, price, { size: chipSize })
+          }
+          disabled={loading}
+        />
+      )}
 
       {/* At limit gate — blurred card when they tried a 4th search */}
       {atLimit && gateData && (
@@ -215,7 +254,8 @@ function PriceLookupInner() {
             style={{ background: "rgba(0,0,0,0.6)" }}
           >
             <p className="font-mono text-sm" style={{ color: "#ffffffb3" }}>
-              {gateData.item} · ¥{gateData.priceJPY.toLocaleString()}
+              {gateData.item}
+              {gateData.priceJPY ? ` · ¥${gateData.priceJPY.toLocaleString()}` : ""}
             </p>
             <p className="font-display text-2xl text-white leading-tight">
               You&apos;ve used your 3 free lookups today.
@@ -235,7 +275,7 @@ function PriceLookupInner() {
       )}
 
       {/* At limit — simple state when they haven't tried a 4th search yet */}
-      {atLimit && !gateData && !result && (
+      {atLimit && !gateData && !data && (
         <div
           className="border-2 border-dashed rounded-xl p-8 text-center space-y-4"
           style={{ borderColor: "var(--border)" }}
@@ -258,12 +298,9 @@ function PriceLookupInner() {
       {loading && (
         <div className="space-y-4">
           <div className="rounded-xl h-44 animate-pulse" style={{ background: "#15191E" }} />
-          <div className="grid md:grid-cols-2 gap-3">
-            <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />
-            <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />
-          </div>
+          <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />
           <p className="font-mono text-xs text-muted text-center tracking-widest">
-            Checking JP and US markets...
+            Pulling recent eBay sold listings...
           </p>
         </div>
       )}
@@ -271,43 +308,39 @@ function PriceLookupInner() {
       {/* No result */}
       {noResult && !loading && (
         <div className="bg-surface border border-border rounded-xl p-8 text-center space-y-3">
-          <p className="font-display text-2xl text-black">No data on this yet</p>
+          <p className="font-display text-2xl text-black">Lookup failed</p>
           <p className="font-body text-sm text-muted">
-            We don&apos;t have data on &ldquo;{lastItem}&rdquo;. Try a more specific search —
-            include the model number if you have it.
+            Couldn&apos;t reach the sold-listings service for &ldquo;{lastItem}&rdquo;. Check your connection
+            and try again.
           </p>
-          <div className="flex flex-wrap gap-2 justify-center pt-2">
-            {["Seiko SKX007", "Levi's 501", "Olympus mju-II"].map((s) => (
-              <button
-                key={s}
-                onClick={() => handleSearch(s, "Other", 4500)}
-                className="px-3 py-1.5 border border-border rounded-full font-mono text-xs text-muted hover:text-text hover:border-text transition-colors"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
         </div>
       )}
 
       {/* Results */}
-      {result && !loading && (
+      {result && data && !loading && (
         <div className="space-y-4">
           <VerdictCard
             result={result}
-            condition={lastCondition}
+            condition={condition}
             onAddToTrip={isBasic ? handleAddToTrip : undefined}
           />
 
-          <div className="grid md:grid-cols-2 gap-3">
-            <MarketData market={result.jpMarket} country="Japan" flag="🇯🇵" />
-            <MarketData
-              market={result.usMarket}
-              country="US Market"
-              flag="🇺🇸"
-              isUSMarket
-            />
-          </div>
+          <AdjustPanel
+            priceJPY={priceJPY}
+            onPriceChange={setPriceJPY}
+            onPriceCommit={commitResult}
+            condition={condition}
+            onConditionChange={setCondition}
+            size={size}
+            onSizeChange={setSize}
+            focusPrice={result.valueOnly && result.compsUsed >= 3}
+          />
+
+          <CompsList
+            comps={data.comps}
+            overrides={overrides}
+            onToggle={(comp, include) => setOverrides((o) => ({ ...o, [comp.id]: include }))}
+          />
 
           <ProfitBreakdown result={result} />
           <PlatformCards platforms={result.profitBreakdown.platforms} />

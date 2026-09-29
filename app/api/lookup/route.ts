@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { lookupItem } from "@/lib/lookup";
+import { fetchSoldComps } from "@/lib/soldComps";
+import { markComps } from "@/lib/comps";
 import { fetchJPYRate } from "@/lib/fetchRate";
+import type { LookupResponse } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
-  const { item, category, priceJPY, condition = "A", size = "Small" } = await req.json().catch(() => ({}));
+  const { item, category } = await req.json().catch(() => ({}));
 
-  if (typeof item !== "string" || !item.trim() || typeof category !== "string" || !(Number(priceJPY) > 0)) {
-    return NextResponse.json({ error: "item, category and a positive priceJPY are required" }, { status: 400 });
+  if (typeof item !== "string" || !item.trim() || typeof category !== "string") {
+    return NextResponse.json({ error: "item and category are required" }, { status: 400 });
   }
 
-  const rate = await fetchJPYRate();
-  const result = await lookupItem(item.trim().slice(0, 200), category, Number(priceJPY), rate, String(condition), String(size));
-  return NextResponse.json(result);
+  const query = item.trim().slice(0, 200);
+  const [rate, sold] = await Promise.all([fetchJPYRate(), fetchSoldComps(query)]);
+
+  const body: LookupResponse = { query, category, exchangeRate: rate, comps: markComps(query, sold) };
+  return NextResponse.json(body);
 }
