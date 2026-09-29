@@ -9,10 +9,6 @@ Given an image of an item, identify:
 Respond only in JSON: { "itemName": string, "category": string }
 If you cannot identify the item with reasonable confidence, respond: { "itemName": null, "category": null }`;
 
-const CATEGORY_MAP: Record<string, string> = {
-  "Retro Gaming": "Electronics",
-};
-
 export async function POST(req: NextRequest) {
   const { imageBase64, mimeType } = await req.json();
 
@@ -73,10 +69,6 @@ export async function POST(req: NextRequest) {
     } catch {
       console.error("[vision] JSON parse failed on:", text);
       return NextResponse.json({ itemName: null, category: null });
-    }
-
-    if (parsed.category && CATEGORY_MAP[parsed.category]) {
-      parsed.category = CATEGORY_MAP[parsed.category];
     }
 
     return NextResponse.json({

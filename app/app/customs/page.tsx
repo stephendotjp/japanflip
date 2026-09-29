@@ -75,6 +75,30 @@ const countries: Record<
 
 const itemTypes = ["General Goods", "Alcohol / Spirits", "Knives & Tools", "Electronics"];
 
+// Japan switches tax-free shopping from "exempt at the till" to "refund at departure" on this date.
+const REFUND_SYSTEM_START = new Date(2026, 10, 1);
+
+const taxFreeRules = {
+  before: {
+    label: "Until Oct 31, 2026",
+    points: [
+      "Tax is taken off at the till — show your passport. Minimum ¥5,000 before tax, same store, same day.",
+      "Goods clearly bought for resale or business aren't eligible.",
+      "Consumables (food, cosmetics) stay in the sealed bag — don't open them in Japan.",
+      "Customs can ask to see the goods when you leave. If you can't show them, you pay the tax then.",
+    ],
+  },
+  after: {
+    label: "From Nov 1, 2026",
+    points: [
+      "You pay the full price including 10% tax, then get it refunded after customs checks the goods at departure.",
+      "Export within 90 days of purchase. Do the customs check before you check your bags.",
+      "One item missing, used or already in checked luggage voids the refund for that whole receipt.",
+      "No resale exclusion any more, but quantities are limited to what you can personally carry out.",
+    ],
+  },
+};
+
 export default function CustomsPage() {
   const [selectedCountry, setSelectedCountry] = useState("US");
   const [selectedItem, setSelectedItem] = useState("General Goods");
@@ -101,6 +125,11 @@ export default function CustomsPage() {
     danger: { bg: "var(--red-light)", text: "var(--red)", border: "rgba(217,43,58,0.2)" },
   };
 
+  const refundSystemLive = new Date() >= REFUND_SYSTEM_START;
+  const taxFreePeriods = refundSystemLive
+    ? [taxFreeRules.after]
+    : [taxFreeRules.before, taxFreeRules.after];
+
   const statusIcon = { ok: "✓", warn: "⚠", danger: "✕" };
   const statusLabel = { ok: "No restrictions", warn: "Check rules", danger: "High risk" };
   const status = rule.status ?? "ok";
@@ -112,6 +141,61 @@ export default function CustomsPage() {
         title="Customs Checker"
         subtitle="Know the rules before you fly home."
       />
+
+      {/* Leaving Japan */}
+      <div className="space-y-3">
+        <SectionLabel>Leaving Japan</SectionLabel>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-surface border border-border rounded-xl p-5 space-y-4">
+            <div>
+              <p className="font-display text-2xl text-black">Tax-free must leave with you</p>
+              <p className="font-body text-sm text-muted mt-1">
+                Tax-free purchases have to go out in your luggage. Mailing them home yourself doesn&apos;t count
+                (since April 2025) — if you plan to ship it, pay the tax. Some stores ship abroad for you; ask at the counter.
+              </p>
+            </div>
+            {taxFreePeriods.map((period, i) => (
+              <div key={period.label}>
+                <p className="font-mono text-[10px] uppercase tracking-widest mb-1.5" style={{ color: i === 0 ? "var(--red)" : "var(--muted)" }}>
+                  {period.label}{i === 0 ? " · now" : ""}
+                </p>
+                <ul className="space-y-1.5">
+                  {period.points.map((p) => (
+                    <li key={p} className="font-body text-xs text-text flex gap-2">
+                      <span className="text-muted shrink-0">→</span>{p}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-4">
+            <div
+              className="rounded-xl p-5 border"
+              style={{ background: "var(--gold-light)", borderColor: "rgba(184,134,11,0.2)" }}
+            >
+              <p className="font-display text-2xl" style={{ color: "var(--gold)" }}>⚠ You can&apos;t sell it back here</p>
+              <p className="font-body text-sm mt-1" style={{ color: "var(--gold)" }}>
+                Book Off, Hard Off and other recycle shops must record the seller&apos;s ID and Japanese address by law,
+                and most require proof you live in Japan. As a tourist, plan on taking everything you buy home.
+              </p>
+            </div>
+            <div className="bg-surface border border-border rounded-xl p-5">
+              <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted mb-1">Flipping?</p>
+              <p className="font-body text-sm text-text">
+                Japanese price tags include tax, and JapanFlip&apos;s lookups use the tag price — so the profit math
+                already works without tax-free. Treat any refund as a bonus, not part of the margin.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p className="font-body text-xs text-muted">
+          Rules checked Sep 2026. Not legal advice — tax-free rules have changed twice in two years; confirm at the store or with Japan Customs.
+        </p>
+      </div>
+
+      <SectionLabel>Arriving Home</SectionLabel>
 
       <div className="grid md:grid-cols-2 gap-4">
         <div className="bg-surface border border-border rounded-xl p-6">

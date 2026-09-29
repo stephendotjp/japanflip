@@ -192,7 +192,7 @@ interface ScoutItem {
 ### Other Routes
 
 - `/app/calculator` — Haul calculator. All tiers. "Room in bag vs extra bag vs Japan Post vs proxy": total JP spend (or today's trip), weight, destination, user-entered quotes → transport + estimated import tax per option, cheapest highlighted, trip profit after getting it home. Tax assumptions per destination are rough, dated (Sep 2026), and editable. Warns about tax-free goods not being mailable and DDP re-billing.
-- `/app/customs` — Customs checker. All tiers. 7 countries × 4 item types.
+- `/app/customs` — Customs checker. All tiers. "Leaving Japan" section first: tax-free goods must leave with you (self-mailing doesn't count since Apr 2025), both tax-free regimes shown until the refund system goes live on Nov 1, 2026 (date-switched in code), tourists can't sell to recycle shops, flipping note (tag prices include tax). Then "Arriving Home": 7 countries × 4 item types. In the mobile tab bar.
 - `/app/history` — Saved lookups. Basic+ (gate for Free). Newest first, verdict badge, ROI. Premium: CSV export.
 - `/app/phrases` — Phrase cards. 1 free per section, all behind Premium gate. 8 sections, 26 phrases, all recycle-shop specific (negotiation, condition, authenticity, boxes/accessories, return policy, browsing etiquette) with Hard Off / 2nd Street usage notes.
 - `/app/guides` — Category guides. All tiers; Retro Gaming guide Premium-only.
@@ -224,7 +224,7 @@ interface ScoutItem {
 - Calls: **Anthropic Claude API** (`claude-sonnet-4-6`)
 - System prompt: Identifies item name (brand, model, edition) and best-fit category from: Watches / Clothing / Electronics / Spirits / Sneakers / Tools & Knives / Retro Gaming / Other
 - Response parsing: Strips markdown code fences (` ```json ``` `) before `JSON.parse` — Claude sometimes adds them despite the JSON-only instruction
-- Category mapping: "Retro Gaming" → "Electronics" (app doesn't have Retro Gaming as a lookup category)
+- Retro Gaming is a first-class lookup category (no remapping).
 - Returns: `{ itemName: string | null, category: string | null }`
 - On any failure (API error, parse error, low confidence): returns `{ itemName: null, category: null }` — never throws
 - Auth: `ANTHROPIC_API_KEY` env var (set in Vercel project settings)

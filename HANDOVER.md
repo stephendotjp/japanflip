@@ -28,8 +28,6 @@ Plan going forward: fix real problems the research evidenced, then market via ad
 
 Roughly in the order the research says they matter:
 
-- **Customs Checker gap** — only covers home-country arrival duties. Missing the Japan-exit side entirely: "tax-free goods must leave with you, can't be mailed" and "you can't sell to Book Off as a tourist" — both real, repeated complaints with no answer in the app. Also not reachable from the mobile bottom tab bar, despite being the kind of thing checked in-the-moment at the airport.
-- **Retro Gaming isn't a first-class lookup category yet.** Guides already treats it as the flagship niche (Premium-gated), and `/api/vision` can detect "Retro Gaming" from a photo, but then silently remaps it to "Electronics" because `SearchCard`'s category picker doesn't have it as an option (see `CATEGORY_MAP` in `app/api/vision/route.ts`). Worth fixing if leaning further into the retro-games/Pokémon/figures niche.
 - **No live Japan-side market data.** `jpMarket` always returns an honest "no data" state — there's no live JP sold-price source. Either build one (the research found an Apify Mercari/Yahoo sold-price actor as a candidate) or simplify the UI to stop showing an empty JP panel.
 - **sold-comps.com is a dependency risk.** It's an unofficial third party scraping eBay; if eBay cracks down on it, the app's core data source disappears again. No mitigation planned yet — just something to watch.
 
@@ -71,6 +69,12 @@ Not fixed — needs a decision:
 - Map: Leaflet + `tile.openstreetmap.org`. Canvas renderer with tap tolerance (markers are small); wheel zoom off so the page scrolls. Map only initialises when visible (layout renders desktop + mobile trees). **Risk:** OSM's tile usage policy forbids heavy use — if ad traffic grows, switch to a tile provider (MapTiler/Stadia/etc).
 - "Near me" (geolocation) not tested in the browser automation — test on a real phone.
 - Shop Map is free for all tiers — could be a Basic perk later.
+
+## Customs exit side + Retro Gaming (2026-09-29, fifth session)
+
+- **Customs Checker now has "Leaving Japan"** above the arrival checker: tax-free must leave with you (self-mailing hasn't counted since Apr 2025), the current regime vs the **refund system from Nov 1, 2026** (pay full price, refund after customs check, 90-day export, one missing item voids the whole receipt, resale exclusion dropped but carry-out quantity limit), "tourists can't sell to Book Off/Hard Off" (Secondhand Articles Dealer Act ID + Japan address), and a flipping note (tag prices include tax, so lookup math doesn't rely on tax-free). Sources: LIVE JAPAN 2026 tax-free guide, city-cost/Off-house seller rules. `REFUND_SYSTEM_START` in `app/app/customs/page.tsx` hides the old regime automatically after Nov 1 — **revisit the copy then** and delete the `before` block.
+- Mobile tab bar is now 6 tabs: Lookup, Scout, Shops, Haul (calculator), Customs, Guides.
+- **Retro Gaming is a lookup category**: added to `SearchCard`, removed the vision `CATEGORY_MAP` remap, Pokémon quick-chip uses it. Verdict context copy for it already existed. Lookup math treats it like any non-Spirits category.
 
 ## Dev environment gotcha hit this session
 
