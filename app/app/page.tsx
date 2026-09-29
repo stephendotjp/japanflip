@@ -84,7 +84,8 @@ function PriceLookupInner() {
     }
   }, [searchParams]);
 
-  const atLimit = tier === "free" && todayCount >= FREE_LIMIT;
+  // No daily cap on localhost so the lookup flow can be tested end to end.
+  const atLimit = process.env.NODE_ENV !== "development" && tier === "free" && todayCount >= FREE_LIMIT;
 
   const handleSearch = async (item: string, category: string, priceJPY: number, condition = "A", size = "Small") => {
     if (atLimit) {
@@ -116,7 +117,8 @@ function PriceLookupInner() {
     }
 
     setResult(data);
-    incrementLookup();
+    // Only a real verdict uses up a free lookup — "not enough sold listings" shouldn't cost one.
+    if (data.profitBreakdown.platforms.length > 0) incrementLookup();
 
     if (currentScoutIdRef.current && !scoutResolved.current) {
       scoutResolved.current = true;
