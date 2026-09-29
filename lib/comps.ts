@@ -6,7 +6,7 @@ import type { SoldComp } from "./soldComps";
 // see and restore it) but left out of the median, with the reason shown.
 
 const PARTS = /\b(for parts|parts only|not working|non[- ]?working|broken|junk|as[- ]is|untested)\b/i;
-const ACCESSORY = /\b(replacement|servicing|repair service|box only|manual only|empty box|strap only|case only|charger only|hands for|strap for|case for|cover for|bezel insert)\b/i;
+const ACCESSORY = /\b(replacement|servicing|repair service|box only|manual only|empty box|strap only|case only|charger only|hands for|strap for|case for|cover for|bezel insert|gasket|o[- ]ring|case ?back|movement only|dial only|crystal only|crown only|lens cap|lens hood|guide ?book|strategy guide|art ?book|poster)\b/i;
 const LOT = /\b(lot of|job lot|bundle|set of \d+|\d+\s*pcs)\b|\blot\b/i;
 
 const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
