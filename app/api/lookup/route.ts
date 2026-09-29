@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchSoldComps } from "@/lib/soldComps";
+import { fetchSoldComps, type SoldComp } from "@/lib/soldComps";
 import { markComps } from "@/lib/comps";
 import { fetchJPYRate } from "@/lib/fetchRate";
 import type { LookupResponse } from "@/lib/types";
@@ -12,7 +12,14 @@ export async function POST(req: NextRequest) {
   }
 
   const query = item.trim().slice(0, 200);
-  const [rate, sold] = await Promise.all([fetchJPYRate(), fetchSoldComps(query)]);
+  let rate: number, sold: SoldComp[];
+  try {
+    [rate, sold] = await Promise.all([fetchJPYRate(), fetchSoldComps(query)]);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[lookup] sold-comps failed:", message);
+    return NextResponse.json({ error: message }, { status: 502 });
+  }
 
   const body: LookupResponse = { query, category, exchangeRate: rate, comps: markComps(query, sold) };
   return NextResponse.json(body);
