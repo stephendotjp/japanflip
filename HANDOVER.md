@@ -26,6 +26,7 @@ Visual QA matters to him — do it, via this routine. Fallback: headless Playwri
 **Git:** commit and push at the end of every task. No `Co-Authored-By` line (breaks Vercel on the private repo). Stage files explicitly — `japan-flip-saas-research/`, `japanflip-claude-code-prompt.md`, `scout-mode-prompt.md` are intentionally untracked. For multi-line commit messages use `git commit -F <file>` (PowerShell mangles quotes in here-strings).
 
 **Next up (in priority order):**
+0. **Free-tier cap is switched OFF** (`ENFORCE_FREE_LIMIT = false` in `app/app/page.tsx`) so Stephen can test on Vercel. Turn it back on before ads.
 1. **Rate limiting + server-side checks** on `/api/lookup` and `/api/vision` before any ad spend — anyone can burn sold-comps and Anthropic credits; paywall is client-side only (see audit section).
 2. **Scout upgrade** (agreed with Stephen 2026-09-29): "check all" in the pile with verdict + sells-for on each card, sort by profit; name the nearest store from `data/shops.json` instead of Nominatim's address fragment; read the tag price at capture (vision already returns `tagPriceJPY`).
 3. **Verdict thresholds** — BUY needs ROI ≥7x, SKIP <3x, so ¥20,000 SKX007 → ~$91 profit is "SKIP IT". Probably wrong for flippers; decide profit-based thresholds with Stephen.

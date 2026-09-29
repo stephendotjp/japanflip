@@ -22,6 +22,8 @@ import { PulsingDot } from "@/components/ui/PulsingDot";
 import type { LookupResponse, LookupResult, TripItem } from "@/lib/types";
 
 const FREE_LIMIT = 3;
+// Off while Stephen tests pre-launch — set to true before running ads.
+const ENFORCE_FREE_LIMIT = false;
 
 const categoryDefaultSize: Record<string, string> = {
   Clothing: "Medium",
@@ -127,8 +129,7 @@ function PriceLookupInner() {
     if (data) commitRef.current();
   }, [data]);
 
-  // No daily cap on localhost so the lookup flow can be tested end to end.
-  const atLimit = process.env.NODE_ENV !== "development" && tier === "free" && todayCount >= FREE_LIMIT;
+  const atLimit = ENFORCE_FREE_LIMIT && tier === "free" && todayCount >= FREE_LIMIT;
 
   const handleSearch = async (
     item: string,
@@ -202,7 +203,7 @@ function PriceLookupInner() {
       />
 
       {/* Free usage bar */}
-      {tier === "free" && todayCount > 0 && todayCount < FREE_LIMIT && (
+      {ENFORCE_FREE_LIMIT && tier === "free" && todayCount > 0 && todayCount < FREE_LIMIT && (
         <div
           className="px-4 py-2.5 rounded-md border text-sm"
           style={{
