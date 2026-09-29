@@ -144,3 +144,10 @@ Running `npm run build` while `npm run dev` is still running against the same pr
 ## Browser tool history
 
 Before the Claude-profile routine (see START HERE), the extension attached to / popped over Stephen's active Brave window four times, interrupting live trading. `tabs_context_mcp({createIfEmpty:true})` alone did NOT prevent this. Only use the START HERE routine.
+
+## Lookup loading state (2026-09-30, ninth session)
+
+- "Example chips return no results" on Vercel was **latency, not a bug**: every chip returns comps (local + live), but a live lookup takes **~17s** (sold-comps scrapes eBay per request). The old grey skeleton looked like nothing was happening. New `components/lookup/LookupLoading.tsx`: item name, easing progress bar, three timed steps (not server-reported), "eBay is slow" note after 22s.
+- One transient **502** from `/api/lookup` seen in testing (query "Seiko SKX007 1"), not reproducible. Check Vercel logs if Stephen hits "Lookup failed".
+- **Nikka From The Barrel chip is bad data:** only 3 comps, median $4 (not the bottle). Swap the chip or fix Spirits comp relevance.
+- Latency ideas if it matters: cache sold-comps results per query for a few hours (the chips would then be instant).
