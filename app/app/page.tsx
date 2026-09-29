@@ -8,6 +8,7 @@ import { getScoutItems } from "@/lib/scout";
 import { buildResult } from "@/lib/lookup";
 import { SearchCard, type SearchExtras } from "@/components/lookup/SearchCard";
 import { QuickChips } from "@/components/lookup/QuickChips";
+import { LookupLoading } from "@/components/lookup/LookupLoading";
 import { VerdictCard } from "@/components/lookup/VerdictCard";
 import { AdjustPanel } from "@/components/lookup/AdjustPanel";
 import { CompsList } from "@/components/lookup/CompsList";
@@ -301,15 +302,7 @@ function PriceLookupInner() {
       )}
 
       {/* Loading skeleton */}
-      {loading && (
-        <div className="space-y-4">
-          <div className="rounded-xl h-44 animate-pulse" style={{ background: "#15191E" }} />
-          <div className="bg-surface border border-border rounded-xl h-52 animate-pulse" />
-          <p className="font-mono text-xs text-muted text-center tracking-widest">
-            Pulling recent eBay sold listings...
-          </p>
-        </div>
-      )}
+      {loading && <LookupLoading item={lastItem} />}
 
       {/* No result */}
       {noResult && !loading && (
