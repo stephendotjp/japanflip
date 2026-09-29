@@ -196,6 +196,7 @@ interface ScoutItem {
 - `/app/history` — Saved lookups. Basic+ (gate for Free). Newest first, verdict badge, ROI. Premium: CSV export.
 - `/app/phrases` — Phrase cards. 1 free per section, all behind Premium gate. 8 sections, 26 phrases, all recycle-shop specific (negotiation, condition, authenticity, boxes/accessories, return policy, browsing etiquette) with Hard Off / 2nd Street usage notes.
 - `/app/guides` — Category guides. All tiers; Retro Gaming guide Premium-only.
+- `/app/shops` — Shop Map. All tiers. Leaflet map (OSM tiles) + list of ~450 Hard Off / Off House / Hobby Off / Book Off / 2nd Street / Treasure Factory / Surugaya / Mandarake stores in Tokyo and Kansai, from an OpenStreetMap snapshot (`data/shops.json`, refreshed by `node scripts/fetch-shops.mjs`). Chain filters, "Near me" distance sort, "tourist-central" flag (within 1 km of Akihabara, Harajuku, Den Den Town etc.) with a hide toggle, nearest station, Google Maps transit directions, "wrong or closed?" link to the OSM object. Hand-written per-store notes go in `data/shopNotes.json` (keyed by shop id, e.g. `"node/123": { "tags": ["good junk bin"], "note": "...", "verified": "2026-09" }`).
 - `/app/upgrade` — Gumroad redirect handler + pricing display.
 
 ---

@@ -7,6 +7,7 @@ import { useUser } from "@/context/UserContext";
 const tabs = [
   { label: "Lookup", href: "/app", icon: "⊕" },
   { label: "Scout", href: "/app/scout", icon: "◎" },
+  { label: "Shops", href: "/app/shops", icon: "⌖" },
   { label: "Calculator", href: "/app/calculator", icon: "⊞" },
   { label: "Guides", href: "/app/guides", icon: "☰" },
 ];

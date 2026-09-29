@@ -22,7 +22,7 @@ const tools: NavItem[] = [
 
 const learn: NavItem[] = [
   { label: "Category Guides", href: "/app/guides", icon: "☰" },
-  { label: "Shop Map", href: "#", icon: "◎", soon: true },
+  { label: "Shop Map", href: "/app/shops", icon: "⌖" },
 ];
 
 export function Sidebar() {

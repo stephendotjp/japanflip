@@ -28,7 +28,6 @@ Plan going forward: fix real problems the research evidenced, then market via ad
 
 Roughly in the order the research says they matter:
 
-- **Shop Map** — nav item already exists, marked "soon," not built. This is the single highest-evidence *unbuilt* pain in the research (271-upvote thread: famous districts are tourist-priced/picked-over, suburban Hard Off/Book Off are better but undocumented and decay fast).
 - **Customs Checker gap** — only covers home-country arrival duties. Missing the Japan-exit side entirely: "tax-free goods must leave with you, can't be mailed" and "you can't sell to Book Off as a tourist" — both real, repeated complaints with no answer in the app. Also not reachable from the mobile bottom tab bar, despite being the kind of thing checked in-the-moment at the airport.
 - **Retro Gaming isn't a first-class lookup category yet.** Guides already treats it as the flagship niche (Premium-gated), and `/api/vision` can detect "Retro Gaming" from a photo, but then silently remaps it to "Electronics" because `SearchCard`'s category picker doesn't have it as an option (see `CATEGORY_MAP` in `app/api/vision/route.ts`). Worth fixing if leaning further into the retro-games/Pokémon/figures niche.
 - **No live Japan-side market data.** `jpMarket` always returns an honest "no data" state — there's no live JP sold-price source. Either build one (the research found an Apify Mercari/Yahoo sold-price actor as a candidate) or simplify the UI to stop showing an empty JP panel.
@@ -62,6 +61,16 @@ Not fixed — needs a decision:
 - Japan Post US mail: suspended after 2025 tariffs, **resumed July 2026** (per japanpost.jp notices) — calculator tells US users to check current status.
 - **Premium copy rewritten** to real extras only: Retro Gaming guide, 50-lookup history (this device), CSV export. `PremiumGate` no longer pitches "live data". Premium is now thin — needs a real differentiator.
 - Possible follow-up: sidebar says "Haul Calculator" but mobile tab bar still says "Calculator" (fits better). `LandingCalculator` on the homepage is still the old profit-style widget.
+
+## Shop Map (2026-09-29, fourth session)
+
+- **`/app/shops` built.** Data is an **OpenStreetMap snapshot** (Stephen's choice over hand-curated or Google Places): `scripts/fetch-shops.mjs` → `data/shops.json` (~450 stores: 299 Tokyo area, 149 Kansai). Not called live — Overpass was overloaded/429ing during this session, so the app must never depend on it at runtime. Re-run the script to refresh (it retries across mirrors).
+- Script filters OSM noise: parking lots, the Book Off HQ, and 駿河屋 sweets shops (Surugaya requires `brand:en`). Each store gets its nearest train station (≤1.5 km) because most OSM entries have no branch name.
+- "Tourist-central" = within 1 km of a hard-coded hub list in `lib/shops.ts` (research: those areas are picked over). Heuristic, labelled as such.
+- **Stephen's notes:** `data/shopNotes.json` is empty — the research's "freshness" angle depends on him adding visited/verified notes per store (tags, note, `verified` month). UI already renders them.
+- Map: Leaflet + `tile.openstreetmap.org`. Canvas renderer with tap tolerance (markers are small); wheel zoom off so the page scrolls. Map only initialises when visible (layout renders desktop + mobile trees). **Risk:** OSM's tile usage policy forbids heavy use — if ad traffic grows, switch to a tile provider (MapTiler/Stadia/etc).
+- "Near me" (geolocation) not tested in the browser automation — test on a real phone.
+- Shop Map is free for all tiers — could be a Basic perk later.
 
 ## Dev environment gotcha hit this session
 
