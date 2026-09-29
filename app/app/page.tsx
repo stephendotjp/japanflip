@@ -52,6 +52,7 @@ function PriceLookupInner() {
     scoutId: string;
   } | null>(null);
   const currentScoutIdRef = useRef<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
   // Set on each fetch; cleared once the verdict is saved to history / the scout item.
   const pendingSaveRef = useRef(false);
   // Always holds the latest handleSearch — lets the searchParams effect call it without stale closure
@@ -126,7 +127,10 @@ function PriceLookupInner() {
   commitRef.current = commitResult;
 
   useEffect(() => {
-    if (data) commitRef.current();
+    if (!data) return;
+    commitRef.current();
+    // On a phone the result lands below the search card — bring the verdict into view.
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [data]);
 
   const atLimit = ENFORCE_FREE_LIMIT && tier === "free" && todayCount >= FREE_LIMIT;
@@ -182,7 +186,7 @@ function PriceLookupInner() {
   };
 
   return (
-    <div className="p-5 md:p-10 space-y-5 pb-10">
+    <div className="p-4 md:p-10 space-y-4 md:space-y-5 pb-10">
       <TopBar
         title="Price Lookup"
         subtitle="Snap it or type it — see what it really sells for before you buy."
@@ -196,7 +200,8 @@ function PriceLookupInner() {
           >
             <PulsingDot />
             <span className="font-mono text-[11px]" style={{ color: "var(--green)" }}>
-              ¥{rate ? rate.toFixed(1) : "..."} = $1{rateTime ? ` · as of ${rateTime}` : " · Live rate"}
+              ¥{rate ? rate.toFixed(1) : "..."} = $1
+              <span className="hidden md:inline">{rateTime ? ` · as of ${rateTime}` : " · Live rate"}</span>
             </span>
           </div>
         }
@@ -319,7 +324,7 @@ function PriceLookupInner() {
 
       {/* Results */}
       {result && data && !loading && (
-        <div className="space-y-4">
+        <div ref={resultsRef} className="space-y-4 scroll-mt-4">
           <VerdictCard
             result={result}
             condition={condition}
@@ -334,7 +339,6 @@ function PriceLookupInner() {
             onConditionChange={setCondition}
             size={size}
             onSizeChange={setSize}
-            focusPrice={result.valueOnly && result.compsUsed >= 3}
           />
 
           <CompsList

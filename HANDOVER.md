@@ -99,7 +99,7 @@ Not fixed — needs a decision:
 - Script filters OSM noise: parking lots, the Book Off HQ, and 駿河屋 sweets shops (Surugaya requires `brand:en`). Each store gets its nearest train station (≤1.5 km) because most OSM entries have no branch name.
 - "Tourist-central" = within 1 km of a hard-coded hub list in `lib/shops.ts` (research: those areas are picked over). Heuristic, labelled as such.
 - **Stephen's notes:** `data/shopNotes.json` is empty — the research's "freshness" angle depends on him adding visited/verified notes per store (tags, note, `verified` month). UI already renders them.
-- Map: Leaflet + `tile.openstreetmap.org`. Canvas renderer with tap tolerance (markers are small); wheel zoom off so the page scrolls. Map only initialises when visible (layout renders desktop + mobile trees). **Risk:** OSM's tile usage policy forbids heavy use — if ad traffic grows, switch to a tile provider (MapTiler/Stadia/etc).
+- Map: Leaflet + `tile.openstreetmap.org`. Canvas renderer with tap tolerance (markers are small); wheel zoom off so the page scrolls. Map only initialises when its container is visible. **Risk:** OSM's tile usage policy forbids heavy use — if ad traffic grows, switch to a tile provider (MapTiler/Stadia/etc).
 - "Near me" (geolocation) not tested in the browser automation — test on a real phone.
 - Shop Map is free for all tiers — could be a Basic perk later.
 
@@ -119,6 +119,12 @@ Goal set by Stephen: be the app flippers/tourists use instead of Google Lens / e
 - **Comp relevance** (`lib/comps.ts`): auto-excludes parts/not-working (eBay condition + title), accessories (incl. "X for SKX007"), lots, other model numbers (query tokens containing digits must appear in title; skipped if <3 would remain), price outliers (1.5×IQR, plus a floor at 25% of median). Each exclusion has a reason; `CompsList` shows all comps with ✕/+ toggles. Checked on live data: SKX007 drops SKX009/SKX033/bezels/hands/gaskets/lots; mju-II drops parts-only.
 - Removed the empty JP panel (`MarketData.tsx` deleted, `jpMarket` dropped from `LookupResult`). Condition/size moved from the search form into `AdjustPanel` under the verdict.
 - Junk-tagged items still use working-unit comps — the red warning is the only signal. Consider adjusting condition automatically if Stephen wants.
+
+## Mobile-first layout fix (2026-09-29, seventh session)
+
+- **Bug:** `app/app/layout.tsx` rendered every page twice (desktop tree + mobile tree, toggled by CSS at 768px). Each copy had its own state, so resizing across 768 "lost" a lookup result, and effects/fetches ran twice. Now one tree; sidebar/tab bar are shown/hidden with `md:` classes.
+- Lookup page tuned for 320–375px: compact `TopBar` (title + badge on one row, used by every page), search form as [item | Check] / [¥ price | category], verdict scrolls into view when a result lands, no autofocus on the price field (it popped the phone keyboard over the result), `AdjustPanel` stacked with 4-column pill grids, tighter padding.
+- **Mobile QA method that works:** headless Playwright driving installed Edge (`playwright-core` in the session scratchpad, not the repo), viewport 375×812 and 320×812 with `isMobile`, full-page screenshots + a horizontal-overflow check per page. The Claude Brave profile's screenshots time out while minimized, so it's unreliable for this.
 
 ## Dev environment gotcha hit this session
 

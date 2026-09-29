@@ -60,15 +60,12 @@ export function CompsList({ comps, overrides, onToggle }: CompsListProps) {
   const excluded = comps.filter((c) => !isCompIncluded(c, overrides));
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-5 animate-fadeUp">
-      <div className="flex items-baseline justify-between gap-3 mb-1">
-        <span className="font-mono text-[10px] tracking-[2px] uppercase text-muted">
-          🇺🇸 eBay sold · {included.length} of {comps.length} used
-        </span>
-        {included.length > 0 && (
-          <span className="font-mono text-sm text-text font-medium">median ${Math.round(median(included.map((c) => c.price))).toLocaleString()}</span>
-        )}
-      </div>
+    <div className="bg-surface border border-border rounded-xl p-4 md:p-5 animate-fadeUp">
+      <p className="font-mono text-[10px] tracking-[2px] uppercase text-muted">🇺🇸 eBay sold listings</p>
+      <p className="font-mono text-sm text-text mt-1 mb-1">
+        {included.length} of {comps.length} used
+        {included.length > 0 && ` · median $${Math.round(median(included.map((c) => c.price))).toLocaleString()}`}
+      </p>
       <p className="font-body text-xs text-muted mb-3">
         Tap ✕ on anything that isn&apos;t the same item — the verdict updates instantly.
       </p>

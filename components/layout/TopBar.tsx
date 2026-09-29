@@ -6,16 +6,16 @@ interface TopBarProps {
 
 export function TopBar({ title, subtitle, badge }: TopBarProps) {
   return (
-    <div className="flex items-start justify-between gap-4">
-      <div>
-        <h1 className="font-display text-[42px] leading-none text-black">{title}</h1>
-        {subtitle && (
-          <p className="font-body text-sm mt-1" style={{ color: "var(--muted)" }}>
-            {subtitle}
-          </p>
-        )}
+    <div>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="font-display text-[34px] md:text-[42px] leading-none text-black min-w-0">{title}</h1>
+        {badge && <div className="shrink-0">{badge}</div>}
       </div>
-      {badge && <div className="shrink-0 mt-1">{badge}</div>}
+      {subtitle && (
+        <p className="font-body text-sm mt-1" style={{ color: "var(--muted)" }}>
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }

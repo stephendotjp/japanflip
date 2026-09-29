@@ -142,7 +142,7 @@ export function SearchCard({
   const busy = loading || cameraState === "loading";
 
   return (
-    <div className="bg-surface rounded-xl border border-border p-5 md:p-6 space-y-4">
+    <div className="bg-surface rounded-xl border border-border p-4 md:p-6 space-y-4">
       <input
         ref={fileInputRef}
         type="file"
@@ -242,42 +242,17 @@ export function SearchCard({
         <p className="font-mono text-[10px] uppercase tracking-widest text-muted">
           {photo ? "Edit the search" : "Or type it"}
         </p>
-        <input
-          ref={itemInputRef}
-          type="text"
-          value={item}
-          onChange={(e) => setItem(e.target.value)}
-          placeholder='e.g. "Seiko SKX007" or "Levi 501 made in USA"'
-          disabled={disabled}
-          className="w-full min-w-0 px-4 py-3 border border-border rounded-md font-body text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
-        />
         <div className="flex gap-2">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+          <input
+            ref={itemInputRef}
+            type="text"
+            value={item}
+            onChange={(e) => setItem(e.target.value)}
+            placeholder='e.g. "Seiko SKX007"'
             disabled={disabled}
-            aria-label="Category"
-            className="flex-1 min-w-0 px-3 py-3 border border-border rounded-md font-mono text-xs text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
-          >
-            {categories.map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
-          <div className="relative flex-1 min-w-0">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm" style={{ color: "var(--muted)" }}>
-              ¥
-            </span>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={price}
-              onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))}
-              placeholder="Price"
-              disabled={disabled}
-              aria-label="Tag price in yen"
-              className="w-full pl-7 pr-3 py-3 border border-border rounded-md font-mono text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
-            />
-          </div>
+            enterKeyHint="search"
+            className="flex-1 min-w-0 px-4 py-3 border border-border rounded-md font-body text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40 disabled:cursor-not-allowed"
+          />
           <button
             type="submit"
             disabled={busy || !item.trim() || disabled}
@@ -286,6 +261,34 @@ export function SearchCard({
           >
             {loading ? "..." : "Check"}
           </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="relative min-w-0">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-sm" style={{ color: "var(--muted)" }}>
+              ¥
+            </span>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={price}
+              onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))}
+              placeholder="Tag price"
+              disabled={disabled}
+              aria-label="Tag price in yen"
+              className="w-full pl-7 pr-2 py-3 border border-border rounded-md font-mono text-base md:text-sm text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
+            />
+          </div>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            disabled={disabled}
+            aria-label="Category"
+            className="min-w-0 px-3 py-3 border border-border rounded-md font-mono text-xs text-text bg-white focus:outline-none focus:border-red/50 disabled:opacity-40"
+          >
+            {categories.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
         </div>
       </form>
     </div>

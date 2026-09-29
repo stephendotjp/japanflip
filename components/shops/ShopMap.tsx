@@ -21,8 +21,8 @@ export function ShopMap({ shops, center, userLoc, selectedId, onSelect }: ShopMa
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
 
-  // Leaflet touches `window` on import, so load it client-side only. The app layout renders the page
-  // twice (desktop + mobile, one hidden), so only create the map once its container is actually visible.
+  // Leaflet touches `window` on import, so load it client-side only, and only create the map once
+  // its container is actually visible (it has no size while hidden).
   useEffect(() => {
     let cancelled = false;
     let loading = false;

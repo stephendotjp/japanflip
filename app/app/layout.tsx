@@ -1,25 +1,21 @@
 import { Sidebar } from "@/components/layout/Sidebar";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
 
+// One tree for every width — pages render once, so their state (a lookup result,
+// a half-filled form) survives crossing the md breakpoint.
+// Mobile: page scrolls, fixed bottom tab bar. Desktop: fixed sidebar, main scrolls.
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {/* Desktop: fixed sidebar + scrollable main */}
-      <div className="hidden md:flex h-screen overflow-hidden" style={{ background: "var(--bg)" }}>
+    <div className="min-h-screen md:h-screen md:flex md:overflow-hidden" style={{ background: "var(--bg)" }}>
+      <div className="hidden md:flex">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto min-h-0">{children}</main>
       </div>
-
-      {/* Mobile: full-page scroll + bottom tab bar */}
-      <div className="md:hidden flex flex-col min-h-screen" style={{ background: "var(--bg)" }}>
-        <main
-          className="flex-1"
-          style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom, 0px))" }}
-        >
-          {children}
-        </main>
+      <main className="pb-[calc(64px+env(safe-area-inset-bottom,0px))] md:pb-0 md:flex-1 md:overflow-y-auto md:min-h-0">
+        {children}
+      </main>
+      <div className="md:hidden">
         <MobileTabBar />
       </div>
-    </>
+    </div>
   );
 }

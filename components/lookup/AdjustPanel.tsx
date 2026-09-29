@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
 interface AdjustPanelProps {
   priceJPY: number | null;
   onPriceChange: (price: number | null) => void;
@@ -10,7 +8,6 @@ interface AdjustPanelProps {
   onConditionChange: (c: string) => void;
   size: string;
   onSizeChange: (s: string) => void;
-  focusPrice?: boolean;
 }
 
 const conditions = ["S", "A", "B", "C"];
@@ -28,7 +25,7 @@ function Pill({ active, onClick, children, title }: { active: boolean; onClick: 
       type="button"
       onClick={onClick}
       title={title}
-      className="px-3 py-1.5 rounded-md font-mono text-xs font-medium border transition-colors"
+      className="px-1 md:px-3 py-2 md:py-1.5 rounded-md font-mono text-[11px] md:text-xs font-medium border transition-colors"
       style={{
         background: active ? "var(--black)" : "transparent",
         color: active ? "white" : "var(--muted)",
@@ -49,27 +46,22 @@ export function AdjustPanel({
   onConditionChange,
   size,
   onSizeChange,
-  focusPrice,
 }: AdjustPanelProps) {
-  const priceRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (focusPrice) priceRef.current?.focus();
-  }, [focusPrice]);
+  const row = "flex flex-col gap-1.5 md:flex-row md:items-center md:gap-3";
+  const label = "font-mono text-[10px] uppercase tracking-widest text-muted md:w-24 md:shrink-0";
 
   return (
     <div className="bg-surface border border-border rounded-xl p-4 md:p-5 space-y-3 animate-fadeUp">
-      <div className="flex flex-wrap items-center gap-3">
-        <label htmlFor="adjust-price" className="font-mono text-[10px] uppercase tracking-widest text-muted w-24 shrink-0">
+      <div className={row}>
+        <label htmlFor="adjust-price" className={label}>
           Tag price
         </label>
-        <div className="relative flex-1 min-w-[140px] max-w-[220px]">
+        <div className="relative md:w-56">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 font-mono text-lg" style={{ color: "var(--muted)" }}>
             ¥
           </span>
           <input
             id="adjust-price"
-            ref={priceRef}
             type="text"
             inputMode="numeric"
             value={priceJPY ?? ""}
@@ -85,14 +77,14 @@ export function AdjustPanel({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className={row}>
         <span
-          className="font-mono text-[10px] uppercase tracking-widest text-muted w-24 shrink-0 cursor-help"
+          className={`${label} cursor-help`}
           title="JP recycle shops grade items S (mint) → A (excellent) → B (good) → C (fair). Adjusts the expected sell price."
         >
           Condition ⓘ
         </span>
-        <div className="flex gap-1.5">
+        <div className="grid grid-cols-4 gap-1.5 md:flex">
           {conditions.map((c) => (
             <Pill key={c} active={condition === c} onClick={() => onConditionChange(c)} title={conditionLabels[c]}>
               {c}
@@ -101,9 +93,9 @@ export function AdjustPanel({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted w-24 shrink-0">Shipping</span>
-        <div className="flex gap-1.5 flex-wrap">
+      <div className={row}>
+        <span className={label}>Shipping</span>
+        <div className="grid grid-cols-4 gap-1.5 md:flex">
           {sizes.map((s) => (
             <Pill key={s} active={size === s} onClick={() => onSizeChange(s)}>
               {s}
